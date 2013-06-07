@@ -158,8 +158,8 @@ int start()
       string mode=val[ix];int oplimit=OP_SELLLIMIT;color clr=Red;if(op[ix]==" buylimit"){clr=Blue;oplimit=OP_BUYLIMIT;}
       
 //      OrderSend(StringTrimLeft(val[ix]),oplimit,4.1,StrToDouble(priceopen[ix]),3,0,StrToDouble(tp[ix]),"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+3600,CLR_NONE);
-      double akb=AccountBalance()/3;if(!IsConnected())akb=10000.0;
-      OrderSend(StringTrimLeft(val[ix]),oplimit,NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1),StrToDouble(priceopen[ix]),3,0,StrToDouble(tp[ix]),"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+900,CLR_NONE);
+      double akb=AccountBalance()/5;if(!IsConnected())akb=10000.0;
+      OrderSend(StringTrimLeft(val[ix]),oplimit,NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1),StrToDouble(priceopen[ix]),3,0,StrToDouble(tp[ix]),"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+3600,CLR_NONE);
 
            WindowRedraw();Sleep(500);
       
