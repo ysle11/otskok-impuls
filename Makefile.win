@@ -1,0 +1,42 @@
+# Project: patterns
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
+WINDRES = windres.exe
+RES  = patterns_private.res
+OBJ  = main.o Server.o otskok.o impuls.o $(RES)
+LINKOBJ  = main.o Server.o otskok.o impuls.o $(RES)
+LIBS =  -L"F:/Dev-Cpp/lib" -L"C:/Dev-Cpp/include" -mwindows ../../MinGW/lib/libwsock32.a ../lib/liblzma.a   -g3 
+INCS =  -I"F:/Dev-Cpp/include"  -I"F:/Dev-Cpp/patterns" 
+CXXINCS =  -I"F:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"F:/Dev-Cpp/include/c++/3.4.2/backward"  -I"F:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"F:/Dev-Cpp/include/c++/3.4.2"  -I"F:/Dev-Cpp/include"  -I"F:/Dev-Cpp/patterns" 
+BIN  = patterns.exe
+CXXFLAGS = $(CXXINCS)    -fexceptions -g3
+CFLAGS = $(INCS)    -fexceptions -g3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before patterns.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "patterns.exe" $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+Server.o: Server.cpp
+	$(CPP) -c Server.cpp -o Server.o $(CXXFLAGS)
+
+otskok.o: otskok.cpp
+	$(CPP) -c otskok.cpp -o otskok.o $(CXXFLAGS)
+
+impuls.o: impuls.cpp
+	$(CPP) -c impuls.cpp -o impuls.o $(CXXFLAGS)
+
+patterns_private.res: patterns_private.rc 
+	$(WINDRES) -i patterns_private.rc --input-format=rc -o patterns_private.res -O coff 
