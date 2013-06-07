@@ -48,8 +48,9 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 
 	server = new Server;
 	server->on();
+//	server->otskok(debuging);
 	server->otskok(testing);
-	server->impuls(testing);
+//	server->impuls(testing);
 //	server->impuls(optimizing);
 //	server->otskok(optimizing);
 

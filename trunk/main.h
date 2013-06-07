@@ -1,7 +1,7 @@
 #define whitespaceskip s += strspn(s, "\n\t \r")
 #define elementskip *s=='"' ? (++s, s += strcspn(s, "\"\n\0"), s += *s=='"') : s += strcspn(s, "\n\t \0")
 enum { cmdmain, cmdotskok, cmdimpuls };
-enum { testing, optimizing };
+enum { testing, optimizing, debuging };
 enum { withtime, settitle };
 enum { whwnd,whlog,whpro,whper,whcmd };
 #define MODE_TRADES 0

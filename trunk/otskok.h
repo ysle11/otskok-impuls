@@ -235,6 +235,7 @@ class Otskok
 
 	void test();
 	void optimize();
+	void debug();
 
 	public:
 		Otskok();
