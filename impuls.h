@@ -139,7 +139,7 @@ class Impuls
 	int testervalspreads[255];
 	char testercurval[255];
 	int testercurperiod;
-    double FDlast_sell,FDlast_buy;int LastSellOpen,LastBuyOpen;
+    double FDlast_sell,FDlast_buy,prob;int LastSellOpen,LastBuyOpen;
 	struct optimized_info{
 		time_t datefrom;
 		time_t dateto;
@@ -221,6 +221,7 @@ class Impuls
     	consolidatesorted* csorted;
 		void test();
 		void optimize();
+    	void debug();
 	public:
 		Impuls();
 		~Impuls();

@@ -146,6 +146,8 @@ void Impuls::journalsinit(bool init){
 	lorderscnt=0;
 	sorderscnt=0;
 	testertargetprofit=(testerpoint*(testerspread+testerstop));
+	LastBuyOpen=0;
+	LastSellOpen=0;
 }
 void Impuls::add_row_history(double tOrderPrice, int opclose){
 	history[iHistoryTotal].iOrderTicket=trades[iTradesCurrent].iOrderTicket;
@@ -464,7 +466,7 @@ void Impuls::testerinit()
     lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Demo\\");
     testerperiod=15;
     testercuritem=0;
-    testercntper=11998;testercntpervoid=testercntper;
+    testercntper=8000;testercntpervoid=testercntper;
     testerconsolidationbars=2;
     testerdtime=86376;
 	testerltime=403088;
@@ -603,7 +605,8 @@ void Impuls::testerstart(double k1,int d1,int k2,int d2,int k3,int d3,int l1,dou
 		if (testerNewBar(OP_BUYLIMIT))
 		//if (testerquant())
 		{
-			testercloseall(2);SL=0;TP=sig+testertargetprofit;
+			testercloseall(2);
+			SL=0;TP=sig+testertargetprofit;
 			if(limit<0)OrderSend(OP_BUYSTOP, sig,SL,TP);else
 			if(limit>0)OrderSend(OP_BUYLIMIT,sig,SL,TP);
 		}
@@ -718,7 +721,7 @@ void Impuls::testercontrol(){
 double Impuls::testersignal(double Probab,int dstop,int Nstop,int delta,int Nidelt,int Nideltstop,int NN,double forg,int limit){
 
 	   double sig=0.0;
-  	   double Price=testercuro,Point=testerpoint,prob;int Bar=testercurbar,Ncomb,mn;
+  	   double Price=testercuro,Point=testerpoint;int CurTime=testercurdatetime,Ncomb,mn;
   	   int buy_open=0, sell_open=0, buy_close=0, sell_close=0;
 	   for(int idelt = 1; idelt <= Nidelt; idelt++)
 	     {
@@ -748,11 +751,11 @@ double Impuls::testersignal(double Probab,int dstop,int Nstop,int delta,int Nide
 
 	           for(int istop = 1; istop <= Nstop; istop++)
 	             {
-	               if(engine[idelt].sd[Ncomb][istop] == 0 && Bar - engine[idelt].LastSd[Ncomb][istop] >2)
+	               if(engine[idelt].sd[Ncomb][istop] == 0 && CurTime - engine[idelt].LastSd[Ncomb][istop] >2*testerperiod*60)
 	                 {
 	                   engine[idelt].sd[Ncomb][istop] = 1;
 	                   engine[idelt].cen[Ncomb][istop] = Price;
-	                   engine[idelt].LastSd[Ncomb][istop] = Bar;
+	                   engine[idelt].LastSd[Ncomb][istop] = CurTime;
 	                 }
 	             }
 	           for(int istop = 1; istop <= Nstop; istop++)
@@ -761,18 +764,18 @@ double Impuls::testersignal(double Probab,int dstop,int Nstop,int delta,int Nide
 	                 {
 	                   if(engine[idelt].sd[i][istop] == 1)
 	                     {
-						   double forgw = forg;
+						   //double forgw = forg;
 	                       if(Price - engine[idelt].cen[i][istop] > dstop*istop*Point)
 	                         {
-	                           engine[idelt].rost[i][istop] = engine[idelt].rost[i][istop] / forgw + 1;
-	                           engine[idelt].spad[i][istop] = engine[idelt].spad[i][istop] / forgw;
+	                           engine[idelt].rost[i][istop] = engine[idelt].rost[i][istop] / forg + 1.0;
+	                           engine[idelt].spad[i][istop] = engine[idelt].spad[i][istop] / forg;
 	                           engine[idelt].sd[i][istop] = 0;
 	                           engine[idelt].nsd[i][istop] = engine[idelt].nsd[i][istop] + 1;
 	                         }
 	                       if(engine[idelt].cen[i][istop] - Price > dstop*istop*Point)
 	                         {
-	                           engine[idelt].spad[i][istop] = engine[idelt].spad[i][istop] / forgw + 1;
-	                           engine[idelt].rost[i][istop] = engine[idelt].rost[i][istop] / forgw;
+	                           engine[idelt].spad[i][istop] = engine[idelt].spad[i][istop] / forg + 1.0;
+	                           engine[idelt].rost[i][istop] = engine[idelt].rost[i][istop] / forg;
 	                           engine[idelt].sd[i][istop] = 0;
 	                           engine[idelt].nsd[i][istop] = engine[idelt].nsd[i][istop] + 1;
 	                         }
@@ -783,7 +786,7 @@ double Impuls::testersignal(double Probab,int dstop,int Nstop,int delta,int Nide
 	             {
 	               prob = engine[idelt].rost[Ncomb][istop] / (engine[idelt].rost[Ncomb][istop] +
 	                      engine[idelt].spad[Ncomb][istop] + 0.0001);
-	               if(prob > Probab && engine[idelt].nsd[Ncomb][istop] > Nideltstop && Bar - LastBuyOpen > 2)
+	               if(prob > Probab && engine[idelt].nsd[Ncomb][istop] > Nideltstop && CurTime - LastBuyOpen > 2*testerperiod*60)
 	                 {
 					   buy_open++;
 	                   for(int i=0;i<iTradesTotal;i++)
@@ -807,7 +810,7 @@ double Impuls::testersignal(double Probab,int dstop,int Nstop,int delta,int Nide
 	                     }
 	               prob = engine[idelt].spad[Ncomb][istop] / (engine[idelt].rost[Ncomb][istop]  +
 	                      engine[idelt].spad[Ncomb][istop] + 0.0001);
-	               if(prob > Probab && engine[idelt].nsd[Ncomb][istop] > Nideltstop && Bar - LastSellOpen > 2)
+	               if(prob > Probab && engine[idelt].nsd[Ncomb][istop] > Nideltstop && CurTime - LastSellOpen > 2*testerperiod*60)
 	                 {
 	                   sell_open++;
 	                   for(int i=0; i<iTradesTotal; i++)
@@ -833,20 +836,19 @@ double Impuls::testersignal(double Probab,int dstop,int Nstop,int delta,int Nide
 	         }
 	       engine[idelt].pt=engine[idelt].P[1];
 	     }
-	     if(sell_open>buy_open&&buy_close<=sell_close){sell_open=1;buy_open=0;}
-		  else if(buy_open>sell_open&&sell_close<=buy_close){sell_open=0;buy_open=1;}
-		     else {sell_open=0;buy_open=0;}
+	     if(sell_open>buy_open&&buy_close>=sell_close){sell_open=1;buy_open=0;}else if(buy_open>sell_open&&sell_close>=buy_close){sell_open=0;buy_open=1;}else {sell_open=0;buy_open=0;}
+	     //if(sell_open>buy_open){sell_open=1;buy_open=0;}else if(buy_open>sell_open){sell_open=0;buy_open=1;}else{sell_open=0;buy_open=0;}
 	       if(buy_open == 1)
 	         {
-			   Bar=LastBuyOpen;
-	           sig=(testermetadata->open[testercurbar]-limit*testerpoint);
-			   FDlast_buy=sig;
+			   sig=(testermetadata->open[testercurbar]-limit*testerpoint);
+			   LastBuyOpen=CurTime;
+			   //FDlast_buy=sig;
 	         }else
 	       if(sell_open == 1)
 	         {
-			   Bar=LastSellOpen;
-	           sig=(-(testermetadata->open[testercurbar]+limit*testerpoint));
-			   FDlast_sell=sig*(-1.0);
+			   sig=(-(testermetadata->open[testercurbar]+limit*testerpoint));
+			   LastSellOpen=CurTime;
+			   //FDlast_sell=sig*(-1.0);
 	         }
 	return sig;
 }
@@ -983,8 +985,8 @@ void Impuls::test()
 			lstrcat(buf2,(const char*)csorted[testercuritem].val);
 			lstrcat(buf2," selllimit ");
 			lstrcat(buf2,doubleToStr(csorted[testercuritem].priceopen,csorted[testercuritem].digits));
-			lstrcat(buf2," ");lstrcat(buf2,doubleToStr(csorted[testercuritem].midSELLIMIT,csorted[testercuritem].digits));lstrcat(buf2," tp:");
-			lstrcat(buf2,doubleToStr((csorted[testercuritem].midSELLIMIT-csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
+			lstrcat(buf2," ");lstrcat(buf2,doubleToStr(csorted[testercuritem].highSELLIMIT,csorted[testercuritem].digits));lstrcat(buf2," tp:");
+			lstrcat(buf2,doubleToStr((csorted[testercuritem].highSELLIMIT-csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
 			lstrcat(buf2," pips:");
 			lstrcat(buf2,intToStr((int)((csorted[testercuritem].highSELLIMIT-csorted[testercuritem].lowSELLSTOP)/(1/pow(10,csorted[testercuritem].digits)))));
 			lstrcat(buf2," tg:");
@@ -995,8 +997,8 @@ void Impuls::test()
 			lstrcat(buf2,(const char*)csorted[testercuritem].val);
 			lstrcat(buf2," buylimit ");
 			lstrcat(buf2,doubleToStr(csorted[testercuritem].priceopen,csorted[testercuritem].digits));lstrcat(buf2," ");
-			lstrcat(buf2,doubleToStr(csorted[testercuritem].midBUYLIMIT,csorted[testercuritem].digits));lstrcat(buf2," tp:");
-			lstrcat(buf2,doubleToStr((csorted[testercuritem].midBUYLIMIT+csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
+			lstrcat(buf2,doubleToStr(csorted[testercuritem].lowBUYLIMIT,csorted[testercuritem].digits));lstrcat(buf2," tp:");
+			lstrcat(buf2,doubleToStr((csorted[testercuritem].lowBUYLIMIT+csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
 			lstrcat(buf2," pips:");lstrcat(buf2,intToStr((int)((csorted[testercuritem].highBUYSTOP-csorted[testercuritem].lowBUYLIMIT)/(1/pow(10,csorted[testercuritem].digits)))));lstrcat(buf2," tg:");
 			lstrcat(buf2,intToStr((int)((csorted[testercuritem].targetprofit)/(1/pow(10,csorted[testercuritem].digits)))));lstrcat(buf2,"\r\n");
 		}
