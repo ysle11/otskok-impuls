@@ -47,12 +47,26 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	UpdateWindow(hwnd);
 
 	server = new Server;
-	server->on();
-//	server->otskok(debuging);
-	server->otskok(testing);
-//	server->impuls(testing);
-//	server->impuls(optimizing);
-//	server->otskok(optimizing);
+    if((!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt")))
+	server->on(false);else server->on();
+	if(!strcmp(lpszArgument,"/t15 /debug"))server->otskok(debuging,15);else
+	if(!strcmp(lpszArgument,"/t15 /test")){
+		server->otskok(testing,15);
+		server->impuls(testing,15);
+	}else
+	if(!strcmp(lpszArgument,"/t15 /opt")){
+		server->impuls(optimizing,15);
+		server->otskok(optimizing,15);
+	}else
+	if(!strcmp(lpszArgument,"/t60 /debug"))server->otskok(debuging,60);else
+	if(!strcmp(lpszArgument,"/t60 /test")){
+		server->otskok(testing,60);
+		server->impuls(testing,60);
+	}else
+	if(!strcmp(lpszArgument,"/t60 /opt")){
+		server->impuls(optimizing,60);
+		server->otskok(optimizing,60);
+	}
 
 	while (GetMessage (&messages, NULL, 0, 0))
 	{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);

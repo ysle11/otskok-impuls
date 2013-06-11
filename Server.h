@@ -58,12 +58,12 @@ public:
 	int prevopttime,prevopttime_im;
 
 public:
-	void otskok(int t);
-	void impuls(int t);
+	void otskok(int t,int tperiod);
+	void impuls(int t,int tperiod);
     enum { MAINPAGE = 1, PENDING_ORDERS, PENDING_ORDERS_IM, INPUT, OUTPUT, DONE };
 	void s();
 	Server();
 	~Server();
-	void on();
+	void on(bool up=true);
 };
 #endif

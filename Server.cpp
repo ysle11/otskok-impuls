@@ -212,7 +212,7 @@ Server::~Server(){
 	delete[] this->requests;
 	WSACleanup();
 }
-void  Server::otskok(int t){
+void  Server::otskok(int t,int tperiod){
 //		bool f=false;
 //		if(!f)throw SocketException ( "Could not create Otskok." );
 
@@ -223,20 +223,20 @@ Otskok* otskokobj;
 		//Otskok* otskokobj = (Otskok*)Mmalloc(sizeof(class Otskok));memset(otskokobj,0,sizeof(class Otskok));
 		//memset(otskokobj,0,sizeof(class Otskok));
 		//try{
-			otskokobj->Otskok2(t);//}catch(SocketException &e){throw e;}
+			otskokobj->Otskok2(t,tperiod);//}catch(SocketException &e){throw e;}
 		//
 		delete otskokobj;
 //		mutex=false;this->mutex2=false;
 		}
 }
-void  Server::impuls(int t){
+void  Server::impuls(int t,int tperiod){
 		Impuls* impulsobj;
 		impulsobj=new Impuls;
-		impulsobj->Impuls2(t);
+		impulsobj->Impuls2(t,tperiod);
 		delete impulsobj;
 }
 
-void  Server::on(){
+void  Server::on(bool up){
 
 	//this->mainpage=new uint8_t[16000];//(uint8_t)malloc(16000);
 	memcpy(this->mainpage,"mainpage",8);mainpageSize=8;
@@ -270,16 +270,18 @@ void  Server::on(){
 	u_long u=1;
 	ioctlsocket(sock,FIONBIO,&u);
 
-	int listen_return =::listen(sock, 650);
+	if(up){
+		int listen_return =::listen(sock, 650);
 
-	timersThread = CreateThread(NULL,0,TimersThreadProc,0,0,0);
-	if(timersThread==NULL)wlog("# timersThread error\r\n");
-	  else wlog("# timersThread created\r\n");
-    timersDataTransfer = CreateThread(NULL,0,DataTransfer,0,0,0);
-	if(timersDataTransfer==NULL)wlog("# timersDataTransfer error\r\n");
-	  else wlog("# timersDataTransfer created\r\n");
-	  ResumeThread(timersThread);
-	  ResumeThread(timersDataTransfer);
+		timersThread = CreateThread(NULL,0,TimersThreadProc,0,0,0);
+		if(timersThread==NULL)wlog("# timersThread error\r\n");
+		  else wlog("# timersThread created\r\n");
+	    timersDataTransfer = CreateThread(NULL,0,DataTransfer,0,0,0);
+		if(timersDataTransfer==NULL)wlog("# timersDataTransfer error\r\n");
+		  else wlog("# timersDataTransfer created\r\n");
+		  ResumeThread(timersThread);
+		  ResumeThread(timersDataTransfer);
+	}
 
 }
 

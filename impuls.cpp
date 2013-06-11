@@ -23,8 +23,9 @@ extern HWND hwnd,hlog,hpro,hper,hcmd;
 Impuls::Impuls(){}
 Impuls::~Impuls(){}
 
-void Impuls::Impuls2(int t)
+void Impuls::Impuls2(int t,int tperiod)
 {
+testerperiod=tperiod;
 if(t==testing){mode=testing;test();}
 if(t==optimizing){mode=optimizing;optimize();}
 
@@ -464,7 +465,7 @@ void Impuls::testerinit()
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
     lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Demo\\");
-    testerperiod=15;
+//    testerperiod=15;
     testercuritem=0;
     testercntper=8000;testercntpervoid=testercntper;
     testerconsolidationbars=2;
@@ -693,7 +694,7 @@ void Impuls::testercloseall(int a=0){
 	}
 }
 void Impuls::testercontrol(){
-	int o,d=0;
+	int o,d;
 	tm tm3; tm tm4;
 	memset(&tm3,0,sizeof(tm));
 	memset(&tm4,0,sizeof(tm));
@@ -703,6 +704,7 @@ void Impuls::testercontrol(){
 		time_t ttime1=curOrderOpenTime;tm3=*gmtime(&ttime1);
 		time_t ttime2=curOrderCloseTime;if(curOrderCloseTime<0)ttime2=curOrderOpenTime;
 		tm4=*gmtime(&ttime2);
+		d=0;
 		if(tm3.tm_wday>tm4.tm_wday)d=172800;
 		if((int)((int)testercurdatetime-(int)curOrderOpenTime-d)>testerdtime)//3599*24
 		{
@@ -983,10 +985,12 @@ void Impuls::test()
 		if(c1>c2&&c1>0){
 			lstrcat(buf2,gmtimeToStr(csorted[testercuritem].datetime));
 			lstrcat(buf2,(const char*)csorted[testercuritem].val);
-			lstrcat(buf2," selllimit ");
+//			lstrcat(buf2," selllimit ");
+			lstrcat(buf2," buystop ");
 			lstrcat(buf2,doubleToStr(csorted[testercuritem].priceopen,csorted[testercuritem].digits));
 			lstrcat(buf2," ");lstrcat(buf2,doubleToStr(csorted[testercuritem].highSELLIMIT,csorted[testercuritem].digits));lstrcat(buf2," tp:");
-			lstrcat(buf2,doubleToStr((csorted[testercuritem].highSELLIMIT-csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
+//			lstrcat(buf2,doubleToStr((csorted[testercuritem].highSELLIMIT-csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
+			lstrcat(buf2,doubleToStr((csorted[testercuritem].highSELLIMIT+csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
 			lstrcat(buf2," pips:");
 			lstrcat(buf2,intToStr((int)((csorted[testercuritem].highSELLIMIT-csorted[testercuritem].lowSELLSTOP)/(1/pow(10,csorted[testercuritem].digits)))));
 			lstrcat(buf2," tg:");
@@ -995,10 +999,12 @@ void Impuls::test()
 		if(c1<c2&&c2>0){
 			lstrcat(buf2,gmtimeToStr(csorted[testercuritem].datetime));
 			lstrcat(buf2,(const char*)csorted[testercuritem].val);
-			lstrcat(buf2," buylimit ");
+//			lstrcat(buf2," buylimit ");
+			lstrcat(buf2," sellstop ");
 			lstrcat(buf2,doubleToStr(csorted[testercuritem].priceopen,csorted[testercuritem].digits));lstrcat(buf2," ");
 			lstrcat(buf2,doubleToStr(csorted[testercuritem].lowBUYLIMIT,csorted[testercuritem].digits));lstrcat(buf2," tp:");
-			lstrcat(buf2,doubleToStr((csorted[testercuritem].lowBUYLIMIT+csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
+//			lstrcat(buf2,doubleToStr((csorted[testercuritem].lowBUYLIMIT+csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
+			lstrcat(buf2,doubleToStr((csorted[testercuritem].lowBUYLIMIT-csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
 			lstrcat(buf2," pips:");lstrcat(buf2,intToStr((int)((csorted[testercuritem].highBUYSTOP-csorted[testercuritem].lowBUYLIMIT)/(1/pow(10,csorted[testercuritem].digits)))));lstrcat(buf2," tg:");
 			lstrcat(buf2,intToStr((int)((csorted[testercuritem].targetprofit)/(1/pow(10,csorted[testercuritem].digits)))));lstrcat(buf2,"\r\n");
 		}
@@ -1039,7 +1045,7 @@ void Impuls::optimize(){
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
 
-	double p[]={0.8,55.0,3.0,2.0,21.0,5.0,11.0,1.05};
+	double p[]={0.8,35.0,2.0,3.0,21.0,7.0,11.0,1.05};
 	double oprofitcnt,oordercnt,oprofitindex,odrawdowncnt;
 	double profitcnt2=0.0,ordercnt2=0.0,profitindex2=0.0,drawdowncnt2=0.0;
 	int p2[8];int res1=0,mincnt,sorl,sorli;
@@ -1074,7 +1080,7 @@ void Impuls::optimize(){
 				profitcnt2=0;ordercnt2=0;profitindex2=0;drawdowncnt2=0;res1=0;
 				profitcnt2=0.0;ordercnt2=0.0;profitindex2=0.0;drawdowncnt2=0.0;
 				int i=0,ix=0;mincnt=testermincnttrades;//p[0]=0.92;
-				while(i<5){
+				while(i<9){
 					journalsinit(true);
 					int o=testertest(p[0],(int)p[1],(int)p[2],(int)p[3],(int)p[4],(int)p[5],(int)p[6],p[7],ls*18);
 					if(o!=-1){

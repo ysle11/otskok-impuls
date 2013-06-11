@@ -22,8 +22,9 @@ extern HWND hwnd,hlog,hpro,hper,hcmd;
 Otskok::Otskok(){}
 Otskok::~Otskok(){}
 
-void Otskok::Otskok2(int t)
+void Otskok::Otskok2(int t,int tperiod)
 {
+    testerperiod=tperiod;
 	if(t==testing){mode=testing;test();}
 	if(t==optimizing){mode=optimizing;optimize();}
 	if(t==debuging){mode=debuging;debug();}
@@ -477,7 +478,7 @@ void Otskok::testerinit()
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
     lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Demo\\");
-    testerperiod=15;
+    //testerperiod=15;
     testercuritem=0;
     testercntper=5500;testercntpervoid=testercntper;
     testerconsolidationbars=7;

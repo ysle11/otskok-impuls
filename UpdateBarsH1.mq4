@@ -1,7 +1,7 @@
 string mode;
 string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF","EURGBP","USDSGD"};
 int i,i1,i2,i3;
-int tfs[]={PERIOD_H1};//,PERIOD_H1,PERIOD_H4
+int tfs[]={PERIOD_M15};//,PERIOD_H1,PERIOD_H4
 color clr;
 bool fresh=true,allfresh=true;
 datetime servertime,tc;
@@ -29,7 +29,7 @@ int start()
    y=0;
    for(i=0;i<ArraySize(sms);i++)
    {
-      y+=10;x=300;
+      y+=10;x=100;
       for(i1=0;i1<ArraySize(tfs);i1++)
       { 
       mode=""+sms[i]+DoubleToStr(tfs[i1],0); 
@@ -61,8 +61,6 @@ int start()
                ObjectSetText(mode,""+StringSubstr(t1,5) +"   "+iBars(sms[i],tfs[i1]), 8, "Arial Narrow", clr);
             }
          }   
-      for(i=0;i<ArraySize(sms);i++)if(maxticktime<MarketInfo( ""+sms[i], MODE_TIME))maxticktime=MarketInfo( ""+sms[i], MODE_TIME);
-      ObjectSetText("MODE_TIME",TimeToStr(maxticktime,TIME_DATE|TIME_SECONDS)+"  H1", 8, "Arial Narrow", White);
          WindowRedraw();if(IsStopped())return(0);Sleep(100);i3++;if(i3>30){i3=0;RefreshRates();}
    }
    return(0);
