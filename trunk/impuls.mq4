@@ -155,12 +155,17 @@ int start()
            pips[ix]=s3[7];
            tg[ix]=s3[8];
  
-      string mode=val[ix];int oplimit=OP_SELLLIMIT;color clr=Red;if(op[ix]==" buylimit"){clr=Blue;oplimit=OP_BUYLIMIT;}
+      string mode=val[ix];int oplimit=OP_SELLLIMIT;color clr=Red;double stoploss=0.0,takeprofit=0.0;
+      if(op[ix]==" buylimit"){clr=Blue;oplimit=OP_BUYLIMIT;takeprofit=StrToDouble(tp[ix]);}
+      if(op[ix]==" selllimit"){clr=Red;oplimit=OP_SELLLIMIT;takeprofit=StrToDouble(tp[ix]);}
+      takeprofit=StrToDouble(tp[ix]);
+      if(op[ix]==" buystop"){clr=Blue;oplimit=OP_BUYSTOP;}//stoploss=StrToDouble(priceopen[ix])-MathAbs(StrToDouble(priceopen[ix])-StrToDouble(tp[ix]))*3;}
+      if(op[ix]==" sellstop"){clr=Red;oplimit=OP_SELLSTOP;}//stoploss=StrToDouble(priceopen[ix])+MathAbs(StrToDouble(priceopen[ix])-StrToDouble(tp[ix]))*3;}
       
-//      OrderSend(StringTrimLeft(val[ix]),oplimit,4.1,StrToDouble(priceopen[ix]),3,0,StrToDouble(tp[ix]),"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+3600,CLR_NONE);
       double akb=AccountBalance()/5;if(!IsConnected())akb=10000.0;
-      OrderSend(StringTrimLeft(val[ix]),oplimit,NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1),StrToDouble(priceopen[ix]),3,0,StrToDouble(tp[ix]),"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+3600,CLR_NONE);
-
+            double lots=NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
+      if(lots<0.1)lots=0.1;
+      OrderSend(StringTrimLeft(val[ix]),oplimit,lots,StrToDouble(priceopen[ix]),3,stoploss,takeprofit,"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+900,CLR_NONE);
            WindowRedraw();Sleep(500);
       
       x=100;if(ObjectFind(mode)<0)

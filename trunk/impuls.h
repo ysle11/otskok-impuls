@@ -225,7 +225,7 @@ class Impuls
 	public:
 		Impuls();
 		~Impuls();
-		void Impuls2(int t);
+		void Impuls2(int t,int tperiod);
 };
 
 #endif // IMPULS_H

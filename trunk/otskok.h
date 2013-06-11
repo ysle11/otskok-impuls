@@ -239,7 +239,7 @@ class Otskok
 
 	public:
 		Otskok();
-		void Otskok2(int t);
+		void Otskok2(int t,int tperiod);
 		virtual ~Otskok();
 
 };
