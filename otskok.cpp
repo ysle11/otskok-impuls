@@ -420,6 +420,29 @@ void Otskok::iOrdersControl(){
 void Otskok::testerinit()
 {
     memset(testervals,0,sizeof(testervals));
+//
+	strcpy(&testervals[0][0],"#HPQ");
+	testervalspreads[0]=3;
+	testervalstops[0]=10;
+	strcpy(&testervals[1][0],"#AA");
+	testervalspreads[1]=3;
+	testervalstops[1]=10;
+	strcpy(&testervals[2][0],"#MSFT");
+	testervalspreads[2]=3;
+	testervalstops[2]=10;
+	strcpy(&testervals[3][0],"#YM");
+	testervalspreads[3]=3;
+	testervalstops[3]=5;
+	strcpy(&testervals[4][0],"#EP");
+	testervalspreads[4]=25;
+	testervalstops[4]=5;
+	strcpy(&testervals[5][0],"#ENQ");
+	testervalspreads[5]=50;
+	testervalstops[5]=5;
+    testervalcnt=6;
+
+//
+/*
 	strcpy(&testervals[0][0],"EURUSD");
 	testervalspreads[0]=1;
 	testervalstops[0]=10;
@@ -460,6 +483,8 @@ void Otskok::testerinit()
 	testervalspreads[12]=5;
 	testervalstops[12]=10;
     testervalcnt=13;
+*/
+    
     memset(testersmas,0,sizeof(testersmas));
     strcpy(&testersmas[0][0],"atr");
     strcpy(&testersmas[1][0],"demarker");
@@ -477,7 +502,7 @@ void Otskok::testerinit()
     testerfxok=false;
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
-    lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Demo\\");
+    lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Real\\");
     //testerperiod=15;
     testercuritem=0;
     testercntper=5500;testercntpervoid=testercntper;
