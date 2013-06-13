@@ -423,7 +423,7 @@ void Impuls::testerinit()
 {
     memset(testervals,0,sizeof(testervals));
 //
-	strcpy(&testervals[0][0],"#HPQ");
+/*	strcpy(&testervals[0][0],"#HPQ");
 	testervalspreads[0]=3;
 	testervalstops[0]=10;
 	strcpy(&testervals[1][0],"#AA");
@@ -442,9 +442,8 @@ void Impuls::testerinit()
 	testervalspreads[5]=50;
 	testervalstops[5]=5;
     testervalcnt=6;
-
+*/
 //
-/*
 	strcpy(&testervals[0][0],"EURUSD");
 	testervalspreads[0]=1;
 	testervalstops[0]=10;
@@ -478,17 +477,17 @@ void Impuls::testerinit()
 	strcpy(&testervals[10][0],"EURJPY");
 	testervalspreads[10]=3;
 	testervalstops[10]=10;
-	strcpy(&testervals[11][0],"EURGBP");
+/*	strcpy(&testervals[11][0],"EURGBP");
 	testervalspreads[11]=2;
 	testervalstops[11]=10;
 	strcpy(&testervals[12][0],"USDSGD");
 	testervalspreads[12]=5;
-	testervalstops[12]=10;
-    testervalcnt=13;
-*/
+	testervalstops[12]=10;*/
+    testervalcnt=11;
+
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
-    lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Real\\");
+    lstrcat(testerpath,"history\\MMCIS-Demo\\");
 //    testerperiod=15;
     testercuritem=0;
     testercntper=8000;testercntpervoid=testercntper;
@@ -1069,7 +1068,7 @@ void Impuls::optimize(){
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
 
-	double p[]={0.8,35.0,2.0,3.0,21.0,7.0,11.0,1.05};
+	double p[]={0.8,35.0,3.0,2.0,21.0,7.0,11.0,1.05};
 	double oprofitcnt,oordercnt,oprofitindex,odrawdowncnt;
 	double profitcnt2=0.0,ordercnt2=0.0,profitindex2=0.0,drawdowncnt2=0.0;
 	int p2[8];int res1=0,mincnt,sorl,sorli;

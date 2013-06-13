@@ -7,7 +7,7 @@
 #import*/
 
 string mode;
-string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF","EURGBP","USDSGD"};
+string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF"};//,"EURGBP","USDSGD"};
 //string sms[]={"#HPQ","#AA","#MSFT","#YM","#EP","#ENQ"};
 int i,i1,i2,i3;
 int tfs[]={PERIOD_M15};//,PERIOD_H1,PERIOD_H4

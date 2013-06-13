@@ -163,10 +163,12 @@ int start()
       if(op[ix]==" sellstop"){clr=Red;oplimit=OP_SELLSTOP;}//stoploss=StrToDouble(priceopen[ix])+MathAbs(StrToDouble(priceopen[ix])-StrToDouble(tp[ix]))*3;}
       
       double akb=AccountFreeMargin()/5;if(!IsConnected())akb=10000.0;
-      double lots=NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
+      double lots;
+      if(IsDemo())lots=NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
       if(lots<0.1)lots=0.1;
+      if(!IsDemo())lots=0.01;
       
-      OrderSend(StringTrimLeft(val[ix]),oplimit,lots,StrToDouble(priceopen[ix]),3,stoploss,takeprofit,"otskok",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+1800,CLR_NONE);
+      OrderSend(StringTrimLeft(val[ix]),oplimit,lots,StrToDouble(priceopen[ix]),3,stoploss,takeprofit,"otskok",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+7200,CLR_NONE);
            WindowRedraw();Sleep(500);
       
       x=100;if(ObjectFind(mode)<0)
