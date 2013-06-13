@@ -498,7 +498,21 @@ void Otskok::testerinit()
     strcpy(&testersmas[9][0],"lwma");
     strcpy(&testersmas[10][0],"volumesma");
     strcpy(&testersmas[11][0],"rvi");
-    testersmacnt=12;
+    strcpy(&testersmas[12][0],"adx");
+    strcpy(&testersmas[13][0],"atr");
+    strcpy(&testersmas[14][0],"demarker");
+    strcpy(&testersmas[15][0],"atr");
+    strcpy(&testersmas[16][0],"stochastic");
+    strcpy(&testersmas[17][0],"adx");
+    strcpy(&testersmas[18][0],"gma");
+    strcpy(&testersmas[19][0],"stochastic");//sinema");
+    strcpy(&testersmas[20][0],"demarker");//zerolagema");
+    strcpy(&testersmas[21][0],"lssma");
+    strcpy(&testersmas[22][0],"lwma");
+    strcpy(&testersmas[23][0],"volumesma");
+    strcpy(&testersmas[24][0],"rvi");
+    strcpy(&testersmas[25][0],"adx");
+    testersmacnt=26;
     testerfxok=false;
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
@@ -507,8 +521,8 @@ void Otskok::testerinit()
     testercuritem=0;
     testercntper=5000;testercntpervoid=testercntper;
     testerconsolidationbars=17;
-    testerdtime=86376;//*10
-	testerltime=403088;//*10
+    testerdtime=86376;if(testerperiod==1440&&mode==optimizing)testerdtime*=10;
+	testerltime=403088;if(testerperiod==1440&&mode==optimizing)testerltime*=10;
 	testerquant=3;
 	testerisoptimize=false;
 //	testerqfcount=5;
@@ -839,6 +853,20 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 		case 9:sig=ilwma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
 		case 10:sig=ivolumesma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
 		case 11:sig=irvi(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 12:sig=iadx(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 13:sig=iatr(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 14:sig=idemarker(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 15:sig=iatr(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 16:sig=istochastic(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 17:sig=iadx(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 18:sig=igma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 19:sig=istochastic(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;//isinema
+		case 20:sig=idemarker(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;//izerolagema
+		case 21:sig=ilssma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 22:sig=ilwma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 23:sig=ivolumesma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 24:sig=irvi(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 25:sig=iadx(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
 		default:sig=0.0;break;
 	}
 	return sig;
@@ -1708,8 +1736,8 @@ void Otskok::optimize(){
 	
 	//if(config->optfx)wlog("(optcurfx)\r\n");else wlog("(newfx)\r\n");
 	//testerusefx();
-//	int p[]={222,222,222,222,222,222,2,1};
-    int p[]={122,122,122,122,122,122,2,1};
+	int p[]={222,222,222,222,222,222,2,1};
+//    int p[]={122,122,122,122,122,122,2,1};
 	double oprofitcnt,oordercnt,oprofitindex,odrawdowncnt;
 	double profitcnt2=0.0,ordercnt2=0.0,profitindex2=0.0,drawdowncnt2=0.0;
 	int p2[8];int res1=0,mincnt,sorl,sorli;
