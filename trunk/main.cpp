@@ -47,8 +47,17 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	UpdateWindow(hwnd);
 
 	server = new Server;
-    if((!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt")))
+    if((!strcmp(lpszArgument,"/t5 /opt"))||(!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt")))
 	server->on(false);else server->on();
+	if(!strcmp(lpszArgument,"/t5 /debug"))server->otskok(debuging,5);else
+	if(!strcmp(lpszArgument,"/t5 /test")){
+		server->otskok(testing,5);
+		server->impuls(testing,5);
+	}else
+	if(!strcmp(lpszArgument,"/t5 /opt")){
+		server->impuls(optimizing,5);
+		server->otskok(optimizing,5);
+	}else
 	if(!strcmp(lpszArgument,"/t15 /debug"))server->otskok(debuging,15);else
 	if(!strcmp(lpszArgument,"/t15 /test")){
 		server->otskok(testing,15);
@@ -66,6 +75,15 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	if(!strcmp(lpszArgument,"/t60 /opt")){
 		server->impuls(optimizing,60);
 		server->otskok(optimizing,60);
+	}else
+	if(!strcmp(lpszArgument,"/t1440 /debug"))server->otskok(debuging,1440);else
+	if(!strcmp(lpszArgument,"/t1440 /test")){
+		server->otskok(testing,1440);
+//		server->impuls(testing,1440);
+	}else
+	if(!strcmp(lpszArgument,"/t1440 /opt")){
+//		server->impuls(optimizing,60);
+		server->otskok(optimizing,1440);
 	}
 
 	while (GetMessage (&messages, NULL, 0, 0))

@@ -1,8 +1,8 @@
 string mode;
-string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF"};//,,"EURGBP","USDSGD"};
+string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF"};
 //string sms[]={"#HPQ","#AA","#MSFT","#YM","#EP","#ENQ"};
 int i,i1,i2,i3;
-int tfs[]={PERIOD_H1};//,PERIOD_H1,PERIOD_H4
+int tfs[]={PERIOD_D1};//,PERIOD_H1,PERIOD_H4
 color clr;
 bool fresh=true,allfresh=true;
 datetime servertime,tc;

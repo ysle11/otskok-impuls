@@ -165,6 +165,7 @@ int start()
       double akb=AccountFreeMargin()/5;if(!IsConnected())akb=10000.0;
             double lots=NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
       if(lots<0.1)lots=0.1;
+      if(!IsDemo())lots=0.01;
       OrderSend(StringTrimLeft(val[ix]),oplimit,lots,StrToDouble(priceopen[ix]),3,stoploss,takeprofit,"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+1800,CLR_NONE);
            WindowRedraw();Sleep(500);
       

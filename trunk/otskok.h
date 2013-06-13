@@ -215,11 +215,13 @@ class Otskok
 		double highSELLIMIT;
 		double midSELLIMIT;
 		int cntSELLIMIT;
+		double highSELLSTOP;
 		double lowSELLSTOP;
 		double midSELLSTOP;
 		int cntSELLSTOP;
 		double highBUYSTOP;
 		double midBUYSTOP;
+		double lowBUYSTOP;
 		int cntBUYSTOP;
 		double lowBUYLIMIT;
 		double midBUYLIMIT;
