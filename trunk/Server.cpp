@@ -230,10 +230,10 @@ Otskok* otskokobj;
 		}
 }
 void  Server::impuls(int t,int tperiod){
-		Impuls* impulsobj;
+	/*	Impuls* impulsobj;
 		impulsobj=new Impuls;
 		impulsobj->Impuls2(t,tperiod);
-		delete impulsobj;
+		delete impulsobj;*/
 }
 
 void  Server::on(bool up){

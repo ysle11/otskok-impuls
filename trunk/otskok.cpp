@@ -517,6 +517,7 @@ void Otskok::testerinit()
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
     lstrcat(testerpath,"history\\MMCIS-Demo\\");
+//    lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Demo\\");
     //testerperiod=15;
     testercuritem=0;
     testercntper=5000;testercntpervoid=testercntper;
@@ -714,18 +715,18 @@ void Otskok::testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2
 		if (testerNewBar(OP_BUYLIMIT))
 		if (testerquant_())
 		{
+			//sig+=testerpoint*(d2%3)*10*testerdistance;
 			testercloseall(2);SL=0;TP=sig+testertargetprofit;//*3
-			if(limit<0)OrderSend(OP_BUYSTOP, sig,SL,TP);else
-			if(limit>0)OrderSend(OP_BUYLIMIT,sig,SL,TP);
+			OrderSend(OP_BUYSTOP, sig,SL,TP);
 		}
 		if (sig<0.0)
 		if (testerNewBar(OP_SELLLIMIT))
 		if (testerquant_())
 		{
 			sig*=-1.0;
+			//sig-=testerpoint*(d3%3)*10*testerdistance;
 			testercloseall(1);SL=0;TP=sig-testertargetprofit;//*3
-			if(limit<0)OrderSend(OP_SELLSTOP, sig,SL,TP);else
-			if(limit>0)OrderSend(OP_SELLLIMIT,sig,SL,TP);
+			OrderSend(OP_SELLSTOP, sig,SL,TP);
 		}
 	}
 }
@@ -741,24 +742,8 @@ bool Otskok::testerquant_(){
 		if((curOrderType==OP_SELL)||(curOrderType==OP_BUY))
 			r++;
 	}
-	int h=0,r2=0;
-	if(testerisoptimize){
-		int o=iHistoryTotal-1;bool f=true;
-		while(o>=0&&f){
-			OrderSelect(o, MODE_HISTORY);
-			tm1=*gmtime((const time_t*)curOrderOpenTime);
-			//if(StrToTime(TimeToStr(journals->OrderOpenTime(),TIME_DATE))==iTime(sm,PERIOD_D1,0))
-			if(tm1.tm_year==tm2.tm_year)if(tm1.tm_mon==tm2.tm_mon)if(tm1.tm_mday==tm2.tm_mday){
-				f=true;
-				if((curOrderType==OP_SELL)||(curOrderType==OP_BUY)){
-					h++;
-					if(tm1.tm_hour==tm2.tm_hour)r2++;
-				}
-			}else f=false;
-			o--;
-		}
-	}
-	if(h<testerquant&&r<1&&r2<1)
+
+	if(r<1)
 	return(true);
 	else
 	return(false);
@@ -1681,9 +1666,9 @@ void Otskok::test()
 				lstrcat(buf2," ");lstrcat(buf2,doubleToStr(csorted[testercuritem].midBUYSTOP,csorted[testercuritem].digits));lstrcat(buf2," tp:");
 				lstrcat(buf2,doubleToStr((csorted[testercuritem].midBUYSTOP+csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
 				lstrcat(buf2," pips:");
-				lstrcat(buf2,intToStr((int)((csorted[testercuritem].highBUYSTOP-csorted[testercuritem].lowBUYSTOP)/(pow(0.1,csorted[testercuritem].digits)))));
+				lstrcat(buf2,intToStr((int)((csorted[testercuritem].highBUYSTOP-csorted[testercuritem].lowBUYSTOP)/(1/pow(10,csorted[testercuritem].digits)))));
 				lstrcat(buf2," tg:");
-				lstrcat(buf2,intToStr((int)((csorted[testercuritem].targetprofit)/(pow(0.1,csorted[testercuritem].digits)))));lstrcat(buf2,"\r\n");
+				lstrcat(buf2,intToStr((int)((csorted[testercuritem].targetprofit)/(1/pow(10,csorted[testercuritem].digits)))));lstrcat(buf2,"\r\n");
 			}
 			if(c2>2&&(csorted[testercuritem].highSELLSTOP-csorted[testercuritem].lowSELLSTOP)>csorted[testercuritem].targetprofit){
 				lstrcat(buf2,gmtimeToStr(csorted[testercuritem].datetime));
@@ -1693,9 +1678,9 @@ void Otskok::test()
 				lstrcat(buf2,doubleToStr(csorted[testercuritem].midSELLSTOP,csorted[testercuritem].digits));lstrcat(buf2," tp:");
 				lstrcat(buf2,doubleToStr((csorted[testercuritem].midSELLSTOP-csorted[testercuritem].targetprofit),csorted[testercuritem].digits));
 				lstrcat(buf2," pips:");
-				lstrcat(buf2,intToStr((int)((csorted[testercuritem].highSELLSTOP-csorted[testercuritem].lowSELLSTOP)/(pow(0.1,csorted[testercuritem].digits)))));
+				lstrcat(buf2,intToStr((int)((csorted[testercuritem].highSELLSTOP-csorted[testercuritem].lowSELLSTOP)/(1/pow(10,csorted[testercuritem].digits)))));
 				lstrcat(buf2," tg:");
-				lstrcat(buf2,intToStr((int)((csorted[testercuritem].targetprofit)/(pow(0.1,csorted[testercuritem].digits)))));lstrcat(buf2,"\r\n");
+				lstrcat(buf2,intToStr((int)((csorted[testercuritem].targetprofit)/(1/pow(10,csorted[testercuritem].digits)))));lstrcat(buf2,"\r\n");
 			}
 		}
 		wlog(buf2);
@@ -1781,7 +1766,7 @@ void Otskok::optimize(){
 				bool resfinded=false;
 				int ttl=time(0);
 				testeroptval[sorl].datetimeopt=0;
-				while(i<125){
+				while(i<50){
                     
 					journalsinit();
 					int o=testertest(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7],ls*18);
@@ -1790,7 +1775,7 @@ void Otskok::optimize(){
 						oordercnt=drawdowncnt+profitcnt;
 						oprofitindex=profitcnt/(drawdowncnt+0.001);
 						odrawdowncnt=minprofit;
-						if((oordercnt>testermincnttrades)&&((profitindex2<oprofitindex)||(ordercnt2<oordercnt&&profitindex2<=oprofitindex)))
+						if((oordercnt>testermincnttrades)&&(((ordercnt2-oordercnt)<(ordercnt2/10)&&profitindex2<oprofitindex)||(ordercnt2<oordercnt&&profitindex2<=oprofitindex)))
 						if(profitcnt/(drawdowncnt+0.001)>8.0)
 						if(fabs(sorderscnt-lorderscnt)<(drawdowncnt+profitcnt)/2.0)
 						{
@@ -1894,8 +1879,9 @@ void Otskok::optimize(){
 						}break;
 					}
 					if(res1==0)if(i==49){i=0;ix++;}
+					if(ix>12)i=99999;
 					i++;
-					if((time(0)-ttl)>120)i=150;
+					if((time(0)-ttl)>800)i=99999;
 				}
 				if(!resfinded)lstrcat(tmp,"\r\n");
 				wlog(tmp);
