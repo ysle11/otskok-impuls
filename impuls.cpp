@@ -487,11 +487,12 @@ void Impuls::testerinit()
 
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
-    lstrcat(testerpath,"history\\MMCIS-Demo\\");
+//    lstrcat(testerpath,"history\\MMCIS-Demo\\");
+    lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Demo\\");
 //    testerperiod=15;
     testercuritem=0;
     testercntper=8000;testercntpervoid=testercntper;
-    testerconsolidationbars=2;
+    testerconsolidationbars=17;
     testerdtime=86376;
 	testerltime=403088;
 	testerquant=3;
@@ -1186,7 +1187,7 @@ void Impuls::testersaveimpuls(bool limitstop){
 	 wlog(tmp);
 	 string full_path;
 
- 		 int MAX_SIZE=1000000;
+ 		 int MAX_SIZE=4334188;//3252749;
 	 uint8_t* in_buf; in_buf=(uint8_t*)malloc(MAX_SIZE);
 	 uint8_t* out_buf; out_buf=(uint8_t*)malloc(MAX_SIZE);
 	 size_t out_len=0,in_len1;
@@ -1235,7 +1236,7 @@ void Impuls::testersaveimpuls(bool limitstop){
 void Impuls::testerloadimpuls(bool limitstop){
 	string full_path;
 	testerimpulsok=false;
-	int MAX_SIZE=1000000;
+	int MAX_SIZE=4334188;//3252749;
 	uint8_t* in_buf; in_buf=new uint8_t[MAX_SIZE];
 	size_t out_len=0,in_len;
 

@@ -113,6 +113,8 @@ int start()
   string tp[111];
   string pips[111];
   string tg[111];
+  
+
 
 
   /*int handle;
@@ -155,26 +157,30 @@ int start()
            pips[ix]=s3[7];
            tg[ix]=s3[8];
  
+      double csortedopen,csortedclose,csortedopen1,csortedclose1;
       string mode=val[ix];int oplimit=OP_SELLLIMIT;color clr=Red;double stoploss=0.0,takeprofit=0.0;
       if(op[ix]==" buylimit"){clr=Blue;oplimit=OP_BUYLIMIT;takeprofit=StrToDouble(tp[ix]);}
       if(op[ix]==" selllimit"){clr=Red;oplimit=OP_SELLLIMIT;takeprofit=StrToDouble(tp[ix]);}
       takeprofit=StrToDouble(tp[ix]);
-      if(op[ix]==" buystop"){clr=Blue;oplimit=OP_BUYSTOP;}//stoploss=StrToDouble(priceopen[ix])-MathAbs(StrToDouble(priceopen[ix])-StrToDouble(tp[ix]))*3;}
-      if(op[ix]==" sellstop"){clr=Red;oplimit=OP_SELLSTOP;}//stoploss=StrToDouble(priceopen[ix])+MathAbs(StrToDouble(priceopen[ix])-StrToDouble(tp[ix]))*3;}
-      
-      double akb=AccountFreeMargin()/1.06;if(!IsConnected())akb=10000.0;
+      if(op[ix]==" buystop"){clr=Blue;oplimit=OP_BUYLIMIT;csortedopen=iOpen(StringTrimLeft(val[ix]),PERIOD_D1,0)-MarketInfo(StringTrimLeft(val[ix]),MODE_POINT)*20;csortedclose=csortedopen+MathAbs(csortedopen-StrToDouble(tp[ix]))/2;}
+      if(op[ix]==" sellstop"){clr=Red;oplimit=OP_SELLLIMIT;csortedopen=iOpen(StringTrimLeft(val[ix]),PERIOD_D1,0)+MarketInfo(StringTrimLeft(val[ix]),MODE_POINT)*20;csortedclose=csortedopen-MathAbs(csortedopen-StrToDouble(tp[ix]))/2;}
+
+      csortedopen1=csortedopen-MarketInfo(StringTrimLeft(val[ix]),MODE_POINT);csortedclose1=csortedclose-MarketInfo(StringTrimLeft(val[ix]),MODE_POINT);
       double lots;
-      if(IsDemo())lots=NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
-      if(lots<0.1)lots=0.1;
-      if(!IsDemo())lots=0.01;
-      
-      closeall(StringTrimLeft(val[ix]),oplimit);
-      OrderSend(StringTrimLeft(val[ix]),oplimit,lots,StrToDouble(priceopen[ix]),3,stoploss,takeprofit,"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+7200,CLR_NONE);
-           WindowRedraw();Sleep(250);
-      
+      while(IsTradeContextBusy())Sleep(100);
+         lots=NormalizeDouble(MathAbs(AccountBalance()/1.04/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
+         if(lots<0.1)lots=0.1;if(!IsDemo())lots=0.01;      
+         closeall(StringTrimLeft(val[ix]),oplimit);
+         OrderSend(StringTrimLeft(val[ix]),oplimit,lots,csortedopen,3,0,csortedclose,"otskok",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000,CLR_NONE);
+      /*while(IsTradeContextBusy())Sleep(100);
+         lots=NormalizeDouble(MathAbs(AccountBalance()*0.2/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
+         if(lots<0.1)lots=0.1;if(!IsDemo())lots=0.01;      
+         closeall(StringTrimLeft(val[ix]),oplimit);
+         OrderSend(StringTrimLeft(val[ix]),oplimit,lots,csortedopen1,3,0,csortedclose1,"otskok",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000,CLR_NONE);
+      */
       x=100;if(ObjectFind(mode)<0)
       ObjectCreate(mode, OBJ_LABEL, 0,0,0);ObjectSet(mode, OBJPROP_CORNER, 0);ObjectSet(mode, OBJPROP_XDISTANCE, x);ObjectSet(mode, OBJPROP_YDISTANCE, y);
-      ObjectSetText(mode,StringConcatenate(val[ix],priceopen[ix]," tp:",tp[ix],pips[ix],tg[ix]), 8, "Arial Narrow", clr);//,op[ix],priceopencurbar[ix]
+      ObjectSetText(mode,StringConcatenate(val[ix]," ",csortedopen," tp:",csortedclose,pips[ix],tg[ix]), 8, "Arial Narrow", clr);//,op[ix],priceopencurbar[ix]
 
       mode=""+mode+"datetime";clr=Black;if(prevvaldate!=date[ix])clr=White;prevvaldate=date[ix];
       x=10;if(ObjectFind(mode)<0)
@@ -182,8 +188,9 @@ int start()
       ObjectSetText(mode,date[ix], 8, "Arial Narrow", clr);
 
       y+=12;            
-         Print(StringConcatenate(date[ix],val[ix],op[ix],priceopencurbar[ix],priceopen[ix],tp[ix],pips[ix],tg[ix]));
+         Print(StringConcatenate(date[ix],val[ix],op[ix],priceopencurbar[ix]," ",csortedopen," tp:",csortedclose,pips[ix],tg[ix]));
          ix++;
+      WindowRedraw();Sleep(250);
       }
       else {
          ObjectCreate("error", OBJ_LABEL, 0,0,0);ObjectSet("error", OBJPROP_CORNER, 0);ObjectSet("error", OBJPROP_XDISTANCE, 8);ObjectSet("error", OBJPROP_YDISTANCE, 8);
@@ -198,7 +205,7 @@ void closeall(string sm,int a=999){
    if(a==OP_BUYSTOP||a==OP_BUYLIMIT){
     for(o=OrdersTotal()-1;o>=0;o--){
       OrderSelect(o, SELECT_BY_POS, MODE_TRADES);
-      if(OrderSymbol()==sm&&OrderComment()=="impuls"){
+      if(OrderSymbol()==sm&&OrderComment()=="otskok"){
        if(OrderType()==OP_BUYSTOP){OrderDelete(OrderTicket());continue;}
        if(OrderType()==OP_BUYLIMIT){OrderDelete(OrderTicket());continue;}
       }
@@ -207,7 +214,7 @@ void closeall(string sm,int a=999){
    if(a==OP_SELLSTOP||a==OP_SELLLIMIT){
     for(o=OrdersTotal()-1;o>=0;o--){
       OrderSelect(o, SELECT_BY_POS, MODE_TRADES);
-      if(OrderSymbol()==sm&&OrderComment()=="impuls"){
+      if(OrderSymbol()==sm&&OrderComment()=="otskok"){
        if(OrderType()==OP_SELLSTOP){OrderDelete(OrderTicket());continue;}
        if(OrderType()==OP_SELLLIMIT){OrderDelete(OrderTicket());continue;}
       }

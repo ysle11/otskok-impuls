@@ -76,12 +76,12 @@ class Impuls
 /* TODO (root#1#): Tester */
 	struct Engine{
 		    int sr[32];
-		    int sd[4096][3];
-		    int nsd[4096][3];
-		    int LastSd[4096][3];
-		 double cen[4096][3];
-		 double rost[4096][3];
-		 double spad[4096][3];
+		    int sd[4096][4];
+		    int nsd[4096][4];
+		    int LastSd[4096][4];
+		 double cen[4096][4];
+		 double rost[4096][4];
+		 double spad[4096][4];
 		 double P[32];
 		 double pt;
 		    int delt;

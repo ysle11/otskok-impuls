@@ -12,22 +12,22 @@ ResourceIncludes=C:\Dev-Cpp\include
 MakeIncludes=
 Compiler=_@@_
 CppCompiler=_@@_
-Linker=../../MinGW/lib/libwsock32.a_@@_../lib/liblzma.a_@@__@@_
+Linker=../../MinGW/lib/libwsock32.a_@@_../lib/liblzma.a_@@_../lib/libcomctl32.a_@@_
 IsCpp=1
 Icon=patterns.ico
 ExeOutput=
 ObjectOutput=
 OverrideOutput=0
-OverrideOutputName=patterns_test.exe
+OverrideOutputName=patterns.exe
 HostApplication=
 Folders=
-CommandLine=
+CommandLine=/t60 /opt
 UseCustomMakefile=0
 CustomMakefile=Makefile.win
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000001000000001000000
+CompilerSettings=0000001000000000000000
 
 [Unit1]
 FileName=main.cpp
