@@ -228,9 +228,11 @@ class Otskok
 		int cntBUYLIMIT;
 		double lowSELL;
 		double midSELL;
+		double midSELLdrawdown;
 		int cntSELL;
 		double lowBUY;
 		double midBUY;
+		double midBUYdrawdown;
 		int cntBUY;
 	};
 	consolidatesorted* csorted;
