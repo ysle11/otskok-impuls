@@ -274,13 +274,13 @@ void  Server::on(bool up){
 		int listen_return =::listen(sock, 650);
 
 		timersThread = CreateThread(NULL,0,TimersThreadProc,0,0,0);
-		if(timersThread==NULL)wlog("# timersThread error\r\n");
-		  else wlog("# timersThread created\r\n");
+  //		if(timersThread==NULL)wlog("# timersThread error\r\n");
+  //		  else wlog("# timersThread created\r\n");
 	    timersDataTransfer = CreateThread(NULL,0,DataTransfer,0,0,0);
-		if(timersDataTransfer==NULL)wlog("# timersDataTransfer error\r\n");
-		  else wlog("# timersDataTransfer created\r\n");
-		  ResumeThread(timersThread);
-		  ResumeThread(timersDataTransfer);
+  //		if(timersDataTransfer==NULL)wlog("# timersDataTransfer error\r\n");
+  //		  else wlog("# timersDataTransfer created\r\n");
+//		  ResumeThread(timersThread);
+//		  ResumeThread(timersDataTransfer);
 	}
 
 }

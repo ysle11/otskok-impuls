@@ -7,12 +7,12 @@ WINDRES = windres.exe
 RES  = patterns_private.res
 OBJ  = main.o Server.o otskok.o impuls.o $(RES)
 LINKOBJ  = main.o Server.o otskok.o impuls.o $(RES)
-LIBS =  -L"F:/Dev-Cpp/lib" -L"C:/Dev-Cpp/include" -mwindows ../../MinGW/lib/libwsock32.a ../lib/liblzma.a ../lib/libcomctl32.a  -g3 
+LIBS =  -L"F:/Dev-Cpp/lib" -L"C:/Dev-Cpp/include" -L"F:/Dev-Cpp/patterns" -mwindows ../../MinGW/lib/libwsock32.a ../lib/liblzma.a   -g3 
 INCS =  -I"F:/Dev-Cpp/include"  -I"F:/Dev-Cpp/patterns" 
 CXXINCS =  -I"F:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"F:/Dev-Cpp/include/c++/3.4.2/backward"  -I"F:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"F:/Dev-Cpp/include/c++/3.4.2"  -I"F:/Dev-Cpp/include"  -I"F:/Dev-Cpp/patterns" 
 BIN  = patterns.exe
 CXXFLAGS = $(CXXINCS)    -fexceptions -g3
-CFLAGS = $(INCS)    -fexceptions -g3
+CFLAGS = $(INCS)   -fexceptions -g3
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
@@ -39,4 +39,4 @@ impuls.o: impuls.cpp
 	$(CPP) -c impuls.cpp -o impuls.o $(CXXFLAGS)
 
 patterns_private.res: patterns_private.rc 
-	$(WINDRES) -i patterns_private.rc --input-format=rc -o patterns_private.res -O coff 
+	$(WINDRES) -i patterns_private.rc --input-format=rc -o patterns_private.res -O coff  --include-dir F:/Dev-Cpp/patterns

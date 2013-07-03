@@ -155,21 +155,20 @@ int start()
            pips[ix]=s3[7];
            tg[ix]=s3[8];
  
-      string mode=val[ix];int oplimit=OP_SELLLIMIT;color clr=Red;double stoploss=0.0,takeprofit=0.0;
-      if(op[ix]==" buylimit"){clr=Blue;oplimit=OP_BUYLIMIT;takeprofit=StrToDouble(tp[ix]);}
-      if(op[ix]==" selllimit"){clr=Red;oplimit=OP_SELLLIMIT;takeprofit=StrToDouble(tp[ix]);}
-      takeprofit=StrToDouble(tp[ix]);
-      if(op[ix]==" buystop"){clr=Blue;oplimit=OP_BUYSTOP;}//stoploss=StrToDouble(priceopen[ix])-MathAbs(StrToDouble(priceopen[ix])-StrToDouble(tp[ix]))*3;}
-      if(op[ix]==" sellstop"){clr=Red;oplimit=OP_SELLSTOP;}//stoploss=StrToDouble(priceopen[ix])+MathAbs(StrToDouble(priceopen[ix])-StrToDouble(tp[ix]))*3;}
+      string mode=val[ix];int oplimit=999;color clr=Red;
+      double takeprofit=StrToDouble(tp[ix]);
+      if(op[ix]==" buystop"){clr=Blue;oplimit=OP_BUYSTOP;}
+      if(op[ix]==" sellstop"){clr=Red;oplimit=OP_SELLSTOP;}
       
-      double akb=AccountFreeMargin()/1.06;if(!IsConnected())akb=10000.0;
+      double akb=AccountFreeMargin()/1.5;if(!IsConnected())akb=10000.0;
       double lots;
       if(IsDemo())lots=NormalizeDouble(MathAbs((akb-300)/MarketInfo(StringTrimLeft(val[ix]),MODE_MARGINREQUIRED)),1);
       if(lots<0.1)lots=0.1;
       if(!IsDemo())lots=0.01;
       
-      closeall(StringTrimLeft(val[ix]),oplimit);
-      OrderSend(StringTrimLeft(val[ix]),oplimit,lots,StrToDouble(priceopen[ix]),3,stoploss,takeprofit,"impuls",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+7200,CLR_NONE);
+      //closeall(StringTrimLeft(val[ix]),oplimit);
+      //OrderSend(StringTrimLeft(val[ix]),oplimit,lots,StrToDouble(priceopen[ix]),3,0,takeprofit,"",0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+7200,CLR_NONE);
+      opens(StringTrimLeft(val[ix]),oplimit,takeprofit);
            WindowRedraw();Sleep(250);
       
       x=100;if(ObjectFind(mode)<0)
@@ -193,6 +192,30 @@ int start()
    return(0);
   }
 //+------------------------------------------------------------------+
+void opens(string sm,int OP,double tp){
+   int Op_step=MarketInfo(sm,MODE_STOPLEVEL);
+   int count=MathFloor(MathAbs(MarketInfo(sm,MODE_ASK)-tp)/MarketInfo(sm,MODE_POINT)/Op_step)-2;if(count>6)count=6;else if(count<7)count/=1.33;
+   double initlot=(AccountFreeMargin( )/1.33)/ MarketInfo(sm,MODE_MARGINREQUIRED);initlot=initlot-MarketInfo(sm,MODE_LOTSTEP)*2;
+//   if(OP==OP_BUYSTOP)OrderSend(sm,OP_BUY,NormalizeDouble(initlot,1),NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS)),3,0,tp);
+//   if(OP==OP_SELLSTOP)OrderSend(sm,OP_SELL,NormalizeDouble(initlot,1),NormalizeDouble(MarketInfo(sm,MODE_BID),MarketInfo(sm,MODE_DIGITS)),3,0,tp);
+   if(OP==OP_BUYSTOP)Print(sm," ",OP_BUY," ",NormalizeDouble(initlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+   if(OP==OP_SELLSTOP)Print(sm," ",OP_SELL," ",NormalizeDouble(initlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_BID),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+   double boomlot=0,ilot,t=0;
+   ilot=initlot;
+   int i;
+   boomlot=ilot*MarketInfo(sm,MODE_TICKVALUE)*MarketInfo(sm,MODE_STOPLEVEL)/ MarketInfo(sm,MODE_MARGINREQUIRED);
+   ilot=ilot+boomlot;
+   for (i=0;i<count;i++){
+      boomlot=ilot*(MarketInfo(sm,MODE_TICKVALUE)*Op_step/ MarketInfo(sm,MODE_MARGINREQUIRED)-MarketInfo(sm,MODE_TICKVALUE)*MarketInfo(sm,MODE_SPREAD)/ MarketInfo(sm,MODE_MARGINREQUIRED));
+      ilot=ilot+boomlot;
+//      if(OP==OP_BUYSTOP)OrderSend(sm,OP_BUYSTOP,NormalizeDouble(boomlot,1),NormalizeDouble(MarketInfo(sm,MODE_ASK)+MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS)),3,0,tp,NULL,0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000);
+//      if(OP==OP_SELLSTOP)OrderSend(sm,OP_SELLSTOP,NormalizeDouble(boomlot,1),NormalizeDouble(MarketInfo(sm,MODE_BID)-MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS)),3,0,tp,NULL,0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000);
+      if(OP==OP_BUYSTOP)Print(sm," ",OP_BUYSTOP," ",NormalizeDouble(boomlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_ASK)+MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+      if(OP==OP_SELLSTOP)Print(sm," ",OP_SELLSTOP," ",NormalizeDouble(boomlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_BID)-MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+
+      t=t+boomlot*MarketInfo(sm,MODE_MARGINREQUIRED);Sleep(1000);RefreshRates();
+   }
+}
 void closeall(string sm,int a=999){
    int o;
    if(a==OP_BUYSTOP||a==OP_BUYLIMIT){

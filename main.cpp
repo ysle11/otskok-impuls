@@ -5,8 +5,18 @@
 //#include <new>
 #include "main.h"
 #include "Server.h"
+#include "mysql/mysql.h"
 
 Server* server;
+
+static HMODULE mysql_dll = NULL;
+/*static int (WINAPI * getaddrinfo_dll_func)(const char *node, const char *service,
+                                           const struct addrinfo *hints,
+                                           struct addrinfo **res) = NULL;
+static int (WINAPI * freeaddrinfo_dll_func)(struct addrinfo *res) = NULL;*/
+typedef MYSQL* (WINAPI pmysql_init)(MYSQL*);
+
+int mysqltest();
 char* intToStr(int i);
 void wcmd(int reqestor);
 void wlog(const char* buffer);
@@ -40,13 +50,13 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	wincl.hbrBackground = (HBRUSH) COLOR_BACKGROUND;
 	
 	if (!RegisterClassEx (&wincl)) return 0;
-	hwnd =CreateWindowEx (0,szClassName,"patterns",WS_CAPTION|WS_MINIMIZEBOX|WS_VISIBLE|WS_SYSMENU,CW_USEDEFAULT,CW_USEDEFAULT,544,375,HWND_DESKTOP,NULL,hThisInstance,NULL);
-	hlog =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,0,538,260,hwnd,NULL,hThisInstance,NULL);
+	hwnd =CreateWindowEx (0,szClassName,"patterns",WS_CAPTION|WS_MINIMIZEBOX|WS_VISIBLE|WS_SYSMENU,CW_USEDEFAULT,CW_USEDEFAULT,544,575,HWND_DESKTOP,NULL,hThisInstance,NULL);
+	hlog =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,0,538,530,hwnd,NULL,hThisInstance,NULL);
 //	hcmd =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,310,538,20,hwnd,NULL,hThisInstance,NULL);
-	hcmd =CreateWindowEx (WS_EX_CLIENTEDGE,"ListBox","",WS_CHILD|WS_VISIBLE|WS_VSCROLL|LVS_REPORT | LVS_SHAREIMAGELISTS,0,260,538,70,hwnd,NULL,hThisInstance,NULL);
-	hpro =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,0,330,440,355,hwnd,NULL,hThisInstance,NULL);
-	hper =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,450,330,120,35,hwnd,NULL,hThisInstance,NULL);
-    SendMessage( hcmd, LVM_FIRST+54, 0, 32 | 16 | 2 | 1);
+//	hcmd =CreateWindowEx (WS_EX_CLIENTEDGE,"ListBox","",WS_CHILD|WS_VISIBLE|WS_VSCROLL|LVS_REPORT | LVS_SHAREIMAGELISTS,0,260,538,70,hwnd,NULL,hThisInstance,NULL);
+	hpro =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,0,530,440,35,hwnd,NULL,hThisInstance,NULL);
+	hper =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,450,530,120,35,hwnd,NULL,hThisInstance,NULL);
+/*    SendMessage( hcmd, LVM_FIRST+54, 0, 32 | 16 | 2 | 1);
 
 	ListView_SetTextColor(hcmd,0x00000000);
 	SendMessage( hcmd, LVM_SETTEXTBKCOLOR, 0, 0x00ffffef);
@@ -78,63 +88,78 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	SendMessage(hcmd, LVM_SETTEXTCOLOR, 0, (LPARAM)(COLORREF)0xff0f00ff);
 	ListView_Update(hcmd,0);
 	ListView_RedrawItems(hcmd,0,3);
-
-
+*/
+//mysqltest();
 	ShowWindow (hwnd, nFunsterStil);
 	UpdateWindow(hwnd);
 
 	server = new Server;
-    if((!strcmp(lpszArgument,"/t5 /opt"))||(!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt"))||(!strcmp(lpszArgument,"/t240 /opt"))||(!strcmp(lpszArgument,"/t1440 /opt")))
+    if((!strcmp(lpszArgument,"/opt"))||(!strcmp(lpszArgument,"/t5 /opt"))||(!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt"))||(!strcmp(lpszArgument,"/t240 /opt"))||(!strcmp(lpszArgument,"/t1440 /opt")))
 	server->on(false);else server->on();
 
 //		server->impuls(optimizing,60);
 //		server->impuls(optimizing,240);
 //		server->impuls(optimizing,1440);
 
-
+/*		server->otskok(optimizing,15);
+		server->otskok(optimizing,60);
+		server->otskok(optimizing,240);
+*/
+	if(!strcmp(lpszArgument,"/test")){
+		server->otskok(testing,15);
+		server->otskok(testing,60);
+		server->otskok(testing,240);
+		server->otskok(testing,1440);
+	}else
+	if(!strcmp(lpszArgument,"/opt")){
+//		server->otskok(optimizing,1440);
+//		server->otskok(optimizing,240);
+		server->otskok(optimizing,60);
+		server->otskok(optimizing,15);
+	}else
 	if(!strcmp(lpszArgument,"/t5 /debug"))server->otskok(debuging,5);else
 	if(!strcmp(lpszArgument,"/t5 /test")){
 		server->otskok(testing,5);
-		server->impuls(testing,5);
+		//server->impuls(testing,5);
 	}else
 	if(!strcmp(lpszArgument,"/t5 /opt")){
-		server->impuls(optimizing,5);
+		//server->impuls(optimizing,5);
 		server->otskok(optimizing,5);
 	}else
 	if(!strcmp(lpszArgument,"/t15 /debug"))server->otskok(debuging,15);else
 	if(!strcmp(lpszArgument,"/t15 /test")){
 		server->otskok(testing,15);
-		server->impuls(testing,15);
+		//server->impuls(testing,15);
 	}else
 	if(!strcmp(lpszArgument,"/t15 /opt")){
-		server->impuls(optimizing,15);
+		//server->impuls(optimizing,15);
 		server->otskok(optimizing,15);
 	}else
 	if(!strcmp(lpszArgument,"/t60 /debug"))server->otskok(debuging,60);else
 	if(!strcmp(lpszArgument,"/t60 /test")){
 		server->otskok(testing,60);
-		server->impuls(testing,60);
+		//server->impuls(testing,60);
 	}else
 	if(!strcmp(lpszArgument,"/t60 /opt")){
-		server->impuls(optimizing,60);
+		//server->impuls(optimizing,60);
 		server->otskok(optimizing,60);
 	}else
 	if(!strcmp(lpszArgument,"/t240 /debug"))server->otskok(debuging,240);else
 	if(!strcmp(lpszArgument,"/t240 /test")){
 		server->otskok(testing,240);
-		server->impuls(testing,240);
+		//server->impuls(testing,240);
 	}else
 	if(!strcmp(lpszArgument,"/t240 /opt")){
-		server->impuls(optimizing,240);
+		//server->impuls(optimizing,240);
 		server->otskok(optimizing,240);
 	}else
 	if(!strcmp(lpszArgument,"/t1440 /debug"))server->otskok(debuging,1440);else
 	if(!strcmp(lpszArgument,"/t1440 /test")){
 		server->otskok(testing,1440);
-		server->impuls(testing,1440);
+		//server->impuls(testing,1440);
 	}else
 	if(!strcmp(lpszArgument,"/t1440 /opt")){
-		server->impuls(optimizing,1440);
+		//server->impuls(optimizing,1440);
 		server->otskok(optimizing,1440);
 	}
 
@@ -253,3 +278,59 @@ inline char* intToStr(int i){
 
 	return (char *)str1;
 }
+#define SELECT_QUERY "select name from test where num = %d"
+/*
+
+int mysqltest()
+{
+  int	count, num;
+  MYSQL mysql,*sock;
+  MYSQL_RES *res;
+  char	qbuf[160];
+
+	mysql_dll = LoadLibraryA("libmysql.dll");
+	//FARPROC	mysql_init,mysql_real_connect,mysql_query;
+	if (mysql_dll)
+	{
+	 	pmysql_init = GetProcAddress(mysql_dll, "mysql_init");
+	 	mysql_real_connect = GetProcAddress(mysql_dll, "mysql_real_connect");
+	 	mysql_query = GetProcAddress(mysql_dll, "mysql_query");
+	}
+
+  mysql_init(&mysql);
+  if (!(sock = mysql_real_connect(&mysql,"127.0.0.1","root",0,"admin",3306,NULL,(MYSQL*)0)))
+  {
+    wlog("Couldn't connect to engine!\n%s\n\n");
+    return(1);
+  }
+  mysql.reconnect= 1;
+
+  count = 0;
+  while (count < 10)
+  {
+    sprintf(qbuf,SELECT_QUERY,count);
+    if(mysql_query(sock,qbuf))
+    {
+      fprintf(stderr,"Query failed (%s)\n",mysql_error(sock));
+      return(1);
+    }
+    if (!(res=mysql_store_result(sock)))
+    {
+      fprintf(stderr,"Couldn't get result from %s\n",
+	      mysql_error(sock));
+      return(1);
+    }
+    printf("number of fields: %d\n",mysql_num_fields(res));
+
+    mysql_free_result(res);
+    count++;
+  }
+  mysql_close(sock);
+  FreeLibrary(mysql_dll);
+  mysql_dll = NULL;
+  mysql_init = NULL;
+  mysql_real_connect = NULL;
+  mysql_query = NULL;
+  return 0;		
+}*/
+
