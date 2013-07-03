@@ -1,7 +1,7 @@
 string mode;
 string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF"};//,,"EURGBP","USDSGD"};
 //string sms[]={"#HPQ","#AA","#MSFT","#YM","#EP","#ENQ"};
-int i,i1,i2,i3;
+int i,i1,i2,i3,secs=60;
 int tfs[]={PERIOD_H4};//,PERIOD_H1,PERIOD_H4
 color clr;
 bool fresh=true,allfresh=true;
@@ -30,7 +30,7 @@ int start()
    y=0;
    for(i=0;i<ArraySize(sms);i++)
    {
-      y+=10;x=300;
+      y+=10;x=265;
       for(i1=0;i1<ArraySize(tfs);i1++)
       { 
       mode=""+sms[i]+DoubleToStr(tfs[i1],0); 
@@ -55,15 +55,15 @@ int start()
                }
                mode=""+sms[i]+DoubleToStr(tfs[i1],0);
                fresh=true;for(i2=0;i2<200;i2++)
-                           if((TimeDayOfWeek(servertime-tfs[i1]*i2*60)>0)&&(TimeDayOfWeek(servertime-tfs[i1]*i2*60)<6)&&tfs[i1]<PERIOD_W1&&tfs[i1]>PERIOD_M30)
-                            if(iBarShift(sms[i],tfs[i1],servertime-tfs[i1]*i2*60,true)<0&&fresh){fresh=false;allfresh=false;break;}
-               clr=DimGray;if(iBars(sms[i],tfs[i1])>200 && fresh)clr=Green;
+                           if((TimeDayOfWeek(servertime-tfs[i1]*i2*secs)>0)&&(TimeDayOfWeek(servertime-tfs[i1]*i2*secs)<6))
+                            if(iBarShift(sms[i],tfs[i1],servertime-tfs[i1]*i2*secs,true)<0&&fresh){fresh=false;allfresh=false;break;}
+               clr=Red;if(iBars(sms[i],tfs[i1])>200 && fresh)clr=Green;
                string t1=TimeToStr(iTime(sms[i],tfs[i1],0));
                ObjectSetText(mode,""+StringSubstr(t1,5) +"   "+iBars(sms[i],tfs[i1]), 8, "Arial Narrow", clr);
             }
          }   
       for(i=0;i<ArraySize(sms);i++)if(maxticktime<MarketInfo( ""+sms[i], MODE_TIME))maxticktime=MarketInfo( ""+sms[i], MODE_TIME);
-      ObjectSetText("MODE_TIME",TimeToStr(maxticktime,TIME_DATE|TIME_SECONDS)+"  H1", 8, "Arial Narrow", White);
+      ObjectSetText("MODE_TIME",TimeToStr(maxticktime,TIME_DATE|TIME_SECONDS)+"  H4", 8, "Arial Narrow", White);
          WindowRedraw();if(IsStopped())return(0);Sleep(100);i3++;if(i3>30){i3=0;RefreshRates();}
    }
    return(0);

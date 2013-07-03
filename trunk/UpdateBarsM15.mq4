@@ -9,7 +9,7 @@
 string mode;
 string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF"};//,"EURGBP","USDSGD"};
 //string sms[]={"#HPQ","#AA","#MSFT","#YM","#EP","#ENQ"};
-int i,i1,i2,i3;
+int i,i1,i2,i3,secs=60;
 int tfs[]={PERIOD_M15};//,PERIOD_H1,PERIOD_H4
 color clr;
 bool fresh=true,allfresh=true;
@@ -43,7 +43,7 @@ if((prevbuildtime!=ctime)&&((TimeMinute(ctime)==0)||(TimeMinute(ctime)==15)||(Ti
    y=0;
    for(i=0;i<ArraySize(sms);i++)
    {
-      y+=10;x=100;
+      y+=10;x=55;
       for(i1=0;i1<ArraySize(tfs);i1++)
       { 
       mode=""+sms[i]+DoubleToStr(tfs[i1],0); 
@@ -58,19 +58,12 @@ if((prevbuildtime!=ctime)&&((TimeMinute(ctime)==0)||(TimeMinute(ctime)==15)||(Ti
             for(i1=0;i1<ArraySize(tfs);i1++)
             {
                tc=TimeCurrent();
-               switch(tfs[i1]){
-                  case PERIOD_MN1:servertime=StrToTime(TimeYear(tc)+"."+TimeMonth(tc)+".01 00:00");break;
-                  case PERIOD_W1:servertime=StrToTime(TimeYear(tc)+"."+TimeMonth(tc)+"."+TimeDay(tc)+" 00:00");break;
-                  case PERIOD_D1:servertime=StrToTime(TimeYear(tc)+"."+TimeMonth(tc)+"."+TimeDay(tc)+" 00:00");break;
-                  case PERIOD_H4:servertime=StrToTime(TimeYear(tc)+"."+TimeMonth(tc)+"."+TimeDay(tc)+" "+TimeHour(tc)+":00");break;
-                  case PERIOD_H1:servertime=StrToTime(TimeYear(tc)+"."+TimeMonth(tc)+"."+TimeDay(tc)+" "+TimeHour(tc)+":00");break;
-                  case PERIOD_M15:servertime=StrToTime(TimeYear(tc)+"."+TimeMonth(tc)+"."+TimeDay(tc)+" "+TimeHour(tc)+":"+TimeMinute(tc));break;
-               }
+               servertime=StrToTime(TimeYear(tc)+"."+TimeMonth(tc)+"."+TimeDay(tc)+" "+TimeHour(tc)+":"+TimeMinute(tc));
                mode=""+sms[i]+DoubleToStr(tfs[i1],0);
-               fresh=true;for(i2=0;i2<200;i2++)
-                           if((TimeDayOfWeek(servertime-tfs[i1]*i2*15)>0)&&(TimeDayOfWeek(servertime-tfs[i1]*i2*15)<6)&&tfs[i1]<PERIOD_W1&&tfs[i1]>PERIOD_M5)
-                            if(iBarShift(sms[i],tfs[i1],servertime-tfs[i1]*i2*15,true)<0&&fresh){fresh=false;allfresh=false;break;}
-               clr=DimGray;if(iBars(sms[i],tfs[i1])>200 && fresh)clr=Green;
+               fresh=true;for(i2=0;i2<500;i2++)
+                           if((TimeDayOfWeek(servertime-tfs[i1]*i2*secs)>0)&&(TimeDayOfWeek(servertime-tfs[i1]*i2*secs)<6))
+                            if(iBarShift(sms[i],tfs[i1],servertime-tfs[i1]*i2*secs,true)<0&&fresh){fresh=false;allfresh=false;break;}
+               clr=Red;if(iBars(sms[i],tfs[i1])>500 && fresh)clr=Green;
                string t1=TimeToStr(iTime(sms[i],tfs[i1],0));
                ObjectSetText(mode,""+StringSubstr(t1,5) +"   "+iBars(sms[i],tfs[i1]), 8, "Arial Narrow", clr);
             }
@@ -86,7 +79,6 @@ while(!IsConnected())Sleep(4000);
 signals();
 
    }Sleep(400);}*/
-   
    return(0);
   }
 //+------------------------------------------------------------------+

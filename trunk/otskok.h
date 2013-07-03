@@ -205,6 +205,7 @@ class Otskok
 	void testerloaddata();
 	void testerusefx();
 	void testersavefx();
+	int testerbacktest;
 /* TODO (root#1#): Optimizer */
 	struct consolidatesorted{
 		char val[22];
