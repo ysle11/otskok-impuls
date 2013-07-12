@@ -141,7 +141,7 @@ class Otskok
 	time_t testercurdatetime;
 	bool testerisoptimize;
 	
-	int testermincnttrades,testermdrawdownclimit;
+	int testermincnttrades,testermdrawdownclimit,testertargetprofitmul;
 
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
 	void testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
@@ -172,6 +172,8 @@ class Otskok
 	double iosma(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double demarker(const int period, const int price, const int shift );
 	double idemarker(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double demarker2(const int period, const int price, const int shift );
+	double idemarker2(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double stddev(const int period, const int price, const int shift );
 	double istddev(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double stochastic(const int period, const int price, const int shift );
@@ -182,12 +184,16 @@ class Otskok
 	double iac(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double adx(const int period, const int price, const int aprice, const int shift );
 	double iadx(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double adx2(const int period, const int price, const int aprice, const int shift );
+	double iadx2(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double gma(const int period, const int price, const int shift );
 	double igma(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double tma(const int period, const int price, const int shift );
 	double itma(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double sinema(const int period, const int price, const int shift );
 	double isinema(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double randma(const int period, const int price, const int shift, const double rma );
+	double irandma(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double zerolagema(const int period, const int price, const int shift );
 	double izerolagema(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double lssma(const int period, const int price, const int shift );
@@ -198,6 +204,8 @@ class Otskok
 	double ivolumesma(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double rvi(const int period, const int price, const int shift );
 	double irvi(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double rvi2(const int period, const int price, const int shift );
+	double irvi2(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double GetAppliedPrice(const int nAppliedPrice, const int nIndex);
 
 
@@ -237,6 +245,7 @@ class Otskok
 		int cntBUY;
 	};
 	consolidatesorted* csorted;
+	int optstop;
 
 	void test();
 	void optimize();
