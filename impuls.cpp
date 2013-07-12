@@ -499,7 +499,7 @@ void Impuls::testerinit()
 	testerisoptimize=false;
 //	testerqfcount=5;
 	testermincnttrades=49;
-	testermdrawdownclimit=5;
+	testermdrawdownclimit=2;
 	memset(strategyset,0,sizeof(strategyset));
 	lstrcat(strategyset,"patterns.fx");lstrcat(strategyset,intToStr(testerperiod));
 

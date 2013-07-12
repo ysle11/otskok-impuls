@@ -9,13 +9,6 @@
 
 Server* server;
 
-static HMODULE mysql_dll = NULL;
-/*static int (WINAPI * getaddrinfo_dll_func)(const char *node, const char *service,
-                                           const struct addrinfo *hints,
-                                           struct addrinfo **res) = NULL;
-static int (WINAPI * freeaddrinfo_dll_func)(struct addrinfo *res) = NULL;*/
-typedef MYSQL* (WINAPI pmysql_init)(MYSQL*);
-
 int mysqltest();
 char* intToStr(int i);
 void wcmd(int reqestor);
@@ -94,7 +87,7 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	UpdateWindow(hwnd);
 
 	server = new Server;
-    if((!strcmp(lpszArgument,"/opt"))||(!strcmp(lpszArgument,"/t5 /opt"))||(!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt"))||(!strcmp(lpszArgument,"/t240 /opt"))||(!strcmp(lpszArgument,"/t1440 /opt")))
+    if((!strcmp(lpszArgument,"/opt"))||(!strcmp(lpszArgument,"/t5 /opt"))||(!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt"))||(!strcmp(lpszArgument,"/t240 /opt"))||(!strcmp(lpszArgument,"/t1440 /opt"))||(!strcmp(lpszArgument,"/t10080 /opt")))
 	server->on(false);else server->on();
 
 //		server->impuls(optimizing,60);
@@ -106,16 +99,18 @@ ListView_InsertColumn(hcmd,1,&lvc);
 		server->otskok(optimizing,240);
 */
 	if(!strcmp(lpszArgument,"/test")){
-		server->otskok(testing,15);
-		server->otskok(testing,60);
+//		server->otskok(testing,15);
+//		server->otskok(testing,60);
 		server->otskok(testing,240);
 		server->otskok(testing,1440);
+		server->otskok(testing,10080);
 	}else
 	if(!strcmp(lpszArgument,"/opt")){
-//		server->otskok(optimizing,1440);
-//		server->otskok(optimizing,240);
-		server->otskok(optimizing,60);
-		server->otskok(optimizing,15);
+//		server->otskok(optimizing,10080);
+		server->otskok(optimizing,240);
+		server->otskok(optimizing,1440);
+//		server->otskok(optimizing,60);
+//		server->otskok(optimizing,15);
 	}else
 	if(!strcmp(lpszArgument,"/t5 /debug"))server->otskok(debuging,5);else
 	if(!strcmp(lpszArgument,"/t5 /test")){
@@ -161,6 +156,15 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	if(!strcmp(lpszArgument,"/t1440 /opt")){
 		//server->impuls(optimizing,1440);
 		server->otskok(optimizing,1440);
+	}else
+	if(!strcmp(lpszArgument,"/t10080 /debug"))server->otskok(debuging,10080);else
+	if(!strcmp(lpszArgument,"/t10080 /test")){
+		server->otskok(testing,10080);
+		//server->impuls(testing,10080);
+	}else
+	if(!strcmp(lpszArgument,"/t10080 /opt")){
+		//server->impuls(optimizing,10080);
+		server->otskok(optimizing,10080);
 	}
 
 	while (GetMessage (&messages, NULL, 0, 0))
@@ -217,6 +221,7 @@ void wlog(const char* buffer){
 		char* buf;
 	    int hloglen=GetWindowTextLength(hlog)+1;
 	    int slen=strlen(buffer)+1;
+if(slen<30000){
         buf= new char[hloglen+slen+1];
 		memset(buf,0,hloglen+slen+1);
 		if((hloglen+slen)<30000)GetWindowText(hlog,buf,hloglen);
@@ -229,6 +234,7 @@ void wlog(const char* buffer){
 		SetFocus(hlog);
 		ShowCaret(hlog);
 		delete[] buf;
+}
 }
 void title(int h,const char* buffer){
 		if(h==whwnd)SetWindowText(hwnd,buffer);else
@@ -278,53 +284,126 @@ inline char* intToStr(int i){
 
 	return (char *)str1;
 }
-#define SELECT_QUERY "select name from test where num = %d"
-/*
+#define SELECT_QUERY "select * from mt4 where valname='EURUSD' and timeframe=15 order by `ctm` desc limit 100;"
+
+static HMODULE mysql_dll = NULL;
+/*static int (WINAPI * getaddrinfo_dll_func)(const char *node, const char *service,
+                                           const struct addrinfo *hints,
+                                           struct addrinfo **res) = NULL;
+static int (WINAPI * freeaddrinfo_dll_func)(struct addrinfo *res) = NULL;
+typedef DWORD (WINAPI *pfnGetAdaptersAddresses)(IN ULONG Family,
+    IN DWORD Flags,IN PVOID Reserved,
+    OUT PIP_ADAPTER_ADDRESSES pAdapterAddresses,
+    IN OUT PULONG pOutBufLen);
+*/
+typedef MYSQL* (WINAPI *pmysql_init)(MYSQL*);
+typedef MYSQL* (WINAPI *pmysql_real_connect)(MYSQL *mysql, const char *host,
+					   const char *user,
+					   const char *passwd,
+					   const char *db,
+					   unsigned int port,
+					   const char *unix_socket,
+					   unsigned long clientflag);
+typedef int (WINAPI *pmysql_query)(MYSQL *mysql, const char *q);
+
+typedef const char * (WINAPI *pmysql_error)(MYSQL *mysql);
+typedef MYSQL_RES * (WINAPI *pmysql_store_result)(MYSQL *mysql);
+typedef unsigned int (WINAPI *pmysql_num_fields)(MYSQL_RES *res);
+typedef void (WINAPI *pmysql_free_result)(MYSQL_RES *result);
+typedef void (WINAPI *pmysql_close)(MYSQL *sock);
+typedef MYSQL_ROW (WINAPI *pmysql_fetch_row)(MYSQL_RES *result);
+typedef int (WINAPI *pmysql_options)(MYSQL *mysql,enum mysql_option option,const void *arg);
 
 int mysqltest()
 {
   int	count, num;
   MYSQL mysql,*sock;
   MYSQL_RES *res;
+  MYSQL_ROW row;
   char	qbuf[160];
 
-	mysql_dll = LoadLibraryA("libmysql.dll");
-	//FARPROC	mysql_init,mysql_real_connect,mysql_query;
-	if (mysql_dll)
+  mysql_dll = LoadLibraryA("libmysql.dll");
+  static pmysql_init mysql_init=(pmysql_init)-1;
+  static pmysql_real_connect mysql_real_connect=(pmysql_real_connect)-1;
+  static pmysql_query mysql_query=(pmysql_query)-1;
+
+  static pmysql_error mysql_error=(pmysql_error)-1;
+  static pmysql_store_result mysql_store_result=(pmysql_store_result)-1;
+  static pmysql_num_fields mysql_num_fields=(pmysql_num_fields)-1;
+  static pmysql_free_result mysql_free_result=(pmysql_free_result)-1;
+  static pmysql_close mysql_close=(pmysql_close)-1;
+  static pmysql_fetch_row mysql_fetch_row=(pmysql_fetch_row)-1;
+  static pmysql_options mysql_options=(pmysql_options)-1;
+
+  if(mysql_init == (pmysql_init)-1)
+  {
+    /* Get the function from the DLL */
+    mysql_init=(pmysql_init)GetProcAddress(mysql_dll,"mysql_init");
+    mysql_real_connect=(pmysql_real_connect)GetProcAddress(mysql_dll,"mysql_real_connect");
+    mysql_query=(pmysql_query)GetProcAddress(mysql_dll,"mysql_query");
+
+    mysql_error=(pmysql_error)GetProcAddress(mysql_dll,"mysql_error");
+    mysql_store_result=(pmysql_store_result)GetProcAddress(mysql_dll,"mysql_store_result");
+    mysql_num_fields=(pmysql_num_fields)GetProcAddress(mysql_dll,"mysql_num_fields");
+    mysql_free_result=(pmysql_free_result)GetProcAddress(mysql_dll,"mysql_free_result");
+    mysql_close=(pmysql_close)GetProcAddress(mysql_dll,"mysql_close");
+    mysql_fetch_row=(pmysql_fetch_row)GetProcAddress(mysql_dll,"mysql_fetch_row");
+    mysql_options=(pmysql_options)GetProcAddress(mysql_dll,"mysql_options");
+  }
+    if (!mysql_init)wlog("Couldn't use libmysql.dll!\n%s\n\n");
+    ULONG address_len;
+    address_len= sizeof (MYSQL);
+  //  fnGetAdaptersAddresses(AF_UNSPEC, 0, 0, &adapterAddresses, &address_len)
+    
+	/*if (mysql_dll)
 	{
 	 	pmysql_init = GetProcAddress(mysql_dll, "mysql_init");
 	 	mysql_real_connect = GetProcAddress(mysql_dll, "mysql_real_connect");
 	 	mysql_query = GetProcAddress(mysql_dll, "mysql_query");
-	}
+	}*/
 
   mysql_init(&mysql);
-  if (!(sock = mysql_real_connect(&mysql,"127.0.0.1","root",0,"admin",3306,NULL,(MYSQL*)0)))
+//        mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "libmysqld_client");
+//        mysql_options(&mysql, MYSQL_OPT_USE_EMBEDDED_CONNECTION, NULL);
+  if (!(sock = mysql_real_connect(&mysql,"127.0.0.1","root",0,"admin",3306,NULL,0)))
   {
     wlog("Couldn't connect to engine!\n%s\n\n");
     return(1);
   }
   mysql.reconnect= 1;
 
+ /* sock=mysql_init(NULL);
+  mysql_real_connect(sock,"127.0.0.1","root",0,"admin",3306,NULL,0);*/
   count = 0;
-  while (count < 10)
-  {
     sprintf(qbuf,SELECT_QUERY,count);
+    //wlog(qbuf);
     if(mysql_query(sock,qbuf))
     {
-      fprintf(stderr,"Query failed (%s)\n",mysql_error(sock));
+      wlog("Query failed (%s) ");
+	  wlog(mysql_error(sock));wlog("\r\n");
       return(1);
     }
     if (!(res=mysql_store_result(sock)))
     {
-      fprintf(stderr,"Couldn't get result from %s\n",
-	      mysql_error(sock));
+      wlog("Couldn't get result from %s");
+	  wlog(mysql_error(sock));wlog("\r\n");
       return(1);
     }
-    printf("number of fields: %d\n",mysql_num_fields(res));
+/*    wlog("number of fields: ");
+	wlog(intToStr(mysql_num_fields(res)));wlog("\r\n");*/
+  while (count < 10)
+  {
+	row = mysql_fetch_row(res);
+    //wlog("number of fields: ");
+	for(int t=0;t<9;t++){
+	wlog(row[t]);wlog(" ");}
 
-    mysql_free_result(res);
+	wlog("\r\n");
+	
+	
     count++;
   }
+    mysql_free_result(res);
   mysql_close(sock);
   FreeLibrary(mysql_dll);
   mysql_dll = NULL;
@@ -332,5 +411,5 @@ int mysqltest()
   mysql_real_connect = NULL;
   mysql_query = NULL;
   return 0;		
-}*/
+}
 

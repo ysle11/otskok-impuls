@@ -17,6 +17,7 @@
 //+------------------------------------------------------------------+
 //| expert initialization function                                   |
 //+------------------------------------------------------------------+
+int cnts=0;
 int start()
   {
   ObjectsDeleteAll();
@@ -135,7 +136,18 @@ int start()
          if(StringLen(text) == dwBytesRead[0]) break;
          text = text + CharToStr(cBuffer[i] >> 24 & 0x000000FF);
       }*/
-      int index,index0=0,ix=0,y=8,x=8;i = 0;string s1,s2,s3[9],prevvaldate="";
+      int index,index0=0,ix=0,y=8,x=8;i = 0;string s1,s2,s3[9],prevvaldate="",text1=text;
+//      
+
+      if(StringLen(text1)>1)
+      while( index0 < StringLen(text1))
+      {
+         index=StringFind(text1, "\r\n", index0);
+         s1=StringSubstr(text1,index0,(index-index0));index0=index+2;
+         cnts++;
+      }      
+//      
+      index0=0;
       if(StringLen(text)>1)
       while( index0 < StringLen(text))
       {
@@ -193,27 +205,32 @@ int start()
   }
 //+------------------------------------------------------------------+
 void opens(string sm,int OP,double tp){
+   double clot;
    int Op_step=MarketInfo(sm,MODE_STOPLEVEL);
    int count=MathFloor(MathAbs(MarketInfo(sm,MODE_ASK)-tp)/MarketInfo(sm,MODE_POINT)/Op_step)-2;if(count>6)count=6;else if(count<7)count/=1.33;
-   double initlot=(AccountFreeMargin( )/1.33)/ MarketInfo(sm,MODE_MARGINREQUIRED);initlot=initlot-MarketInfo(sm,MODE_LOTSTEP)*2;
-//   if(OP==OP_BUYSTOP)OrderSend(sm,OP_BUY,NormalizeDouble(initlot,1),NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS)),3,0,tp);
-//   if(OP==OP_SELLSTOP)OrderSend(sm,OP_SELL,NormalizeDouble(initlot,1),NormalizeDouble(MarketInfo(sm,MODE_BID),MarketInfo(sm,MODE_DIGITS)),3,0,tp);
-   if(OP==OP_BUYSTOP)Print(sm," ",OP_BUY," ",NormalizeDouble(initlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
-   if(OP==OP_SELLSTOP)Print(sm," ",OP_SELL," ",NormalizeDouble(initlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_BID),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+   double initlot=((AccountBalance( )/cnts)/1.16)/ MarketInfo(sm,MODE_MARGINREQUIRED);initlot=initlot-MarketInfo(sm,MODE_LOTSTEP)*2;
+   if(OP==OP_BUYSTOP)tp=NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS))+(count+2)*Op_step*MarketInfo(sm,MODE_POINT);else
+   if(OP==OP_SELLSTOP)tp=NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS))-(count+2)*Op_step*MarketInfo(sm,MODE_POINT);
+   
+   if(OP==OP_BUYSTOP)OrderSend(sm,OP_BUY,NormalizeDouble(initlot,1),NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS)),3,0,tp);
+   if(OP==OP_SELLSTOP)OrderSend(sm,OP_SELL,NormalizeDouble(initlot,1),NormalizeDouble(MarketInfo(sm,MODE_BID),MarketInfo(sm,MODE_DIGITS)),3,0,tp);
+//   if(OP==OP_BUYSTOP)Print(sm," ",OP_BUY," ",NormalizeDouble(initlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_ASK),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+//   if(OP==OP_SELLSTOP)Print(sm," ",OP_SELL," ",NormalizeDouble(initlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_BID),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
    double boomlot=0,ilot,t=0;
    ilot=initlot;
    int i;
    boomlot=ilot*MarketInfo(sm,MODE_TICKVALUE)*MarketInfo(sm,MODE_STOPLEVEL)/ MarketInfo(sm,MODE_MARGINREQUIRED);
    ilot=ilot+boomlot;
-   for (i=0;i<count;i++){
+   for (i=0;i<=count;i++){
       boomlot=ilot*(MarketInfo(sm,MODE_TICKVALUE)*Op_step/ MarketInfo(sm,MODE_MARGINREQUIRED)-MarketInfo(sm,MODE_TICKVALUE)*MarketInfo(sm,MODE_SPREAD)/ MarketInfo(sm,MODE_MARGINREQUIRED));
       ilot=ilot+boomlot;
-//      if(OP==OP_BUYSTOP)OrderSend(sm,OP_BUYSTOP,NormalizeDouble(boomlot,1),NormalizeDouble(MarketInfo(sm,MODE_ASK)+MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS)),3,0,tp,NULL,0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000);
-//      if(OP==OP_SELLSTOP)OrderSend(sm,OP_SELLSTOP,NormalizeDouble(boomlot,1),NormalizeDouble(MarketInfo(sm,MODE_BID)-MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS)),3,0,tp,NULL,0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000);
-      if(OP==OP_BUYSTOP)Print(sm," ",OP_BUYSTOP," ",NormalizeDouble(boomlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_ASK)+MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
-      if(OP==OP_SELLSTOP)Print(sm," ",OP_SELLSTOP," ",NormalizeDouble(boomlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_BID)-MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+      clot=boomlot;if(clot<0.1)clot=0.1;
+      if(OP==OP_BUYSTOP)OrderSend(sm,OP_BUYSTOP,NormalizeDouble(clot,1),NormalizeDouble(MarketInfo(sm,MODE_ASK)+MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS)),3,0,tp,NULL,0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000);
+      if(OP==OP_SELLSTOP)OrderSend(sm,OP_SELLSTOP,NormalizeDouble(clot,1),NormalizeDouble(MarketInfo(sm,MODE_BID)-MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS)),3,0,tp,NULL,0,StrToTime(TimeToStr(TimeCurrent(),TIME_DATE|TIME_MINUTES))+86000);
+//      if(OP==OP_BUYSTOP)Print(sm," ",OP_BUYSTOP," ",NormalizeDouble(boomlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_ASK)+MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
+//      if(OP==OP_SELLSTOP)Print(sm," ",OP_SELLSTOP," ",NormalizeDouble(boomlot,1)," ",NormalizeDouble(MarketInfo(sm,MODE_BID)-MarketInfo(sm,MODE_POINT)*Op_step*(i+1),MarketInfo(sm,MODE_DIGITS))," ",3,0," ",tp);
 
-      t=t+boomlot*MarketInfo(sm,MODE_MARGINREQUIRED);Sleep(1000);RefreshRates();
+      t=t+boomlot*MarketInfo(sm,MODE_MARGINREQUIRED);Sleep(3000);RefreshRates();
    }
 }
 void closeall(string sm,int a=999){
