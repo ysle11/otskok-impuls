@@ -4,7 +4,7 @@
 #define FILE 256
 A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "patterns.ico"
 A1 ICON MOVEABLE PURE LOADONCALL DISCARDABLE "patterns-on.ico"
-patterns.cnf FILE "patterns.cnf"
+/*patterns.cnf FILE "patterns.cnf"
 patterns.fx60 FILE "patterns.fx60"
 otskok.mq4 FILE "otskok.mq4"
-impuls.mq4 FILE "impuls.mq4"
+impuls.mq4 FILE "impuls.mq4"*/

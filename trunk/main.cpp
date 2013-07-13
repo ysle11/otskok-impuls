@@ -1,16 +1,19 @@
 #include <windows.h>
-#include <commctrl.h>
+//#include <commctrl.h>
 #include <windowsx.h>
 #include <iostream>
 //#include <new>
 #include "main.h"
-#include "Server.h"
-#include "mysql/mysql.h"
+//#include "Server.h"
+//#include "mysql/mysql.h"
+#include "otskok.h"
 
-Server* server;
-
-int mysqltest();
+//Server* server;
+//int mysqltest();
+inline int rdtsc(){__asm__ __volatile__("rdtsc");}
 char* intToStr(int i);
+int find(const char *s, const char *key);
+void decode(int act,int tperiod,int actmode);
 void wcmd(int reqestor);
 void wlog(const char* buffer);
 void title(int h,const char* buffer);
@@ -85,88 +88,39 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //mysqltest();
 	ShowWindow (hwnd, nFunsterStil);
 	UpdateWindow(hwnd);
+	srand(rdtsc());
+    //if(!find(lpszArgument,"/t240"))wlog("/t240");
+    int action=optimizing,period=1440,mode=light;
+    if(find(lpszArgument,"/opt"))action=optimizing;else
+    if(find(lpszArgument,"/test"))action=testing;else
+    if(find(lpszArgument,"/debug"))action=debuging;
 
-	server = new Server;
-    if((!strcmp(lpszArgument,"/opt"))||(!strcmp(lpszArgument,"/t5 /opt"))||(!strcmp(lpszArgument,"/t15 /opt"))||(!strcmp(lpszArgument,"/t60 /opt"))||(!strcmp(lpszArgument,"/t240 /opt"))||(!strcmp(lpszArgument,"/t1440 /opt"))||(!strcmp(lpszArgument,"/t10080 /opt")))
-	server->on(false);else server->on();
+    if(find(lpszArgument,"/1t"))period=1;else
+    if(find(lpszArgument,"/5t"))period=5;else
+    if(find(lpszArgument,"/15t"))period=15;else
+    if(find(lpszArgument,"/60t"))period=60;else
+    if(find(lpszArgument,"/240t"))period=240;else
+    if(find(lpszArgument,"/1440t"))period=1440;else
+    if(find(lpszArgument,"/10080t"))period=10080;else
+    if(find(lpszArgument,"/43200t"))period=43200;
 
-//		server->impuls(optimizing,60);
-//		server->impuls(optimizing,240);
-//		server->impuls(optimizing,1440);
+    if(find(lpszArgument,"/unscalp"))mode=unscalp;else
+    if(find(lpszArgument,"/light"))mode=light;else
+    if(find(lpszArgument,"/medium"))mode=medium;else
+    if(find(lpszArgument,"/hard"))mode=hard;
 
-/*		server->otskok(optimizing,15);
-		server->otskok(optimizing,60);
-		server->otskok(optimizing,240);
-*/
-	if(!strcmp(lpszArgument,"/test")){
-//		server->otskok(testing,15);
-//		server->otskok(testing,60);
-		server->otskok(testing,240);
-		server->otskok(testing,1440);
-		server->otskok(testing,10080);
-	}else
-	if(!strcmp(lpszArgument,"/opt")){
-//		server->otskok(optimizing,10080);
-		server->otskok(optimizing,240);
-		server->otskok(optimizing,1440);
-//		server->otskok(optimizing,60);
-//		server->otskok(optimizing,15);
-	}else
-	if(!strcmp(lpszArgument,"/t5 /debug"))server->otskok(debuging,5);else
-	if(!strcmp(lpszArgument,"/t5 /test")){
-		server->otskok(testing,5);
-		//server->impuls(testing,5);
-	}else
-	if(!strcmp(lpszArgument,"/t5 /opt")){
-		//server->impuls(optimizing,5);
-		server->otskok(optimizing,5);
-	}else
-	if(!strcmp(lpszArgument,"/t15 /debug"))server->otskok(debuging,15);else
-	if(!strcmp(lpszArgument,"/t15 /test")){
-		server->otskok(testing,15);
-		//server->impuls(testing,15);
-	}else
-	if(!strcmp(lpszArgument,"/t15 /opt")){
-		//server->impuls(optimizing,15);
-		server->otskok(optimizing,15);
-	}else
-	if(!strcmp(lpszArgument,"/t60 /debug"))server->otskok(debuging,60);else
-	if(!strcmp(lpszArgument,"/t60 /test")){
-		server->otskok(testing,60);
-		//server->impuls(testing,60);
-	}else
-	if(!strcmp(lpszArgument,"/t60 /opt")){
-		//server->impuls(optimizing,60);
-		server->otskok(optimizing,60);
-	}else
-	if(!strcmp(lpszArgument,"/t240 /debug"))server->otskok(debuging,240);else
-	if(!strcmp(lpszArgument,"/t240 /test")){
-		server->otskok(testing,240);
-		//server->impuls(testing,240);
-	}else
-	if(!strcmp(lpszArgument,"/t240 /opt")){
-		//server->impuls(optimizing,240);
-		server->otskok(optimizing,240);
-	}else
-	if(!strcmp(lpszArgument,"/t1440 /debug"))server->otskok(debuging,1440);else
-	if(!strcmp(lpszArgument,"/t1440 /test")){
-		server->otskok(testing,1440);
-		//server->impuls(testing,1440);
-	}else
-	if(!strcmp(lpszArgument,"/t1440 /opt")){
-		//server->impuls(optimizing,1440);
-		server->otskok(optimizing,1440);
-	}else
-	if(!strcmp(lpszArgument,"/t10080 /debug"))server->otskok(debuging,10080);else
-	if(!strcmp(lpszArgument,"/t10080 /test")){
-		server->otskok(testing,10080);
-		//server->impuls(testing,10080);
-	}else
-	if(!strcmp(lpszArgument,"/t10080 /opt")){
-		//server->impuls(optimizing,10080);
-		server->otskok(optimizing,10080);
+//	server = new Server;
+//    if(action==optimizing)server->on(false);else server->on();
+
+    if(mode!=unscalp)decode(action,period,mode);else{
+        decode(action,10080,hard);
+        decode(action,1440,light);
+        decode(action,240,light);
+		wlog("\r\n");
+        decode(action,1440,hard);
+        decode(action,240,hard);
 	}
-
+    
 	while (GetMessage (&messages, NULL, 0, 0))
 	{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
 	if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));
@@ -181,7 +135,7 @@ switch (message)
 {
 	case WM_DESTROY:
 		{
-			delete server;
+//			delete server;
 			PostQuitMessage (0);
 		}
 	break;
@@ -211,6 +165,12 @@ switch (message)
 	return DefWindowProc (hwnd1, message, wParam, lParam);
 }
 return 0;
+}
+void decode(int act,int tperiod,int actmode){
+	Otskok* otskokobj;
+	otskokobj=new Otskok;
+	otskokobj->action(act,tperiod,actmode);
+	delete otskokobj;
 }
 void wcmd(int reqestor){
 		if(reqestor==cmdmain)wlog("\r\n main enter\r\n");else
@@ -284,18 +244,29 @@ inline char* intToStr(int i){
 
 	return (char *)str1;
 }
+inline int find(const char *s, const char *key)
+{
+    whitespaceskip;
+	int len = strlen(key);
+	for(int i = 0; *s; i++)
+	{
+		const char *a = s, *e = s;
+		elementskip;
+		if(*e=='"')
+		{
+			e++;
+			if(s[-1]=='"') --s;
+		}
+		if(s-e==len && !strncmp(e, key, s-e)) return 1;//i;
+		else s = a;
+		elementskip, whitespaceskip;
+	}
+    return 0;
+}
+/*
 #define SELECT_QUERY "select * from mt4 where valname='EURUSD' and timeframe=15 order by `ctm` desc limit 100;"
-
 static HMODULE mysql_dll = NULL;
-/*static int (WINAPI * getaddrinfo_dll_func)(const char *node, const char *service,
-                                           const struct addrinfo *hints,
-                                           struct addrinfo **res) = NULL;
-static int (WINAPI * freeaddrinfo_dll_func)(struct addrinfo *res) = NULL;
-typedef DWORD (WINAPI *pfnGetAdaptersAddresses)(IN ULONG Family,
-    IN DWORD Flags,IN PVOID Reserved,
-    OUT PIP_ADAPTER_ADDRESSES pAdapterAddresses,
-    IN OUT PULONG pOutBufLen);
-*/
+
 typedef MYSQL* (WINAPI *pmysql_init)(MYSQL*);
 typedef MYSQL* (WINAPI *pmysql_real_connect)(MYSQL *mysql, const char *host,
 					   const char *user,
@@ -337,7 +308,6 @@ int mysqltest()
 
   if(mysql_init == (pmysql_init)-1)
   {
-    /* Get the function from the DLL */
     mysql_init=(pmysql_init)GetProcAddress(mysql_dll,"mysql_init");
     mysql_real_connect=(pmysql_real_connect)GetProcAddress(mysql_dll,"mysql_real_connect");
     mysql_query=(pmysql_query)GetProcAddress(mysql_dll,"mysql_query");
@@ -353,14 +323,6 @@ int mysqltest()
     if (!mysql_init)wlog("Couldn't use libmysql.dll!\n%s\n\n");
     ULONG address_len;
     address_len= sizeof (MYSQL);
-  //  fnGetAdaptersAddresses(AF_UNSPEC, 0, 0, &adapterAddresses, &address_len)
-    
-	/*if (mysql_dll)
-	{
-	 	pmysql_init = GetProcAddress(mysql_dll, "mysql_init");
-	 	mysql_real_connect = GetProcAddress(mysql_dll, "mysql_real_connect");
-	 	mysql_query = GetProcAddress(mysql_dll, "mysql_query");
-	}*/
 
   mysql_init(&mysql);
 //        mysql_options(&mysql, MYSQL_READ_DEFAULT_GROUP, "libmysqld_client");
@@ -371,12 +333,8 @@ int mysqltest()
     return(1);
   }
   mysql.reconnect= 1;
-
- /* sock=mysql_init(NULL);
-  mysql_real_connect(sock,"127.0.0.1","root",0,"admin",3306,NULL,0);*/
   count = 0;
     sprintf(qbuf,SELECT_QUERY,count);
-    //wlog(qbuf);
     if(mysql_query(sock,qbuf))
     {
       wlog("Query failed (%s) ");
@@ -389,18 +347,12 @@ int mysqltest()
 	  wlog(mysql_error(sock));wlog("\r\n");
       return(1);
     }
-/*    wlog("number of fields: ");
-	wlog(intToStr(mysql_num_fields(res)));wlog("\r\n");*/
   while (count < 10)
   {
 	row = mysql_fetch_row(res);
-    //wlog("number of fields: ");
 	for(int t=0;t<9;t++){
 	wlog(row[t]);wlog(" ");}
-
 	wlog("\r\n");
-	
-	
     count++;
   }
     mysql_free_result(res);
@@ -412,4 +364,4 @@ int mysqltest()
   mysql_query = NULL;
   return 0;		
 }
-
+*/

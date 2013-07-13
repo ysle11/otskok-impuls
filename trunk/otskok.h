@@ -164,6 +164,10 @@ class Otskok
 	double imomentum(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double ema(const int period, const int price, const int shift );
 	double iema(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double bandsup(const int period, const int price, const int shift );
+	double ibandsup(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double bandsdn(const int period, const int price, const int shift );
+	double ibandsdn(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double bears(const int period, const int price, const int shift );
 	double ibears(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double bulls(const int period, const int price, const int shift );
@@ -184,6 +188,9 @@ class Otskok
 	double iac(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double adx(const int period, const int price, const int aprice, const int shift );
 	double iadx(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double iadxmain(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double iadxup(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double iadxdn(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double adx2(const int period, const int price, const int aprice, const int shift );
 	double iadx2(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double gma(const int period, const int price, const int shift );
@@ -214,6 +221,7 @@ class Otskok
 	void testerusefx();
 	void testersavefx();
 	int testerbacktest;
+	int actmode;
 /* TODO (root#1#): Optimizer */
 	struct consolidatesorted{
 		char val[22];
@@ -253,7 +261,7 @@ class Otskok
 
 	public:
 		Otskok();
-		void Otskok2(int t,int tperiod);
+		void action(int t,int tperiod,int historymode);
 		virtual ~Otskok();
 
 };

@@ -2,6 +2,7 @@
 #define elementskip *s=='"' ? (++s, s += strcspn(s, "\"\n\0"), s += *s=='"') : s += strcspn(s, "\n\t \0")
 enum { cmdmain, cmdotskok, cmdimpuls };
 enum { testing, optimizing, debuging };
+enum { light, medium, hard, unscalp };
 enum { withtime, settitle };
 enum { whwnd,whlog,whpro,whper,whcmd };
 #define MODE_TRADES 0
