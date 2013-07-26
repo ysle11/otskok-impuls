@@ -214,6 +214,8 @@ class Otskok
 	double rvi2(const int period, const int price, const int shift );
 	double irvi2(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double GetAppliedPrice(const int nAppliedPrice, const int nIndex);
+    int iLowest(int count, int start);
+    int iHighest(int count, int start);
 
 
 	void testerinit();
