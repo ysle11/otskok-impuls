@@ -113,12 +113,15 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //    if(action==optimizing)server->on(false);else server->on();
 
     if(mode!=unscalp)decode(action,period,mode);else{
-        decode(action,10080,hard);
-        decode(action,1440,light);
-        decode(action,240,light);
+        //if(action!=optimizing)
+		decode(action,10080,hard);
 		wlog("\r\n");
-        decode(action,1440,hard);
-        decode(action,240,hard);
+        //if(action!=optimizing)
+		decode(action,1440,hard);
+        decode(action,1440,light);
+        //if(action!=optimizing)
+		decode(action,240,hard);
+        decode(action,240,light);
 	}
     
 	while (GetMessage (&messages, NULL, 0, 0))

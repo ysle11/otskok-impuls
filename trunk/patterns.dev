@@ -21,13 +21,13 @@ OverrideOutput=0
 OverrideOutputName=patterns.exe
 HostApplication=
 Folders=
-CommandLine=/test
+CommandLine=/unscalp /test
 UseCustomMakefile=0
 CustomMakefile=Makefile.win
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000001001000000000
+CompilerSettings=0000000001001001000000
 
 [Unit1]
 FileName=main.cpp
