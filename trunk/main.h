@@ -5,6 +5,7 @@ enum { testing, optimizing, debuging };
 enum { light, medium, hard, unscalp };
 enum { withtime, settitle };
 enum { whwnd,whlog,whpro,whper,whcmd };
+enum { donottradecurrentbar=false, tradecurrentbar=true };
 #define MODE_TRADES 0
 #define MODE_HISTORY 1
 #define OP_BUY 0

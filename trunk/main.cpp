@@ -13,7 +13,7 @@
 inline int rdtsc(){__asm__ __volatile__("rdtsc");}
 char* intToStr(int i);
 int find(const char *s, const char *key);
-void decode(int act,int tperiod,int actmode);
+void decode(int act,int tperiod,int actmode,bool tradecurbar);
 void wcmd(int reqestor);
 void wlog(const char* buffer);
 void title(int h,const char* buffer);
@@ -90,7 +90,7 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	UpdateWindow(hwnd);
 	srand(rdtsc());
     //if(!find(lpszArgument,"/t240"))wlog("/t240");
-    int action=optimizing,period=1440,mode=light;
+    int action=testing,period=1440,mode=light;
     if(find(lpszArgument,"/opt"))action=optimizing;else
     if(find(lpszArgument,"/test"))action=testing;else
     if(find(lpszArgument,"/debug"))action=debuging;
@@ -112,17 +112,24 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //	server = new Server;
 //    if(action==optimizing)server->on(false);else server->on();
 
-    if(mode!=unscalp)decode(action,period,mode);else{
+    if(mode!=unscalp){decode(action,1440,light,donottradecurrentbar);}else{//action=debuging;
         //if(action!=optimizing)
 //		wlog("\r\n");
-        //if(action!=optimizing)
-		//if(action==testing)
-		decode(action,1440,hard);
+        if(action!=optimizing){
+//			decode(action,10080,light,donottradecurrentbar);
+			decode(action,1440,light,donottradecurrentbar);
+//			decode(action,240,light,donottradecurrentbar);
+//			decode(action,60,light,donottradecurrentbar);
+		}else{
+			decode(action,1440,light,tradecurrentbar);
+			decode(action,240,light,tradecurrentbar);
+			decode(action,10080,light,tradecurrentbar);
+//			decode(action,60,light,tradecurrentbar);
+		}
 //        decode(action,1440,light);
         //if(action!=optimizing)
-		decode(action,240,hard);
-		decode(action,10080,hard);
-//        decode(action,240,light);
+//        decode(action,15,light);
+//        decode(action,60,hard);
 	}
     
 	while (GetMessage (&messages, NULL, 0, 0))
@@ -170,10 +177,10 @@ switch (message)
 }
 return 0;
 }
-void decode(int act,int tperiod,int actmode){
+void decode(int act,int tperiod,int actmode,bool tradecurbar){
 	Otskok* otskokobj;
 	otskokobj=new Otskok;
-	otskokobj->action(act,tperiod,actmode);
+	otskokobj->action(act,tperiod,actmode,tradecurbar);
 	delete otskokobj;
 }
 void wcmd(int reqestor){

@@ -31,6 +31,12 @@ class Otskok
 	int totalorders;
 	int iTradesTotal;
 	int iTradesCurrent;
+	int iTradesTotalOP_BUY;
+	int iTradesTotalOP_SELL;
+	int iTradesTotalOP_BUYLIMIT;
+	int iTradesTotalOP_SELLLIMIT;
+	int iTradesTotalOP_BUYSTOP;
+	int iTradesTotalOP_SELLSTOP;
 	int iHistoryTotal;
 	int iHistoryCurrent;
 	int minprofit;
@@ -71,7 +77,6 @@ class Otskok
 	void OrderClose(int OrderTicket, double tOrderPrice, int opclose);
 	void OrderDelete(int OrderTicket);
 
-	time_t* OrderOpenTime();
 	void iOrdersControl();
 /* TODO (root#1#): Tester */
 	struct optimizationconfig{
@@ -104,16 +109,16 @@ class Otskok
 
 		int totalprofit;
 		int totalorders;
-		int totalprofitindex;
+		double totalprofitindex;
 		int totaldrawdown;
 	};
 	struct mdata{
-		time_t ctm[12000];
-		double open[12000];
-		double low[12000];
-		double high[12000];
-		double close[12000];
-		double volume[12000];
+		time_t ctm[42000];
+		double open[42000];
+		double low[42000];
+		double high[42000];
+		double close[42000];
+		double volume[42000];
 	};
 	char testerpath[255];
 	char strategyset[255];
@@ -253,8 +258,16 @@ class Otskok
 		double midBUY;
 		double midBUYdrawdown;
 		int cntBUY;
+		char smab[2200];
+		char smas[2200];
+		double totalprofitindexb;
+		double totalprofitindexs;
+		double totalordersb;
+		double totalorderss;
 	};
 	consolidatesorted* csorted;
+	bool tradecurbar;
+	int optcurbuysell;
 	int optstop;
 
 	void test();
@@ -263,7 +276,7 @@ class Otskok
 
 	public:
 		Otskok();
-		void action(int t,int tperiod,int historymode);
+		void action(int t,int tperiod,int historymode,bool tcurbar);
 		virtual ~Otskok();
 
 };
