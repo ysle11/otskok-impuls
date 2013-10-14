@@ -264,6 +264,8 @@ class Otskok
 		double totalprofitindexs;
 		double totalordersb;
 		double totalorderss;
+		double kb;
+		double ks;
 	};
 	consolidatesorted* csorted;
 	bool tradecurbar;

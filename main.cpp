@@ -118,12 +118,12 @@ ListView_InsertColumn(hcmd,1,&lvc);
         if(action!=optimizing){
 //			decode(action,10080,light,donottradecurrentbar);
 			decode(action,1440,light,donottradecurrentbar);
-//			decode(action,240,light,donottradecurrentbar);
+			decode(action,240,light,donottradecurrentbar);
 //			decode(action,60,light,donottradecurrentbar);
 		}else{
+//			decode(action,240,light,tradecurrentbar);
 			decode(action,1440,light,tradecurrentbar);
-			decode(action,240,light,tradecurrentbar);
-			decode(action,10080,light,tradecurrentbar);
+//			decode(action,10080,light,tradecurrentbar);
 //			decode(action,60,light,tradecurrentbar);
 		}
 //        decode(action,1440,light);
