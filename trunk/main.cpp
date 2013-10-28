@@ -45,13 +45,19 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	wincl.cbWndExtra = 0;
 	wincl.hbrBackground = (HBRUSH) COLOR_BACKGROUND;
 	
+	
+	
 	if (!RegisterClassEx (&wincl)) return 0;
-	hwnd =CreateWindowEx (0,szClassName,"patterns",WS_CAPTION|WS_MINIMIZEBOX|WS_VISIBLE|WS_SYSMENU,CW_USEDEFAULT,CW_USEDEFAULT,544,575,HWND_DESKTOP,NULL,hThisInstance,NULL);
-	hlog =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,0,538,530,hwnd,NULL,hThisInstance,NULL);
+	RECT lp;
+	GetWindowRect(GetDesktopWindow(),&lp);
+	int w=GetSystemMetrics(SM_CXSCREEN);
+	int h=GetSystemMetrics(SM_CYSCREEN);
+	hwnd =CreateWindowEx (0,szClassName,"patterns",WS_CAPTION|WS_MINIMIZEBOX|WS_VISIBLE|WS_SYSMENU,lp.right-414,0,414,675,HWND_DESKTOP,NULL,hThisInstance,NULL);//CW_USEDEFAULT
+	hlog =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,0,438,630,hwnd,NULL,hThisInstance,NULL);
 //	hcmd =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,310,538,20,hwnd,NULL,hThisInstance,NULL);
 //	hcmd =CreateWindowEx (WS_EX_CLIENTEDGE,"ListBox","",WS_CHILD|WS_VISIBLE|WS_VSCROLL|LVS_REPORT | LVS_SHAREIMAGELISTS,0,260,538,70,hwnd,NULL,hThisInstance,NULL);
-	hpro =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,0,530,440,35,hwnd,NULL,hThisInstance,NULL);
-	hper =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,450,530,120,35,hwnd,NULL,hThisInstance,NULL);
+	hpro =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,0,630,410,35,hwnd,NULL,hThisInstance,NULL);
+	hper =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,410,630,30,35,hwnd,NULL,hThisInstance,NULL);
 /*    SendMessage( hcmd, LVM_FIRST+54, 0, 32 | 16 | 2 | 1);
 
 	ListView_SetTextColor(hcmd,0x00000000);
@@ -90,7 +96,7 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	UpdateWindow(hwnd);
 	srand(rdtsc());
     //if(!find(lpszArgument,"/t240"))wlog("/t240");
-    int action=testing,period=1440,mode=light;
+    int action=testing,period=15,mode=light;
     if(find(lpszArgument,"/opt"))action=optimizing;else
     if(find(lpszArgument,"/test"))action=testing;else
     if(find(lpszArgument,"/debug"))action=debuging;
@@ -112,19 +118,19 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //	server = new Server;
 //    if(action==optimizing)server->on(false);else server->on();
 
-    if(mode!=unscalp){decode(action,1440,light,donottradecurrentbar);}else{//action=debuging;
+    if(mode!=unscalp){decode(action,15,light,donottradecurrentbar);}else{//action=debuging;
         //if(action!=optimizing)
 //		wlog("\r\n");
         if(action!=optimizing){
 //			decode(action,10080,light,donottradecurrentbar);
 			decode(action,1440,light,donottradecurrentbar);
-			decode(action,240,light,donottradecurrentbar);
-//			decode(action,60,light,donottradecurrentbar);
+//			decode(action,240,light,donottradecurrentbar);
+//			decode(action,15,light,donottradecurrentbar);
 		}else{
-//			decode(action,240,light,tradecurrentbar);
-			decode(action,1440,light,tradecurrentbar);
 //			decode(action,10080,light,tradecurrentbar);
-//			decode(action,60,light,tradecurrentbar);
+			decode(action,1440,light,tradecurrentbar);
+//			decode(action,240,light,tradecurrentbar);
+//			decode(action,15,light,tradecurrentbar);
 		}
 //        decode(action,1440,light);
         //if(action!=optimizing)
