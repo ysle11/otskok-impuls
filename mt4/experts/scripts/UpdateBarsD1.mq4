@@ -30,7 +30,7 @@ int start()
    y=0;
    for(i=0;i<ArraySize(sms);i++)
    {
-      y+=10;x=365;
+      y+=10;x=160;//365;
       for(i1=0;i1<ArraySize(tfs);i1++)
       { 
       mode=""+sms[i]+DoubleToStr(tfs[i1],0); 
@@ -56,7 +56,7 @@ int start()
             }
          }   
       for(i=0;i<ArraySize(sms);i++)if(maxticktime<MarketInfo( ""+sms[i], MODE_TIME))maxticktime=MarketInfo( ""+sms[i], MODE_TIME);
-      ObjectSetText("MODE_TIME",TimeToStr(maxticktime,TIME_DATE|TIME_SECONDS)+"  H1", 8, "Arial Narrow", White);
+      ObjectSetText("MODE_TIME",TimeToStr(maxticktime,TIME_DATE|TIME_SECONDS)+"  D1", 8, "Arial Narrow", White);
          WindowRedraw();if(IsStopped())return(0);Sleep(100);i3++;if(i3>30){i3=0;RefreshRates();}
    }
    return(0);
