@@ -136,6 +136,8 @@ class Otskok
 	int testerperiod,testercntpervoid,testerdtime,testerltime,testerquant;
 	int testervalcnt,testercuritem,testersmacnt,testercursma;
 	bool testerfxok,testerdataok;
+	
+	double topen,topen1,thigh,tlow,tclose,tvolume;
 
 	int testerconsolidationbars,testercbars,testerdigits,testercntper;
 	double testertargetprofit,testerpoint;
@@ -146,7 +148,11 @@ class Otskok
 	time_t testercurdatetime;
 	bool testerisoptimize;
 	
-	int testermincnttrades,testermdrawdownclimit,testertargetprofitmul;
+	int testermincnttrades,testermdrawdownclimit,testertargetprofitmul,testerdistance;
+	int randptr,randcnt,randcnt2,randmdl,randbytes[256];
+	void initrandbytes();
+	int getrand();int getI();int getII();
+
 
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
 	void testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
@@ -235,6 +241,7 @@ class Otskok
 		int digits;
 		int datetime;
 		double priceopen;
+		double priceclose;
 		double targetprofit;
 		double highSELLIMIT;
 		double midSELLIMIT;
@@ -267,7 +274,28 @@ class Otskok
 		double kb;
 		double ks;
 	};
+	struct selltable{
+		int valid;
+		int digits;
+		int datetime;
+		double priceopen;
+		double priceclose;
+		double kb;
+		double ks;
+	};
+	struct buytable{
+		int valid;
+		int digits;
+		int datetime;
+		double priceopen;
+		double priceclose;
+		double kb;
+		double ks;
+	};
 	consolidatesorted* csorted;
+	selltable* stable;
+	buytable* btable;
+	int stablecnt,btablecnt,datetimemin;
 	bool tradecurbar;
 	int optcurbuysell;
 	int optstop;
