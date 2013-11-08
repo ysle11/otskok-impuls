@@ -125,11 +125,13 @@ ListView_InsertColumn(hcmd,1,&lvc);
 			decode(action,10080,light,donottradecurrentbar);
 			decode(action,1440,light,donottradecurrentbar);
 //			decode(action,240,light,donottradecurrentbar);
+//			decode(action,60,light,donottradecurrentbar);
 //			decode(action,15,light,donottradecurrentbar);
 		}else{
 			decode(action,10080,light,tradecurrentbar);
 			decode(action,1440,light,tradecurrentbar);
 //			decode(action,240,light,tradecurrentbar);
+//			decode(action,60,light,tradecurrentbar);
 //			decode(action,15,light,tradecurrentbar);
 		}
 //        decode(action,1440,light);
