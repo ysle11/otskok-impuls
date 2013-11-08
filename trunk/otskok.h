@@ -156,8 +156,6 @@ class Otskok
 
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
 	void testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
-	bool testerquant_();
-	bool testerNewBar(int op);
 	void testercloseall(int a);
 	void testercontrol();
 	double testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
