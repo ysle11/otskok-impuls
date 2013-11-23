@@ -122,13 +122,13 @@ ListView_InsertColumn(hcmd,1,&lvc);
         //if(action!=optimizing)
 //		wlog("\r\n");
         if(action!=optimizing){
-			decode(action,10080,light,donottradecurrentbar);
+//			decode(action,10080,light,donottradecurrentbar);
 			decode(action,1440,light,donottradecurrentbar);
 //			decode(action,240,light,donottradecurrentbar);
 //			decode(action,60,light,donottradecurrentbar);
 //			decode(action,15,light,donottradecurrentbar);
 		}else{
-			decode(action,10080,light,tradecurrentbar);
+//			decode(action,10080,light,tradecurrentbar);
 			decode(action,1440,light,tradecurrentbar);
 //			decode(action,240,light,tradecurrentbar);
 //			decode(action,60,light,tradecurrentbar);
@@ -139,7 +139,7 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //        decode(action,15,light);
 //        decode(action,60,hard);
 	}
-    
+    if(action!=optimizing)
 	while (GetMessage (&messages, NULL, 0, 0))
 	{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
 	if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));

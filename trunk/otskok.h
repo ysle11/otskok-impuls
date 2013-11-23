@@ -86,10 +86,10 @@ class Otskok
 		int dtime;
 		int ltime;
 		int quant;
-		char smas[255][22];
-		char vals[255][22];
-		int valstops[255];
-		int valspreads[255];
+		char smas[36][22];
+		char vals[65][22];
+		int valstops[65];
+		int valspreads[65];
 		int valcnt;
 		int smacnt;
 	};
@@ -125,10 +125,10 @@ class Otskok
 	char datfile[255];
 	int testertestfrom,testertestto;
 	mdata* testermetadata;
-	char testersmas[255][22];
-	char testervals[255][22];
-	int testervalstops[255];
-	int testervalspreads[255];
+	char testersmas[36][22];
+	char testervals[65][22];
+	int testervalstops[65];
+	int testervalspreads[65];
 	optimizationconfig* testeroptcnf;
 	optimizationvals* testeroptval;
 
@@ -191,6 +191,8 @@ class Otskok
 	double istddev(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double stochastic(const int period, const int price, const int shift );
 	double istochastic(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double stochastic2(const int period, const int price, const int shift );
+	double istochastic2(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double force(const int period, const int price, const int shift );
 	double iforce(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double ac(const int period, const int price, const int shift );
@@ -271,6 +273,7 @@ class Otskok
 		double totalorderss;
 		double kb;
 		double ks;
+		int prevbarsellorbuy;
 	};
 	struct selltable{
 		int valid;
@@ -280,6 +283,7 @@ class Otskok
 		double priceclose;
 		double kb;
 		double ks;
+		int scnt;
 	};
 	struct buytable{
 		int valid;
@@ -289,6 +293,7 @@ class Otskok
 		double priceclose;
 		double kb;
 		double ks;
+		int bcnt;
 	};
 	consolidatesorted* csorted;
 	selltable* stable;

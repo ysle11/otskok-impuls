@@ -1,5 +1,5 @@
 string mode;
-string sms[]={"EURUSD","USDCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","GBPCHF","USDSGD","EURGBP"};
+string sms[]={"#WMT","#XOM","#AA","#HPQ","#AIG","#MSFT","#AXP","#BA","#CAT","#DD","#DIS","#GE","#HD","#HON","#IBM","#INTC","#JNJ","#JPM","#KO","#MCD","#MMM","#MO","#MRK","#PFE","#PG","#T","#UTX","#VZ"};
 //string sms[]={"#HPQ","#AA","#MSFT","#YM","#EP","#ENQ"};
 int i,i1,i2,i3,secs=60;
 int tfs[]={PERIOD_D1};//,PERIOD_H1,PERIOD_H4
