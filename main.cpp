@@ -118,17 +118,19 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //	server = new Server;
 //    if(action==optimizing)server->on(false);else server->on();
 
-    if(mode!=unscalp){decode(action,15,light,donottradecurrentbar);}else{//action=debuging;
+    if(mode!=unscalp){decode(action,1440,hard,donottradecurrentbar);}else{//action=debuging;
         //if(action!=optimizing)
 //		wlog("\r\n");
         if(action!=optimizing){
 //			decode(action,10080,light,donottradecurrentbar);
+//			decode(action,1440,hard,donottradecurrentbar);
 			decode(action,1440,light,donottradecurrentbar);
 //			decode(action,240,light,donottradecurrentbar);
 //			decode(action,60,light,donottradecurrentbar);
 //			decode(action,15,light,donottradecurrentbar);
 		}else{
 //			decode(action,10080,light,tradecurrentbar);
+//			decode(action,1440,hard,tradecurrentbar);
 			decode(action,1440,light,tradecurrentbar);
 //			decode(action,240,light,tradecurrentbar);
 //			decode(action,60,light,tradecurrentbar);

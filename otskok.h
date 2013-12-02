@@ -250,10 +250,12 @@ class Otskok
 		double lowSELLSTOP;
 		double midSELLSTOP;
 		int cntSELLSTOP;
+		int cntSELLSTOPtotal;
 		double highBUYSTOP;
 		double midBUYSTOP;
 		double lowBUYSTOP;
 		int cntBUYSTOP;
+		int cntBUYSTOPtotal;
 		double lowBUYLIMIT;
 		double midBUYLIMIT;
 		int cntBUYLIMIT;
@@ -284,6 +286,7 @@ class Otskok
 		double kb;
 		double ks;
 		int scnt;
+		int totalscnt;
 	};
 	struct buytable{
 		int valid;
@@ -294,7 +297,22 @@ class Otskok
 		double kb;
 		double ks;
 		int bcnt;
+		int totalbcnt;
 	};
+	struct valmetr{
+		char name[22];
+		double smascntsell;
+		double smastotalsell;
+		double powersell;
+		double ratesell;
+		double smascntbuy;
+		double smastotalbuy;
+		double powerbuy;
+		double ratebuy;
+
+	};
+    valmetr* vmetr;
+    int vmetrcnt;
 	consolidatesorted* csorted;
 	selltable* stable;
 	buytable* btable;
