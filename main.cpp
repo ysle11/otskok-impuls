@@ -13,6 +13,7 @@
 inline int rdtsc(){__asm__ __volatile__("rdtsc");}
 char* intToStr(int i);
 int find(const char *s, const char *key);
+int find2(const char *s, const char *key);
 void decode(int act,int tperiod,int actmode,bool tradecurbar);
 void wcmd(int reqestor);
 void wlog(const char* buffer);
@@ -94,9 +95,8 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //mysqltest();
 	ShowWindow (hwnd, nFunsterStil);
 	UpdateWindow(hwnd);
-	srand(rdtsc());
-    //if(!find(lpszArgument,"/t240"))wlog("/t240");
-    int action=testing,period=15,mode=light;
+	srand(time(0));
+    int action,period,mode;
     if(find(lpszArgument,"/opt"))action=optimizing;else
     if(find(lpszArgument,"/test"))action=testing;else
     if(find(lpszArgument,"/debug"))action=debuging;
@@ -110,44 +110,26 @@ ListView_InsertColumn(hcmd,1,&lvc);
     if(find(lpszArgument,"/10080t"))period=10080;else
     if(find(lpszArgument,"/43200t"))period=43200;
 
-    if(find(lpszArgument,"/unscalp"))mode=unscalp;else
-    if(find(lpszArgument,"/light"))mode=light;else
-    if(find(lpszArgument,"/medium"))mode=medium;else
-    if(find(lpszArgument,"/hard"))mode=hard;
+	mode=999;
+	if(find2(lpszArgument,"/MMCIS-Demo"))mode=light;else
+    if(find2(lpszArgument,"/MMCIS-Real"))mode=medium;else
+    if(find2(lpszArgument,"/InstaForex-Demo.com"))mode=hard;
 
 //	server = new Server;
 //    if(action==optimizing)server->on(false);else server->on();
 
-    if(mode!=unscalp){decode(action,1440,hard,donottradecurrentbar);}else{//action=debuging;
-        //if(action!=optimizing)
-//		wlog("\r\n");
-        if(action!=optimizing){
-//			decode(action,10080,light,donottradecurrentbar);
-//			decode(action,1440,hard,donottradecurrentbar);
-			decode(action,1440,light,donottradecurrentbar);
-//			decode(action,240,light,donottradecurrentbar);
-//			decode(action,60,light,donottradecurrentbar);
-//			decode(action,15,light,donottradecurrentbar);
-		}else{
-//			decode(action,10080,light,tradecurrentbar);
-//			decode(action,1440,hard,tradecurrentbar);
-			decode(action,1440,light,tradecurrentbar);
-//			decode(action,240,light,tradecurrentbar);
-//			decode(action,60,light,tradecurrentbar);
-//			decode(action,15,light,tradecurrentbar);
+    if(mode==999)MessageBoxA(0,"Optimization: patterns.exe /MMCIS-Demo /opt /1440t\r\nTesting: patterns.exe /MMCIS-Demo /test /1440t\r\nDebuging: patterns.exe /MMCIS-Demo /debug /1440t\r\n\r\naction: /opt,/test,/debug\r\nperiod: /1t,/5t,/15t,/60t,/240t,/1440t,/10080t,/43200t\r\nmode: /MMCIS-Demo,/MMCIS-Real,/InstaForex-Demo.com\r\n\r\nExample: f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\patterns.exe /MMCIS-Demo /opt /1440t\r\n","Help:",0);
+	  else{
+        if(action!=optimizing)decode(action,period,mode,donottradecurrentbar);
+		  else decode(action,period,mode,tradecurrentbar);
+	    if(action!=optimizing)
+		while (GetMessage (&messages, NULL, 0, 0))
+		{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
+		if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));
+			TranslateMessage(&messages);
+			DispatchMessage(&messages);
 		}
-//        decode(action,1440,light);
-        //if(action!=optimizing)
-//        decode(action,15,light);
-//        decode(action,60,hard);
-	}
-    if(action!=optimizing)
-	while (GetMessage (&messages, NULL, 0, 0))
-	{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
-	if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));
-		TranslateMessage(&messages);
-		DispatchMessage(&messages);
-	}
+	  }
 	return messages.wParam;
 }
 LRESULT CALLBACK WindowProcedure (HWND hwnd1, UINT message, WPARAM wParam, LPARAM lParam)
@@ -281,6 +263,22 @@ inline int find(const char *s, const char *key)
 		if(s-e==len && !strncmp(e, key, s-e)) return 1;//i;
 		else s = a;
 		elementskip, whitespaceskip;
+	}
+    return 0;
+}
+inline int find2(const char *s, const char *key)
+{
+	int len = strlen(key);
+	int len2 = strlen(s);
+	if(len<len2)
+	for(int i = 0; i<(len2-len); i++)
+	{
+		bool crc=true;
+		for(int i1 = 0; i1<len; i1++)
+		if(s[i+i1]!=key[i1])crc=false;
+
+		if(crc) return 1;
+
 	}
     return 0;
 }
