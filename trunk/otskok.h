@@ -9,9 +9,11 @@ class Otskok
 	char* doubleToStr(double d,int precsion);
 	int rdtsc();
 	int find(const char *s, const char *key);
+	int find2(const char *s, const char *key);
 	char* substr(const char* S, const int pos, const int len);
 	char* timeToStr(const time_t st=0);
 	char* gmtimeToStr(const time_t st=0);
+	void sleep(int delay);
 	int mode;
 /* TODO (root#1#): Journals */
 	struct deal{
@@ -87,9 +89,9 @@ class Otskok
 		int ltime;
 		int quant;
 		char smas[36][22];
-		char vals[65][22];
-		int valstops[65];
-		int valspreads[65];
+		char vals[255][22];
+		int valstops[255];
+		int valspreads[255];
 		int valcnt;
 		int smacnt;
 	};
@@ -126,9 +128,9 @@ class Otskok
 	int testertestfrom,testertestto;
 	mdata* testermetadata;
 	char testersmas[36][22];
-	char testervals[65][22];
-	int testervalstops[65];
-	int testervalspreads[65];
+	char testervals[255][22];
+	int testervalstops[255];
+	int testervalspreads[255];
 	optimizationconfig* testeroptcnf;
 	optimizationvals* testeroptval;
 
@@ -136,18 +138,18 @@ class Otskok
 	int testerperiod,testercntpervoid,testerdtime,testerltime,testerquant;
 	int testervalcnt,testercuritem,testersmacnt,testercursma;
 	bool testerfxok,testerdataok;
-	
+
 	double topen,topen1,thigh,tlow,tclose,tvolume;
 
 	int testerconsolidationbars,testercbars,testerdigits,testercntper;
 	double testertargetprofit,testerpoint;
 	time_t testertime_pending_orders;
-	
+
 	double testercurh,testercuro,testercurl,testercurc,testercurprice;
 	int testercurbar;
 	time_t testercurdatetime;
 	bool testerisoptimize;
-	
+
 	int testermincnttrades,testermdrawdownclimit,testertargetprofitmul,testerdistance;
 	int randptr,randcnt,randcnt2,randmdl,randbytes[256];
 	void initrandbytes();
@@ -309,6 +311,7 @@ class Otskok
 		double smastotalbuy;
 		double powerbuy;
 		double ratebuy;
+		int ratedir;
 
 	};
     valmetr* vmetr;
@@ -316,7 +319,7 @@ class Otskok
 	consolidatesorted* csorted;
 	selltable* stable;
 	buytable* btable;
-	int stablecnt,btablecnt,datetimemin;
+	int stablecnt,btablecnt,datetimemin,datetimemax;
 	bool tradecurbar;
 	int optcurbuysell;
 	int optstop;
