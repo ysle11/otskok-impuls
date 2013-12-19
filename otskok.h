@@ -134,23 +134,21 @@ class Otskok
 	optimizationconfig* testeroptcnf;
 	optimizationvals* testeroptval;
 
-	int testerspread,testerstop;
-	int testerperiod,testercntpervoid,testerdtime,testerltime,testerquant;
-	int testervalcnt,testercuritem,testersmacnt,testercursma;
+	int testerperiod,testerspread;
+	int testervalcnt,testersmacnt,testercuritem,testercursma;
 	bool testerfxok,testerdataok;
 
 	double topen,topen1,thigh,tlow,tclose,tvolume;
 
-	int testerconsolidationbars,testercbars,testerdigits,testercntper;
-	double testertargetprofit,testerpoint;
+	int testercbars,testerdigits,testercntper,tester2point;
+	double testerpoint;
 	time_t testertime_pending_orders;
 
 	double testercurh,testercuro,testercurl,testercurc,testercurprice;
 	int testercurbar;
 	time_t testercurdatetime;
-	bool testerisoptimize;
 
-	int testermincnttrades,testermdrawdownclimit,testertargetprofitmul,testerdistance;
+	int testermincnttrades,testermdrawdownclimit,testerdistance;
 	int randptr,randcnt,randcnt2,randmdl,randbytes[256];
 	void initrandbytes();
 	int getrand();int getI();int getII();
@@ -158,8 +156,6 @@ class Otskok
 
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
 	void testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
-	void testercloseall(int a);
-	void testercontrol();
 	double testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
 	double sma(const int period, const int price, const int shift );
 	double isma(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
@@ -244,7 +240,6 @@ class Otskok
 		int datetime;
 		double priceopen;
 		double priceclose;
-		double targetprofit;
 		double highSELLIMIT;
 		double midSELLIMIT;
 		int cntSELLIMIT;
@@ -288,6 +283,7 @@ class Otskok
 		double kb;
 		double ks;
 		int scnt;
+		int scnt1;
 		int totalscnt;
 	};
 	struct buytable{
@@ -299,6 +295,7 @@ class Otskok
 		double kb;
 		double ks;
 		int bcnt;
+		int bcnt1;
 		int totalbcnt;
 	};
 	struct valmetr{
@@ -322,7 +319,6 @@ class Otskok
 	int stablecnt,btablecnt,datetimemin,datetimemax;
 	bool tradecurbar;
 	int optcurbuysell;
-	int optstop;
 
 	void test();
 	void optimize();

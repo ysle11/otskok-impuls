@@ -10,6 +10,7 @@
 
 //Server* server;
 //int mysqltest();
+char* globallog;int globallogsize;
 inline int rdtsc(){__asm__ __volatile__("rdtsc");}
 char* intToStr(int i);
 int find(const char *s, const char *key);
@@ -17,6 +18,7 @@ int find2(const char *s, const char *key);
 void decode(int act,int tperiod,int actmode,bool tradecurbar);
 void wcmd(int reqestor);
 void wlog(const char* buffer);
+void wlogsave();
 void title(int h,const char* buffer);
 void* Mmalloc(size_t size);
 char* Mstrdup(const char *s);
@@ -26,11 +28,15 @@ WNDCLASSEX wincl;
 NOTIFYICONDATA note;
 char szClassName[]="patterns";
 HWND hwnd,hlog,hpro,hper,hcmd;
+int action,period,mode;
 LRESULT CALLBACK WindowProcedure (HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszArgument,int nFunsterStil)
 {
 	MSG messages;
+	globallog = new char[1];globallog[0]=32;
+	globallogsize=1;
+//	globallog = (char*)Mrealloc(2);
 	
 	wincl.hInstance = hThisInstance;
 	wincl.lpszClassName = szClassName;
@@ -96,7 +102,6 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	ShowWindow (hwnd, nFunsterStil);
 	UpdateWindow(hwnd);
 	srand(time(0));
-    int action,period,mode;
     if(find(lpszArgument,"/opt"))action=optimizing;else
     if(find(lpszArgument,"/test"))action=testing;else
     if(find(lpszArgument,"/debug"))action=debuging;
@@ -130,6 +135,7 @@ ListView_InsertColumn(hcmd,1,&lvc);
 			DispatchMessage(&messages);
 		}
 	  }
+	delete[] globallog;
 	return messages.wParam;
 }
 LRESULT CALLBACK WindowProcedure (HWND hwnd1, UINT message, WPARAM wParam, LPARAM lParam)
@@ -139,6 +145,7 @@ switch (message)
 	case WM_DESTROY:
 		{
 //			delete server;
+			wlogsave();
 			PostQuitMessage (0);
 		}
 	break;
@@ -184,20 +191,55 @@ void wlog(const char* buffer){
 		char* buf;
 	    int hloglen=GetWindowTextLength(hlog)+1;
 	    int slen=strlen(buffer)+1;
-if(slen<30000){
-        buf= new char[hloglen+slen+1];
-		memset(buf,0,hloglen+slen+1);
-		if((hloglen+slen)<30000)GetWindowText(hlog,buf,hloglen);
-		lstrcat(buf,buffer);
-		SetWindowText(hlog, buf);
-		Edit_Scroll(hlog,Edit_GetLineCount(hlog),0);
-		int wlen=GetWindowTextLength(hlog);
-		Edit_SetSel(hlog,wlen-1,wlen);
-		Edit_SetSel(hlog,wlen,wlen);
-		SetFocus(hlog);
-		ShowCaret(hlog);
-		delete[] buf;
+		if(slen<30000){
+		        buf= new char[2];//hloglen+slen+1];
+		        buf = (char*)Mrealloc(buf,hloglen+slen+1);
+				memset(buf,0,hloglen+slen+1);
+				if((hloglen+slen)<30000)GetWindowText(hlog,buf,hloglen);
+				else{
+					char* tmpbuf=new char[2];tmpbuf = (char*)Mrealloc(tmpbuf,hloglen+1);GetWindowText(hlog,&tmpbuf[0],hloglen);
+					//int oldsize;oldsize=sizeof(globallog);
+					globallog = (char*)Mrealloc(globallog,hloglen+globallogsize+1);
+					memcpy(&globallog[globallogsize],tmpbuf,hloglen-1);globallogsize+=hloglen;
+				}
+				lstrcat(buf,buffer);
+				SetWindowText(hlog, buf);
+				Edit_Scroll(hlog,Edit_GetLineCount(hlog),0);
+				int wlen=GetWindowTextLength(hlog);
+				Edit_SetSel(hlog,wlen-1,wlen);
+				Edit_SetSel(hlog,wlen,wlen);
+				SetFocus(hlog);
+				ShowCaret(hlog);
+				delete[] buf;
+		}
 }
+void wlogsave(){
+    DWORD result;
+    HANDLE hFile = CreateFile("patterns.log", GENERIC_WRITE, 0, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+    int i=GetFileSize(hFile, NULL);
+    SetFilePointer(hFile,i,NULL,FILE_BEGIN);
+
+	char* tmp; tmp=(char*)Mmalloc(3255);memset(tmp,0,3255);
+	char* tmp2; tmp2=(char*)Mmalloc(125);memset(tmp2,0,125);
+	time_t t1=time(0);
+	tm tm1;memset(&tm1,0,sizeof(struct tm));tm1 = *localtime((const time_t *)&t1);
+	strftime(tmp2,80,"%d.%m.%Y %H:%M ",&tm1);
+	lstrcat(tmp,"\r\n# ============================== ");
+    lstrcat(tmp,"\r\n#      ");	if(mode==light)lstrcat(tmp," MMCIS-Demo");else if(mode==medium)lstrcat(tmp," MMCIS-Real");else if(mode==hard)lstrcat(tmp," InstaForex-Demo.com");
+	lstrcat(tmp,"\r\n#      action: ");if(action==optimizing)lstrcat(tmp,"optimizing");else if(action==debuging)lstrcat(tmp,"debuging"); else if(action==testing)lstrcat(tmp,"testing");
+	lstrcat(tmp,"\r\n#      period: ");lstrcat(tmp,intToStr(period));
+	lstrcat(tmp,"\r\n#      ");lstrcat(tmp,tmp2);
+	lstrcat(tmp,"\r\n# ============================== ");lstrcat(tmp,"\r\n\r\n");
+	int i1=strlen(tmp);WriteFile(hFile, &tmp[0], i1, &result, NULL);Mfree(tmp);Mfree(tmp2);
+	SetFilePointer(hFile,i+i1,NULL,FILE_BEGIN);
+    
+    WriteFile(hFile, &globallog[0], globallogsize, &result, NULL);
+    int hloglen;hloglen=GetWindowTextLength(hlog);char* buf2= new char[2];buf2 = (char*)Mrealloc(buf2,hloglen+1);GetWindowText(hlog,&buf2[0],hloglen);
+    SetFilePointer(hFile,i1+i+globallogsize,NULL,FILE_BEGIN);
+    WriteFile(hFile, &buf2[0], hloglen-1, &result, NULL);
+    delete[] buf2;
+	CloseHandle(hFile);
+    
 }
 void title(int h,const char* buffer){
 		if(h==whwnd)SetWindowText(hwnd,buffer);else
@@ -210,7 +252,7 @@ void *Mmalloc(size_t size)
 {
 	char *aux=0;
 	size++;
-	if((aux=(char *)malloc(size))==NULL)return NULL;
+	if((aux=(char *)malloc(size))==NULL){wlog("\r\nMmalloc error\r\n");return NULL;}
 	memset(aux, '\0', size);
 	return (void *)aux;
 }
@@ -229,7 +271,7 @@ char *Mstrdup(const char *s)
 void *Mrealloc(void* ptr, size_t size)
 {
 	char *aux=0;
-	if((aux=(char *)realloc(ptr, size))==NULL)return NULL;
+	if((aux=(char *)realloc(ptr, size))==NULL){wlog("\r\nMrealloc error\r\n");return NULL;}
 	return (void *)aux;
 }
 
