@@ -123,18 +123,17 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //	server = new Server;
 //    if(action==optimizing)server->on(false);else server->on();
 
-    if(mode==999)MessageBoxA(0,"Optimization: patterns.exe /MMCIS-Demo /opt /1440t\r\nTesting: patterns.exe /MMCIS-Demo /test /1440t\r\nDebuging: patterns.exe /MMCIS-Demo /debug /1440t\r\n\r\naction: /opt,/test,/debug\r\nperiod: /1t,/5t,/15t,/60t,/240t,/1440t,/10080t,/43200t\r\nmode: /MMCIS-Demo,/MMCIS-Real,/InstaForex-Demo.com\r\n\r\nExample: f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\patterns.exe /MMCIS-Demo /opt /1440t\r\n","Help:",0);
-	  else{
-        if(action!=optimizing)decode(action,period,mode,donottradecurrentbar);
-		  else decode(action,period,mode,tradecurrentbar);
-	    if(action!=optimizing)
-		while (GetMessage (&messages, NULL, 0, 0))
-		{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
-		if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));
-			TranslateMessage(&messages);
-			DispatchMessage(&messages);
-		}
-	  }
+    if(mode==999)wlog("Optimization: patterns.exe /MMCIS-Demo /opt /1440t\r\nTesting: patterns.exe /MMCIS-Demo /test /1440t\r\nDebuging: patterns.exe /MMCIS-Demo /debug /1440t\r\n\r\naction: /opt,/test,/debug\r\nperiod: /1t,/5t,/15t,/60t,/240t,/1440t,/10080t,/43200t\r\nmode: /MMCIS-Demo,/MMCIS-Real,/InstaForex-Demo.com\r\n\r\nExample: f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\patterns.exe /MMCIS-Demo /opt /1440t\r\n");
+	else if(action!=optimizing)decode(action,period,mode,donottradecurrentbar);else decode(action,period,mode,tradecurrentbar);
+    
+    if(!find(lpszArgument,"/quit"))
+	while (GetMessage (&messages, NULL, 0, 0))
+	{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
+	if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));
+		TranslateMessage(&messages);
+		DispatchMessage(&messages);
+	}wlogsave();
+
 	delete[] globallog;
 	return messages.wParam;
 }

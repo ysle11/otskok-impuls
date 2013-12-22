@@ -81,21 +81,7 @@ class Otskok
 
 	void iOrdersControl();
 /* TODO (root#1#): Tester */
-	struct optimizationconfig{
-		char path[255];
-		int period;
-		int cntpervoid;
-		int dtime;
-		int ltime;
-		int quant;
-		char smas[36][22];
-		char vals[255][22];
-		int valstops[255];
-		int valspreads[255];
-		int valcnt;
-		int smacnt;
-	};
-	struct optimizationvals{
+	struct optimizationvalparams{
 		short int param1;
 		short int param2;
 		short int param3;
@@ -103,16 +89,17 @@ class Otskok
 		short int param5;
 		short int param6;
 		short int param7;
-		short int param8;
-		char stoporlimit;
 		int datetimeopt;
-		int datetimestart;
+	};
+	struct optimizationvals{
+        optimizationvalparams params[4];
+/*		int datetimestart;
 		int datetimeend;
 
 		int totalprofit;
 		int totalorders;
 		double totalprofitindex;
-		int totaldrawdown;
+		int totaldrawdown;*/
 	};
 	struct mdata{
 		time_t ctm[42000];
@@ -125,33 +112,28 @@ class Otskok
 	char testerpath[255];
 	char strategyset[255];
 	char datfile[255];
-	int testertestfrom,testertestto;
 	mdata* testermetadata;
 	char testersmas[36][22];
 	char testervals[255][22];
-	int testervalstops[255];
-	int testervalspreads[255];
-	optimizationconfig* testeroptcnf;
 	optimizationvals* testeroptval;
 
-	int testerperiod,testerspread;
+	int testerperiod,testerspread,stopavg1b,stopavg1s,stopavg2b,stopavg2s;
 	int testervalcnt,testersmacnt,testercuritem,testercursma;
 	bool testerfxok,testerdataok;
 
 	double topen,topen1,thigh,tlow,tclose,tvolume;
 
-	int testercbars,testerdigits,testercntper,tester2point;
+	int testerdigits,testercntper,tester2point;
 	double testerpoint;
-	time_t testertime_pending_orders;
 
-	double testercurh,testercuro,testercurl,testercurc,testercurprice;
+	double testercurh,testercuro,testercurl,testercurc;
 	int testercurbar;
 	time_t testercurdatetime;
 
-	int testermincnttrades,testermdrawdownclimit,testerdistance;
-	int randptr,randcnt,randcnt2,randmdl,randbytes[256];
+	int testermincnttrades,testermdrawdownclimit;
+	int randptr,randcnt,randcnt2,randbytes[256];
 	void initrandbytes();
-	int getrand();int getI();int getII();
+	int getrand();
 
 
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
@@ -240,89 +222,27 @@ class Otskok
 		int datetime;
 		double priceopen;
 		double priceclose;
-		double highSELLIMIT;
-		double midSELLIMIT;
-		int cntSELLIMIT;
-		double highSELLSTOP;
-		double lowSELLSTOP;
+		double midBUYSTOP;
+		int cntBUYSTOP;
+		int cntBUYSTOPtotal;
 		double midSELLSTOP;
 		int cntSELLSTOP;
 		int cntSELLSTOPtotal;
-		double highBUYSTOP;
-		double midBUYSTOP;
-		double lowBUYSTOP;
-		int cntBUYSTOP;
-		int cntBUYSTOPtotal;
-		double lowBUYLIMIT;
-		double midBUYLIMIT;
-		int cntBUYLIMIT;
-		double lowSELL;
-		double midSELL;
-		double midSELLdrawdown;
-		int cntSELL;
-		double lowBUY;
-		double midBUY;
-		double midBUYdrawdown;
-		int cntBUY;
-		char smab[2200];
-		char smas[2200];
-		double totalprofitindexb;
-		double totalprofitindexs;
-		double totalordersb;
-		double totalorderss;
-		double kb;
-		double ks;
-		int prevbarsellorbuy;
+		double powerBUYSTOP;
+		double powerSELLSTOP;
+		double profitBUYSTOP;
+		double profitSELLSTOP;
 	};
-	struct selltable{
-		int valid;
-		int digits;
-		int datetime;
-		double priceopen;
-		double priceclose;
-		double kb;
-		double ks;
-		int scnt;
-		int scnt1;
-		int totalscnt;
-	};
-	struct buytable{
-		int valid;
-		int digits;
-		int datetime;
-		double priceopen;
-		double priceclose;
-		double kb;
-		double ks;
-		int bcnt;
-		int bcnt1;
-		int totalbcnt;
-	};
-	struct valmetr{
-		char name[22];
-		double smascntsell;
-		double smastotalsell;
-		double powersell;
-		double ratesell;
-		double smascntbuy;
-		double smastotalbuy;
-		double powerbuy;
-		double ratebuy;
-		int ratedir;
 
-	};
-    valmetr* vmetr;
-    int vmetrcnt;
-	consolidatesorted* csorted;
-	selltable* stable;
-	buytable* btable;
-	int stablecnt,btablecnt,datetimemin,datetimemax;
+	consolidatesorted* unsorted;
+
+	int datetimemin,datetimemax;
 	bool tradecurbar;
 	int optcurbuysell;
 
 	void test();
 	void optimize();
-	void debug();
+	//void debug();
 
 	public:
 		Otskok();
