@@ -131,7 +131,7 @@ class Otskok
 	time_t testercurdatetime;
 
 	int testermincnttrades,testermdrawdownclimit;
-	int randptr,randcnt,randcnt2,randbytes[256];
+	int randptr,randcnt,randcnt2,randbytes[65536];
 	void initrandbytes();
 	int getrand();
 
@@ -222,16 +222,24 @@ class Otskok
 		int datetime;
 		double priceopen;
 		double priceclose;
+		double pricehigh;
+		double pricelow;
 		double midBUYSTOP;
 		int cntBUYSTOP;
 		int cntBUYSTOPtotal;
+		int cntBUYSTOP2total;
 		double midSELLSTOP;
 		int cntSELLSTOP;
 		int cntSELLSTOPtotal;
+		int cntSELLSTOP2total;
 		double powerBUYSTOP;
 		double powerSELLSTOP;
 		double profitBUYSTOP;
 		double profitSELLSTOP;
+		double profitBUYSTOP2;
+		double profitSELLSTOP2;
+		int cntBUYSTOP2;
+		int cntSELLSTOP2;
 	};
 
 	consolidatesorted* unsorted;
@@ -241,12 +249,13 @@ class Otskok
 	int optcurbuysell;
 
 	void test();
+	void test2();
 	void optimize();
 	//void debug();
 
 	public:
 		Otskok();
-		void action(int t,int tperiod,int historymode,bool tcurbar);
+		void action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar);
 		virtual ~Otskok();
 
 };

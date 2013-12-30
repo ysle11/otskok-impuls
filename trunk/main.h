@@ -4,7 +4,7 @@ enum { cmdmain, cmdotskok, cmdimpuls };
 enum { testing, optimizing, debuging };
 enum { light, medium, hard, unscalp };
 enum { withtime, settitle };
-enum { whwnd,whlog,whpro,whper,whcmd };
+enum { whwnd,whlog,whpro,whbackbar,whcmd };
 enum { donottradecurrentbar=false, tradecurrentbar=true };
 #define MODE_TRADES 0
 #define MODE_HISTORY 1
