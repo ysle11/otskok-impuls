@@ -15,7 +15,7 @@ inline int rdtsc(){__asm__ __volatile__("rdtsc");}
 char* intToStr(int i);
 int find(const char *s, const char *key);
 int find2(const char *s, const char *key);
-void decode(int act,int tperiod,int actmode,bool tradecurbar);
+void decode(int act,int tperiod,int actmode,bool tradecurbar,int tbackbar);
 void wcmd(int reqestor);
 void wlog(const char* buffer);
 void wlogsave();
@@ -27,8 +27,8 @@ void Mfree(void *ptr);
 WNDCLASSEX wincl;
 NOTIFYICONDATA note;
 char szClassName[]="patterns";
-HWND hwnd,hlog,hpro,hper,hcmd;
-int action,period,mode;
+HWND hwnd,hlog,hpro,hbup,hbdn,hbackbar,hcmd;
+int action,period,mode,backbar;
 LRESULT CALLBACK WindowProcedure (HWND, UINT, WPARAM, LPARAM);
 
 int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszArgument,int nFunsterStil)
@@ -36,6 +36,7 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	MSG messages;
 	globallog = new char[1];globallog[0]=32;
 	globallogsize=1;
+	backbar=0;
 //	globallog = (char*)Mrealloc(2);
 	
 	wincl.hInstance = hThisInstance;
@@ -59,12 +60,12 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	GetWindowRect(GetDesktopWindow(),&lp);
 	int w=GetSystemMetrics(SM_CXSCREEN);
 	int h=GetSystemMetrics(SM_CYSCREEN);
-	hwnd =CreateWindowEx (0,szClassName,"patterns",WS_CAPTION|WS_MINIMIZEBOX|WS_VISIBLE|WS_SYSMENU,lp.right-414,0,414,675,HWND_DESKTOP,NULL,hThisInstance,NULL);//CW_USEDEFAULT
+	hwnd =CreateWindowEx (0,szClassName,"patterns",WS_CAPTION|WS_MINIMIZEBOX|WS_VISIBLE|WS_SYSMENU,lp.right-414,0,414,670,HWND_DESKTOP,NULL,hThisInstance,NULL);//CW_USEDEFAULT
 	hlog =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,0,438,630,hwnd,NULL,hThisInstance,NULL);
 //	hcmd =CreateWindowEx (0,"Edit","",WS_CHILD|WS_VISIBLE|ES_MULTILINE|ES_AUTOVSCROLL|ES_NOHIDESEL|WS_VSCROLL,0,310,538,20,hwnd,NULL,hThisInstance,NULL);
 //	hcmd =CreateWindowEx (WS_EX_CLIENTEDGE,"ListBox","",WS_CHILD|WS_VISIBLE|WS_VSCROLL|LVS_REPORT | LVS_SHAREIMAGELISTS,0,260,538,70,hwnd,NULL,hThisInstance,NULL);
-	hpro =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,0,630,410,35,hwnd,NULL,hThisInstance,NULL);
-	hper =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,410,630,30,35,hwnd,NULL,hThisInstance,NULL);
+	hpro =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,0,630,380,20,hwnd,NULL,hThisInstance,NULL);
+	
 /*    SendMessage( hcmd, LVM_FIRST+54, 0, 32 | 16 | 2 | 1);
 
 	ListView_SetTextColor(hcmd,0x00000000);
@@ -103,7 +104,12 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	UpdateWindow(hwnd);
 	srand(time(0));
     if(find(lpszArgument,"/opt"))action=optimizing;else
-    if(find(lpszArgument,"/test"))action=testing;else
+    if(find(lpszArgument,"/test")){
+		action=testing;
+		hbup =CreateWindowEx (0,"Button"," ",WS_CHILD | WS_VISIBLE,400,630,10,10,hwnd,NULL,hThisInstance,NULL);
+		hbdn =CreateWindowEx (0,"Button"," ",WS_CHILD | WS_VISIBLE,400,640,10,10,hwnd,NULL,hThisInstance,NULL);
+		hbackbar =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,380,630,20,20,hwnd,NULL,hThisInstance,NULL);title(whbackbar,intToStr(backbar));
+	}else
     if(find(lpszArgument,"/debug"))action=debuging;
 
     if(find(lpszArgument,"/1t"))period=1;else
@@ -124,12 +130,14 @@ ListView_InsertColumn(hcmd,1,&lvc);
 //    if(action==optimizing)server->on(false);else server->on();
 
     if(mode==999)wlog("Optimization: patterns.exe /MMCIS-Demo /opt /1440t\r\nTesting: patterns.exe /MMCIS-Demo /test /1440t\r\nDebuging: patterns.exe /MMCIS-Demo /debug /1440t\r\n\r\naction: /opt,/test,/debug\r\nperiod: /1t,/5t,/15t,/60t,/240t,/1440t,/10080t,/43200t\r\nmode: /MMCIS-Demo,/MMCIS-Real,/InstaForex-Demo.com\r\n\r\nExample: f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\patterns.exe /MMCIS-Demo /opt /1440t\r\n");
-	else if(action!=optimizing)decode(action,period,mode,donottradecurrentbar);else decode(action,period,mode,tradecurrentbar);
+	else if(action!=optimizing)decode(action,period,mode,donottradecurrentbar,backbar);else decode(action,period,mode,tradecurrentbar,backbar);
     
     if(!find(lpszArgument,"/quit"))
 	while (GetMessage (&messages, NULL, 0, 0))
 	{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
 	if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));
+	if((messages.hwnd==hbup)&&(messages.message==WM_LBUTTONUP)){backbar++;if(backbar>21)backbar=21;else title(whbackbar,intToStr(backbar));decode(action,period,mode,donottradecurrentbar,backbar);}
+	if((messages.hwnd==hbdn)&&(messages.message==WM_LBUTTONUP)){backbar--;if(backbar<-1)backbar=-1;else title(whbackbar,intToStr(backbar));decode(action,period,mode,donottradecurrentbar,backbar);}
 		TranslateMessage(&messages);
 		DispatchMessage(&messages);
 	}wlogsave();
@@ -175,10 +183,10 @@ switch (message)
 }
 return 0;
 }
-void decode(int act,int tperiod,int actmode,bool tradecurbar){
+void decode(int act,int tperiod,int actmode,bool tradecurbar,int tbackbar){
 	Otskok* otskokobj;
 	otskokobj=new Otskok;
-	otskokobj->action(act,tperiod,actmode,tradecurbar);
+	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar);
 	delete otskokobj;
 }
 void wcmd(int reqestor){
@@ -244,7 +252,7 @@ void title(int h,const char* buffer){
 		if(h==whwnd)SetWindowText(hwnd,buffer);else
 		if(h==whlog)SetWindowText(hlog,buffer);else
 		if(h==whpro)SetWindowText(hpro,buffer);else
-		if(h==whper)SetWindowText(hper,buffer);
+		if(h==whbackbar)SetWindowText(hbackbar,buffer);
 }
 
 void *Mmalloc(size_t size)
