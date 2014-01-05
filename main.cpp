@@ -223,7 +223,7 @@ void wlog(const char* buffer){
 void wlogsave(){
     DWORD result;
     HANDLE hFile = CreateFile("patterns.log", GENERIC_WRITE, 0, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-    int i=GetFileSize(hFile, NULL);
+    int i=GetFileSize(hFile, NULL),nsize,nsize2;
     SetFilePointer(hFile,i,NULL,FILE_BEGIN);
 
 	char* tmp; tmp=(char*)Mmalloc(3255);memset(tmp,0,3255);
@@ -237,14 +237,16 @@ void wlogsave(){
 	lstrcat(tmp,"\r\n#      period: ");lstrcat(tmp,intToStr(period));
 	lstrcat(tmp,"\r\n#      ");lstrcat(tmp,tmp2);
 	lstrcat(tmp,"\r\n# ============================== ");lstrcat(tmp,"\r\n\r\n");
-	int i1=strlen(tmp);WriteFile(hFile, &tmp[0], i1, &result, NULL);Mfree(tmp);Mfree(tmp2);
-	SetFilePointer(hFile,i+i1,NULL,FILE_BEGIN);
-    
-    WriteFile(hFile, &globallog[0], globallogsize, &result, NULL);
+	int i1=strlen(tmp);
     int hloglen;hloglen=GetWindowTextLength(hlog);char* buf2= new char[2];buf2 = (char*)Mrealloc(buf2,hloglen+1);GetWindowText(hlog,&buf2[0],hloglen);
-    SetFilePointer(hFile,i1+i+globallogsize,NULL,FILE_BEGIN);
-    WriteFile(hFile, &buf2[0], hloglen-1, &result, NULL);
-    delete[] buf2;
+	nsize=i+i1;nsize2=i1+i+globallogsize;
+	WriteFile(hFile, &tmp[0], i1, &result, NULL);FlushFileBuffers(hFile);
+	//SetFilePointer(hFile,nsize,NULL,FILE_BEGIN);
+
+    WriteFile(hFile, &globallog[0], globallogsize, &result, NULL);FlushFileBuffers(hFile);
+    //SetFilePointer(hFile,nsize2,NULL,FILE_BEGIN);
+    WriteFile(hFile, &buf2[0], hloglen-1, &result, NULL);FlushFileBuffers(hFile);
+    Mfree(tmp);Mfree(tmp2);delete[] buf2;
 	CloseHandle(hFile);
     
 }

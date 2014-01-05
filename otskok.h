@@ -204,6 +204,9 @@ class Otskok
 	double irvi(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double rvi2(const int period, const int price, const int shift );
 	double irvi2(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+	double wpr(const int period, const int shift );
+	double iwpr(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
+
 	double GetAppliedPrice(const int nAppliedPrice, const int nIndex);
     int iLowest(int count, int start);
     int iHighest(int count, int start);
@@ -246,7 +249,7 @@ class Otskok
 
 	int datetimemin,datetimemax;
 	bool tradecurbar;
-	int optcurbuysell;
+	int optcurbuysell,kperiod,kperiod1;
 
 	void test();
 	void test2();
