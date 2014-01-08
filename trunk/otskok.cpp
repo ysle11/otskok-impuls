@@ -23,6 +23,8 @@ Otskok::~Otskok(){}
 
 void Otskok::action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar)
 {   srand(time(0));
+	kperiod=128;kperiod1=10;
+	initrandbytes();initrandbytes();
     testerperiod=tperiod;
     actmode=historymode;
     tradecurbar=tcurbar;
@@ -585,28 +587,28 @@ void Otskok::testerinit()
 		strcpy(&testervals[12][0],"GOLD");
 		strcpy(&testervals[13][0],"SILVER");
 		strcpy(&testervals[14][0],"NZDJPY");
-		strcpy(&testervals[15][0],"USDHKD");
-		strcpy(&testervals[16][0],"AUDNZD");
-		strcpy(&testervals[17][0],"AUDCAD");
-		strcpy(&testervals[18][0],"AUDCHF");
-		strcpy(&testervals[19][0],"AUDJPY");
-		strcpy(&testervals[20][0],"AUDSGD");
-		strcpy(&testervals[21][0],"EURAUD");
-		strcpy(&testervals[22][0],"EURCAD");
-		strcpy(&testervals[23][0],"EURCHF");
-		strcpy(&testervals[24][0],"EURNZD");
-		strcpy(&testervals[25][0],"GBPAUD");
-		strcpy(&testervals[26][0],"GBPCAD");
-		strcpy(&testervals[27][0],"NZDCAD");
-		strcpy(&testervals[28][0],"EURNOK");
-		strcpy(&testervals[29][0],"EURSEK");
-		strcpy(&testervals[30][0],"USDDKK");
-		strcpy(&testervals[31][0],"USDNOK");
-		strcpy(&testervals[32][0],"USDSEK");
-		strcpy(&testervals[33][0],"USDZAR");
-		strcpy(&testervals[34][0],"USDRUB");
-		strcpy(&testervals[35][0],"USDSGD");
-		testervalcnt=36;
+//		strcpy(&testervals[15][0],"USDHKD");
+		strcpy(&testervals[15][0],"AUDNZD");
+		strcpy(&testervals[16][0],"AUDCAD");
+		strcpy(&testervals[17][0],"AUDCHF");
+		strcpy(&testervals[18][0],"AUDJPY");
+		strcpy(&testervals[19][0],"AUDSGD");
+		strcpy(&testervals[20][0],"EURAUD");
+		strcpy(&testervals[21][0],"EURCAD");
+//		strcpy(&testervals[23][0],"EURCHF");
+		strcpy(&testervals[22][0],"EURNZD");
+		strcpy(&testervals[23][0],"GBPAUD");
+		strcpy(&testervals[24][0],"GBPCAD");
+		strcpy(&testervals[25][0],"NZDCAD");
+		strcpy(&testervals[26][0],"EURNOK");
+		strcpy(&testervals[27][0],"EURSEK");
+		strcpy(&testervals[28][0],"USDDKK");
+		strcpy(&testervals[29][0],"USDNOK");
+		strcpy(&testervals[30][0],"USDSEK");
+		strcpy(&testervals[31][0],"USDZAR");
+//		strcpy(&testervals[34][0],"USDRUB");
+		strcpy(&testervals[32][0],"USDSGD");
+		testervalcnt=33;
 	}else
 	if(actmode==light){
 	    strcpy(&testervals[0][0],"EURUSD");
@@ -640,32 +642,31 @@ void Otskok::testerinit()
     strcpy(&testersmas[10][0],"bandsdn");
     strcpy(&testersmas[11][0],"bears");
     strcpy(&testersmas[12][0],"bulls");
-    strcpy(&testersmas[13][0],"osma");
+    strcpy(&testersmas[13][0],"wpr");//osma
     strcpy(&testersmas[14][0],"stddev");
-    strcpy(&testersmas[15][0],"force");
-    strcpy(&testersmas[16][0],"ac");
-    strcpy(&testersmas[17][0],"tma");
-    strcpy(&testersmas[18][0],"zerolagema");
-    strcpy(&testersmas[19][0],"volumesma");
+//    strcpy(&testersmas[15][0],"force");
+//    strcpy(&testersmas[16][0],"ac");
+//    strcpy(&testersmas[17][0],"tma");
+//    strcpy(&testersmas[18][0],"zerolagema");
+    strcpy(&testersmas[15][0],"volumesma");
 
-	strcpy(&testersmas[20][0],"randma");
-    strcpy(&testersmas[21][0],"demarker");
-    strcpy(&testersmas[22][0],"atr");
-    strcpy(&testersmas[23][0],"stochastic");
-    strcpy(&testersmas[24][0],"adx");
-    strcpy(&testersmas[25][0],"gma");
-    strcpy(&testersmas[26][0],"stochastic2");
-    strcpy(&testersmas[27][0],"demarker2");
-    strcpy(&testersmas[28][0],"lssma");
-    strcpy(&testersmas[29][0],"lwma");
-    strcpy(&testersmas[30][0],"sinema");
-    strcpy(&testersmas[31][0],"rvi");
-    strcpy(&testersmas[32][0],"adx2");
-    strcpy(&testersmas[33][0],"rvi2");
-    strcpy(&testersmas[34][0],"wpr");
+	strcpy(&testersmas[16][0],"randma");
+    strcpy(&testersmas[17][0],"demarker");
+    strcpy(&testersmas[18][0],"atr");
+    strcpy(&testersmas[19][0],"stochastic");
+    strcpy(&testersmas[20][0],"adx");
+    strcpy(&testersmas[21][0],"gma");
+    strcpy(&testersmas[22][0],"stochastic2");
+    strcpy(&testersmas[23][0],"demarker2");
+    strcpy(&testersmas[24][0],"lssma");
+    strcpy(&testersmas[25][0],"lwma");
+//    strcpy(&testersmas[30][0],"sinema");
+    strcpy(&testersmas[26][0],"rvi");
+    strcpy(&testersmas[27][0],"adx2");
+    strcpy(&testersmas[28][0],"rvi2");
 
 
-    testersmacnt=34;
+    testersmacnt=29;
     testerfxok=false;
 	testerdataok=false;
     memset(testerpath,0,sizeof(testerpath));
@@ -750,6 +751,8 @@ void Otskok::testerloaddata()
 
 			int i=dwFileSize-44*testercntper-44*testerbacktest;
 			if((int)((dwFileSize-148)/44)<testercntper-testerbacktest){i=(dwFileSize-148)/44;testercntper=i-testerbacktest;i=148;}
+			//if(mode==optimizing)if(((testercntper>>1)<<1)==testercntper)testercntper--;
+
 			SetFilePointer(hFile,i,NULL,FILE_BEGIN);
 			ReadFile(hFile, membuf,44*testercntper, &dwRead, NULL);
 			i=0;double tstopavg1b,tstopavg1s,tstopavg2b,tstopavg2s;double tmp1b,tmp1s,tmp2b,tmp2s;
@@ -877,10 +880,11 @@ void Otskok::testerusefx()
 int Otskok::testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9)
 {
 	MSG messages;
-	int t1=333;
+	int t1=333,opt1=1;
 	if(mode==testing)t1=testercntper-1;
 	int t2=testercntper;
-	for(int i=t1;i<t2;i++){
+	if(mode==optimizing){opt1=2;if((getrand()-kperiod)>(kperiod>>1))t1++;}
+	for(int i=t1;i<t2;i+=opt1){
 		testercurbar=i;
 		testercuro=testermetadata->open[i];
 		testercurdatetime=testermetadata->ctm[i];
@@ -1055,29 +1059,29 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 		case 10:sig=ibandsdn(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
 		case 11:sig=ibears(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
 		case 12:sig=ibulls(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 13:sig=iosma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		//case 13:sig=iosma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 13:sig=iwpr(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;//iosma(k1,d1,k2,d2,k3,d3,l1,l2,limit);
 		case 14:sig=istddev(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 15:sig=iforce(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 16:sig=iac(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 17:sig=itma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 18:sig=izerolagema(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 19:sig=ivolumesma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		//case 15:sig=iforce(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		//case 16:sig=iac(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		//case 17:sig=itma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		//case 18:sig=izerolagema(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 15:sig=ivolumesma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
 
-		case 20:sig=irandma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 21:sig=idemarker(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 22:sig=iatr(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 23:sig=istochastic(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 24:sig=iadx(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 25:sig=igma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 26:sig=istochastic2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 27:sig=idemarker2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 28:sig=ilssma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 29:sig=ilwma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 30:sig=isinema(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 31:sig=irvi(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 32:sig=iadx2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 33:sig=irvi2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
-		case 34:sig=iwpr(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 16:sig=irandma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 17:sig=idemarker(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 18:sig=iatr(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 19:sig=istochastic(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 20:sig=iadx(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 21:sig=igma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 22:sig=istochastic2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 23:sig=idemarker2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 24:sig=ilssma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 25:sig=ilwma(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		//case 30:sig=isinema(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 26:sig=irvi(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 27:sig=iadx2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
+		case 28:sig=irvi2(k1,d1,k2,d2,k3,d3,l1,l2,limit);break;
 		default:sig=0.0;break;
 	}
 
@@ -2544,13 +2548,13 @@ void Otskok::test()
 	Mfree(trades);GlobalFree(buf2);
 
 	delete[] unsorted;
-	test2();
+	//test2();
 
 }
 void Otskok::initrandbytes(){
     //for(int z=0;z<256;z++)randbytes[z]=0;
-	for(int z1=0;z1<51;z1++){for(int z=0;z<256;z++){randbytes[z]^=((rand()<<1) % kperiod);if((z&31)==31)SleepEx(0,true);}if((z1&7)==7)SleepEx(11,true);}
-	randptr=0;randcnt=255;randcnt2=0;
+	for(int z1=0;z1<51;z1++){for(int z=0;z<65536;z++){randbytes[z]^=((rand()<<1) % kperiod);if((z&31)==31)SleepEx(0,true);}SleepEx(1,true);}
+	randptr=0;randcnt=65535;randcnt2=0;
 
 /*	int zz=0;for(int z=0;z<256;z++)if(randbytes[z]<10)zz++;
 	if(zz>){wlog("ERROR: Rand generator \r\n");
@@ -2584,7 +2588,7 @@ void Otskok::optimize(){
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
 //	int wsleep=16,wsleep2=8;
-	int wsleep=8,wsleep2=4;
+	int wsleep=5,wsleep2=3;
 
     bool reopt=false,mreopt;
 	testerusefx();
@@ -2594,12 +2598,14 @@ void Otskok::optimize(){
 	double oprofitcnt,oordercnt,oprofitindex,odrawdowncnt,sbalance;
 	double profitcnt2=0.0,ordercnt2=0.0,profitindex2=0.0,drawdowncnt2=0.0;
 	int p2[8];int res1=0,sorl;time_t deltatime;
-	for(testercuritem=0;testercuritem<testervalcnt;testercuritem++){
+	for(testercuritem=0;testercuritem<testervalcnt;testercuritem++)
+	if((testercuritem!=12)&&(testercuritem!=13))
+	{
 //	for(testercuritem=12;testercuritem<testervalcnt;testercuritem++){
 		testerloaddata();//SleepEx(1000,true);
 		//int y=2;if(testercuritem<5)y=1;
 		if(testerdataok)
-		for(int a=0;a<2;a++)
+		for(int a=0;a<1;a++)
 		{
 			if(a!=0)reopt=true;
 			//if(a==0){kperiod=128;kperiod1=10;}else {kperiod=88;kperiod1=3;}
@@ -2750,23 +2756,23 @@ void Otskok::optimize(){
 				      }
 					}}//else sleep(10);
 					switch(ix){
-						case 0:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 1:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 2:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 3:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 4:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 5:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 6:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 7:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 8:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 9:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 10:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();}}break;
-						case 11:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();}}break;
-						default:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();}}break;
+						case 0:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 1:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 2:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]-=kperiod1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 3:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]-=kperiod1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 4:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 5:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 6:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 7:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 8:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 9:{for(int i1=0;i1<6;i1++){if((i&7)>=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 10:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
+						case 11:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
+						default:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
 					}
 					i++;
                     if((i&15)==15)
-					{tt2=time(0);if(tt2!=ttprev){SleepEx(210,true);ttprev=tt2;}}
+					{tt2=time(0);if(tt2!=ttprev){SleepEx(170,true);ttprev=tt2;}}
 					if(i==50){i=0;ix++;}
 					if(ix>11){i=0;ix=0;ix2++;}//if(ix2==5)
 					//if((res1>26)||(tt2-deltatime)>15&&((tt2-deltatime)<10000)){i=99999;res1=0;}

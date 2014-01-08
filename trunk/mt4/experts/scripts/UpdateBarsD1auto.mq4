@@ -1,3 +1,11 @@
+#import "user32.dll"
+  int GetParent(int hWnd);
+  int PostMessageA(int hWnd,int Msg,int wParam,int lParam);
+#import
+#import "shell32.dll"
+ int ShellExecuteA(int hWnd, string Operation, string FileName, string Parameters, string Directory, int ShowCmd);
+#import
+
 string mode;
 string sms[]={"EURUSD","USDCHF","GBPCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","EURGBP","NZDJPY","AUDNZD","AUDCAD","AUDCHF","AUDJPY","AUDSGD","EURAUD","EURCAD","EURNZD","GBPAUD","GBPCAD","NZDCAD","EURNOK","EURSEK","USDDKK","USDNOK","USDSEK","USDZAR","USDSGD"};
 //string sms[]={"USDNOK","USDCAD","EURCHF","USDJPY","AUDCAD","GBPCAD","NZDCAD","GBPCHF","USDHKD"};
@@ -11,6 +19,8 @@ datetime servertime,tc;
 //+------------------------------------------------------------------+
 int start()
   {
+  while(!IsConnected())Sleep(1000);
+  Sleep(20000);
       mode="MODE_TIME"; 
       datetime maxticktime=0;
       for(i=0;i<ArraySize(sms);i++)if(maxticktime<MarketInfo( ""+sms[i], MODE_TIME))maxticktime=MarketInfo( ""+sms[i], MODE_TIME);
@@ -58,6 +68,9 @@ int start()
       ObjectSetText("MODE_TIME",TimeToStr(maxticktime,TIME_DATE|TIME_SECONDS)+"  D1", 8, "Arial Narrow", White);
          WindowRedraw();if(IsStopped())return(0);Sleep(100);i3++;if(i3>30){i3=0;RefreshRates();}
    }
+   ShellExecuteA(0,"","route.bat","off","f:\WINDOWS\system32\\",1);
+   Sleep(10000);
+   PostMessageA(GetParent(GetParent(GetParent(WindowHandle(Symbol(),Period())))),18,0,0);
    return(0);
   }
 //+------------------------------------------------------------------+

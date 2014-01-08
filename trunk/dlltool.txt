@@ -1,0 +1,3 @@
+c:\Dev-Cpp\Examples\vals>
+ld --output-def 11 vals.dll
+dlltool -z 11 dllmain.o
