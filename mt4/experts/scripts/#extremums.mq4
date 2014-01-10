@@ -1,7 +1,8 @@
 string sms[]={"EURUSD","USDCHF","GBPCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","EURGBP","GOLD","SILVER","NZDJPY","AUDNZD","AUDCAD","AUDCHF","AUDJPY","AUDSGD","EURAUD","EURCAD","EURNZD","GBPAUD","GBPCAD","NZDCAD","EURNOK","EURSEK","USDDKK","USDNOK","USDSEK","USDZAR","USDSGD"};
+extern int    back=1;   
 int start()
   {
-   int    i,back=0,period=412;
+   int    i,period=412;
    string mode,sig,sig1;
    string minstoch="EURUSD",maxstoch="EURUSD";
    string mincci="EURUSD",maxcci="EURUSD";

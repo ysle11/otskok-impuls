@@ -1042,7 +1042,8 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 			}
 
 	}
-//	if(mode!=optimizing){l1+=2;l2+=2;}
+	//if(mode!=optimizing){}
+	//	l1+=8;l2+=8;
 //	int limit;if(optcurbuysell<2)limit=(int)(stddev(10, PRICE_CLOSE, 0)*tester2point);else limit=(int)(atr(20, 0)*tester2point);
 
 	switch(testercursma){
@@ -2587,8 +2588,8 @@ void Otskok::optimize(){
 	if(actmode==hard)lstrcat(buf1,":InstaForex-Demo.com");
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
-//	int wsleep=16,wsleep2=8;
-	int wsleep=5,wsleep2=3;
+	int wsleep=12,wsleep2=4;
+//	int wsleep=5,wsleep2=3;
 
     bool reopt=false,mreopt;
 	testerusefx();
