@@ -53,8 +53,15 @@ int WINAPI WinMain (HINSTANCE hThisInstance,HINSTANCE hPrevInstance,LPSTR lpszAr
 	wincl.cbWndExtra = 0;
 	wincl.hbrBackground = (HBRUSH) COLOR_BACKGROUND;
 	
-	
-	
+			memset(&note,0,sizeof(note));
+			note.cbSize=sizeof(NOTIFYICONDATA);
+			note.hWnd=hwnd;
+			note.uID=0;
+			note.uFlags=NIF_ICON|NIF_MESSAGE|NIF_TIP;
+			note.hIcon=wincl.hIcon;
+			note.uCallbackMessage=WM_USER+5;
+			lstrcpy(note.szTip,szClassName);
+
 	if (!RegisterClassEx (&wincl)) return 0;
 	RECT lp;
 	GetWindowRect(GetDesktopWindow(),&lp);
@@ -100,6 +107,7 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	ListView_RedrawItems(hcmd,0,3);
 */
 //mysqltest();
+    if(find(lpszArgument,"/quit"))ShowWindow (hwnd, SW_HIDE); else
 	ShowWindow (hwnd, nFunsterStil);
 	UpdateWindow(hwnd);
 	srand(time(0));
@@ -125,6 +133,8 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	if(find2(lpszArgument,"/MMCIS-Demo"))mode=light;else
     if(find2(lpszArgument,"/MMCIS-Real"))mode=medium;else
     if(find2(lpszArgument,"/InstaForex-Demo.com"))mode=hard;
+    
+    if(find(lpszArgument,"/quit")){PostMessageA(hwnd,WM_SIZE,SIZE_MINIMIZED,0);GetMessage (&messages, NULL, 0, 0);TranslateMessage(&messages);DispatchMessage(&messages);}
 
 //	server = new Server;
 //    if(action==optimizing)server->on(false);else server->on();
@@ -140,7 +150,10 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	if((messages.hwnd==hbdn)&&(messages.message==WM_LBUTTONUP)){backbar--;if(backbar<-1)backbar=-1;else title(whbackbar,intToStr(backbar));decode(action,period,mode,donottradecurrentbar,backbar);}
 		TranslateMessage(&messages);
 		DispatchMessage(&messages);
-	}wlogsave();
+	}
+
+	wlogsave();
+	if(find(lpszArgument,"/quit")){Shell_NotifyIcon(NIM_DELETE,&note);GetMessage (&messages, NULL, 0, 0);TranslateMessage(&messages);DispatchMessage(&messages);}
 
 	delete[] globallog;
 	return messages.wParam;
