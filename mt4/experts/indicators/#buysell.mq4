@@ -1,10 +1,9 @@
 
 #property indicator_chart_window
 string smsbuy[]={"EURUSD","USDCHF","GBPCHF","GBPUSD","USDJPY","USDCAD","AUDUSD","NZDUSD","GBPJPY","CHFJPY","EURJPY","EURGBP","NZDJPY","AUDNZD","AUDCAD","AUDCHF","AUDJPY","AUDSGD","EURAUD","EURCAD","EURNZD","GBPAUD","GBPCAD","NZDCAD","EURNOK","EURSEK","USDDKK","USDNOK","USDSEK","USDZAR","USDSGD"};
-//string smsbuy[]={"AUDNZD","EURCHF","AUDCAD","NZDUSD","USDJPY","NZDCAD","USDRUB"};
-//string smsbuy[]={"EURCHF","","USDZAR","USDRUB","NZDUSD","AUDCAD","USDJPY","GBPCAD","NZDCAD"};
-// string smsbuy[]={"USDCAD","","EURCHF","AUDCAD","USDHKD","GBPCAD"};
-extern int    back=0;   
+//string smsbuy[]={"GBPCHF","GBPUSD","GBPJPY","GBPAUD","GBPCAD","","EURGBP"};
+//string smsbuy[]={"USDCHF","USDJPY","USDCAD","USDDKK","USDNOK","USDSEK","USDZAR","USDSGD","","EURUSD","GBPUSD","AUDUSD","NZDUSD"};
+extern int    back=0;   int issell=-1;
 int init(){ObjectsDeleteAll();}
 int start()
   {
@@ -14,16 +13,18 @@ int start()
      for(i=0;i<ArraySize(smsbuy);i++)avgvol0=avgvol0+iVolume(smsbuy[i],0,back);
      avgvol0=avgvol0/ArraySize(smsbuy);
      avgvol1=avgvol1/11/ArraySize(smsbuy);avgvol0=avgvol0/avgvol1*100;
-
+     for(i=0;i<ArraySize(smsbuy);i++)if(smsbuy[i]=="")issell=0;
    for(i=0;i<ArraySize(smsbuy);i++)
    if(smsbuy[i]!="")
    {
-     color clr=Blue;
+     color clr=Blue,volclr=DarkGray;
      double p1=iHigh(NULL,0,iHighest(NULL,0,MODE_HIGH,2111,0));
      double p2=iLow(NULL,0,iLowest(NULL,0,MODE_LOW,2111,0));
      double c1=(p1-p2)/Point;
      double open1=iOpen(smsbuy[i],0,back);
-     double close1=iClose(smsbuy[i],0,back);if(open1>close1)clr=Red;close1=(close1-open1)*MarketInfo(smsbuy[i],MODE_POINT);
+     double close1=iClose(smsbuy[i],0,back);
+     if(((issell==1)&&(open1<close1))||((issell==0)&&(open1>close1)))volclr=Green;
+     if(open1>close1)clr=Red;close1=(close1-open1)*MarketInfo(smsbuy[i],MODE_POINT);
      double high1=iHigh(smsbuy[i],0,back);high1=(high1-open1)*MarketInfo(smsbuy[i],MODE_POINT);
      double low1=iLow(smsbuy[i],0,back);low1=(open1-low1)*MarketInfo(smsbuy[i],MODE_POINT);
      double vol1=iVolume(smsbuy[i],0,back);totalvol=totalvol+vol1;
@@ -33,9 +34,8 @@ int start()
          if((iVolume(smsbuy[i],0,m)<lvol1)||(lvol1==0.0))lvol1=iVolume(smsbuy[i],0,m);
      }mvol1=hvol1-lvol1;
 
-
    ObjectCreate(smsbuy[i]+"volbarhl", OBJ_RECTANGLE,0,0 ,0,0 );
-   ObjectSet(smsbuy[i]+"volbarhl", OBJPROP_COLOR, DarkGray);
+   ObjectSet(smsbuy[i]+"volbarhl", OBJPROP_COLOR, volclr);
    ObjectSet(smsbuy[i]+"volbarhl", OBJPROP_WIDTH, 2);
    ObjectSet(smsbuy[i]+"volbarhl", OBJPROP_BACK, true);
    ObjectSet(smsbuy[i]+"volbarhl", OBJPROP_PRICE1, p2-c1*Point*1.5+(c1/mvol1*vol1*0.5)*Point);
@@ -74,7 +74,7 @@ int start()
    ObjectSet(smsbuy[i]+"buybarhl", OBJPROP_TIME2, Time[(ArraySize(smsbuy)-i)*3-2]);
 
 
-   }   
+   }else issell=1;   
      ObjectCreate("time1", OBJ_LABEL, 0 ,0,0);
      ObjectSet("time1", OBJPROP_CORNER, 0);
      ObjectSet("time1", OBJPROP_XDISTANCE, 22);ObjectSet("time1", OBJPROP_YDISTANCE, 22);

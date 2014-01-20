@@ -800,8 +800,9 @@ void Otskok::testerloaddata()
 
 			tstopavg1b*=tester2point;tstopavg1s*=tester2point;tstopavg2b*=tester2point;tstopavg2s*=tester2point;
 			//if(actmode==medium&&testercuritem==12){tstopavg1b*=0.5;tstopavg1s*=0.5;tstopavg2b*=0.5;tstopavg2s*=0.5;}
-			//if(testerperiod==10080)
-			{tstopavg1b*=0.666;tstopavg1s*=0.666;tstopavg2b*=0.666;tstopavg2s*=0.666;}
+			
+			//if(testerperiod>1440){tstopavg1b*=0.666;tstopavg1s*=0.666;tstopavg2b*=0.666;tstopavg2s*=0.666;}
+			//{tstopavg1b*=0.666;tstopavg1s*=0.666;tstopavg2b*=0.666;tstopavg2s*=0.666;}
 			stopavg1b=(int)tstopavg1b;stopavg1s=(int)tstopavg1s;stopavg2b=(int)tstopavg2b;stopavg2s=(int)tstopavg2s;
 			if(testerbacktest2==-1){
 				double tmp;
@@ -883,7 +884,7 @@ int Otskok::testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,i
 	int t1=333,opt1=1;
 	if(mode==testing)t1=testercntper-1;
 	int t2=testercntper;
-	if(mode==optimizing){opt1=2;if((getrand()-kperiod)>(kperiod>>1))t1++;}
+	//if(mode==optimizing){opt1=2;if((getrand()-kperiod)>(kperiod>>1))t1++;}
 	for(int i=t1;i<t2;i+=opt1){
 		testercurbar=i;
 		testercuro=testermetadata->open[i];
@@ -2444,7 +2445,7 @@ void Otskok::test()
                 //if(unsorted[testercuritem].powerBUYSTOP>0.0&&unsorted[testercuritem].powerSELLSTOP>0.0)
 				{
 					bool issort=false;
-                    if(sort1cnt==0){sort1[sort1cnt]=testercuritem;sort1cnt++;issort=true;}else
+                    //if(sort1cnt==0){sort1[sort1cnt]=testercuritem;sort1cnt++;issort=true;}else
 					for(int i=0;i<=sort1cnt;i++)
 					if(unsorted[testercuritem].cntBUYSTOP2>unsorted[sort1[i]].cntBUYSTOP2){
 						for(int i1=sort1cnt;i1>i;i1--)sort1[i1]=sort1[i1-1];
@@ -2460,7 +2461,7 @@ void Otskok::test()
                 //if(unsorted[testercuritem].powerBUYSTOP>0.0&&unsorted[testercuritem].powerSELLSTOP>0.0)
 				{
                     bool issort=false;
-                    if(sort2cnt==0){sort2[sort2cnt]=testercuritem;sort2cnt++;issort=true;}else
+                    //if(sort2cnt==0){sort2[sort2cnt]=testercuritem;sort2cnt++;issort=true;}else
 					for(int i=0;i<=sort2cnt;i++)
 					if(unsorted[testercuritem].cntSELLSTOP2>unsorted[sort2[i]].cntSELLSTOP2){
 						for(int i1=sort2cnt;i1>i;i1--)sort2[i1]=sort2[i1-1];
@@ -2555,6 +2556,7 @@ void Otskok::test()
 void Otskok::initrandbytes(){
     //for(int z=0;z<256;z++)randbytes[z]=0;
 	for(int z1=0;z1<51;z1++){for(int z=0;z<65536;z++){randbytes[z]^=((rand()<<1) % kperiod);if((z&31)==31)SleepEx(0,true);}SleepEx(1,true);}
+	for(int z1=0;z1<5;z1++)for(int z=0;z<65536;z++)randbytes[z]^=(randbytes[(z+1)%65536]>>1);
 	randptr=0;randcnt=65535;randcnt2=0;
 
 /*	int zz=0;for(int z=0;z<256;z++)if(randbytes[z]<10)zz++;
@@ -2588,8 +2590,8 @@ void Otskok::optimize(){
 	if(actmode==hard)lstrcat(buf1,":InstaForex-Demo.com");
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
-	int wsleep=12,wsleep2=4;
-//	int wsleep=5,wsleep2=3;
+//	int wsleep=6,wsleep2=4;
+	int wsleep=5,wsleep2=3;
 
     bool reopt=false,mreopt;
 	testerusefx();
@@ -2770,10 +2772,25 @@ void Otskok::optimize(){
 						case 10:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
 						case 11:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
 						default:{for(int i1=0;i1<6;i1++){if((i&7)<=i1)p[i1]>>1;if(p[i1]<45)p[i1]=getrand();}}break;
+/*
+						case 0:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 1:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 2:{for(int i1=0;i1<6;i1+=2){if((i&7)>=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();if((i&7)>=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 3:{for(int i1=0;i1<6;i1+=2){if((i&7)>=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();if((i&7)>=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 4:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 5:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]-=kperiod1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 6:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 7:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 8:{for(int i1=0;i1<6;i1+=2){if((i&7)>=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();if((i&7)>=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 9:{for(int i1=0;i1<6;i1+=2){if((i&7)>=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();if((i&7)>=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 10:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						case 11:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+						default:{for(int i1=0;i1<6;i1+=2){if((i&7)<=i1)p[i1]>>1;if(p[i1]<55)p[i1]=getrand();if((i&7)<=i1)p[i1+1]=p[i1]+10;else p[i1+1]=p[i1]-10;}}break;
+*/
 					}
 					i++;
                     if((i&15)==15)
-					{tt2=time(0);if(tt2!=ttprev){SleepEx(170,true);ttprev=tt2;}}
+					{tt2=time(0);if(tt2!=ttprev){SleepEx(270,true);ttprev=tt2;}}
 					if(i==50){i=0;ix++;}
 					if(ix>11){i=0;ix=0;ix2++;}//if(ix2==5)
 					//if((res1>26)||(tt2-deltatime)>15&&((tt2-deltatime)<10000)){i=99999;res1=0;}
