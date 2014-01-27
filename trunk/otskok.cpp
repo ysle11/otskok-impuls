@@ -969,7 +969,7 @@ void Otskok::testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2
 		if (sig>0.0)
 //		if((iTradesTotalOP_BUY==0)&&(iTradesTotalOP_BUYLIMIT==0)&&(iTradesTotalOP_BUYSTOP==0))
 		{
-			tmp=testerspread;tmp+=2;tmp*=testerpoint;
+			tmp=testerspread;tmp+=4;tmp*=testerpoint;
 			SL=0.0;TP=sig;TP+=tmp;
 			OrderSend(OP_BUYSTOP, sig,SL,TP);
 		}else
@@ -977,7 +977,7 @@ void Otskok::testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2
 //		if((iTradesTotalOP_SELL==0)&&(iTradesTotalOP_SELLLIMIT==0)&&(iTradesTotalOP_SELLSTOP==0))
 		{
 			sig*=-1.0;
-			tmp=testerspread;tmp+=2;tmp*=testerpoint;
+			tmp=testerspread;tmp+=4;tmp*=testerpoint;
 			SL=0.0;TP=sig;TP-=tmp;
 			OrderSend(OP_SELLSTOP, sig,SL,TP);
 		}
@@ -1011,7 +1011,7 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 	
 	if(mode==optimizing){
 		avg1=4;
-		if(testerperiod==1440){if(actmode==medium)avg1=4;else avg1=4;}else
+		if(testerperiod==1440)avg1=4;else
 		if(testerperiod==240)avg1=24;else
 		if(testerperiod==60)avg1=96;else
 		if(testerperiod==15)avg1=184;
@@ -2591,7 +2591,7 @@ void Otskok::optimize(){
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
 //	int wsleep=6,wsleep2=4;
-	int wsleep=5,wsleep2=3;
+	int wsleep=6,wsleep2=3;
 
     bool reopt=false,mreopt;
 	testerusefx();
