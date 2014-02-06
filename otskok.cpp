@@ -610,6 +610,12 @@ void Otskok::testerinit()
 		strcpy(&testervals[32][0],"USDSGD");
 		testervalcnt=33;
 	}else
+	/*if(actmode==medium){
+		strcpy(&testervals[0][0],"GBPUSD");
+		testervalcnt=1;
+	}else*/
+	
+	
 	if(actmode==light){
 	    strcpy(&testervals[0][0],"EURUSD");
 		strcpy(&testervals[1][0],"USDCHF");
@@ -672,13 +678,13 @@ void Otskok::testerinit()
     memset(testerpath,0,sizeof(testerpath));
 
 	char cdir[214];GetCurrentDirectory(214,cdir);
-	if(!find2(cdir,"MMCIS")&&actmode==light)lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Real\\");else
+	/*if(!find2(cdir,"MMCIS")&&actmode==light)lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Real\\");else
 	if(!find2(cdir,"MMCIS")&&actmode==medium)lstrcat(testerpath,"f:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\history\\MMCIS-Real\\");else
 	if(!find2(cdir,"InstaTrader")&&actmode==hard)lstrcat(testerpath,"f:\\Program Files\\InstaTrader\\history\\InstaForex-Demo.com\\");else
 	
 	if(find2(cdir,"InstaTrader")&&actmode==hard)lstrcat(testerpath,"\\history\\InstaForex-Demo.com\\");else
 	if(find2(cdir,"MMCIS")&&actmode==medium)lstrcat(testerpath,"\\history\\MMCIS-Real\\");else
-	if(find2(cdir,"MMCIS")&&actmode==light)lstrcat(testerpath,"\\history\\MMCIS-Real\\");
+	if(find2(cdir,"MMCIS")&&actmode==light)lstrcat(testerpath,"\\history\\MMCIS-Real\\");*/
 	
 	testermdrawdownclimit=2;
 	testercuritem=0;
@@ -727,13 +733,13 @@ void Otskok::testerloaddata()
 	HANDLE hFile;DWORD dwRead;
 	memset(testermetadata,0,sizeof(struct mdata));
 	char fullpath[256],tmp[20];memset(fullpath,0,256);memset(tmp,0,20);
-	lstrcat(fullpath,testerpath);
-	memset(datfile,0,255);
-	lstrcat(datfile,fullpath);
-	lstrcat(fullpath,testervals[testercuritem]);
+	//lstrcat(fullpath,testerpath);
+	//memset(datfile,0,255);
+	//lstrcat(datfile,fullpath);
+	lstrcat(fullpath,testervals[testercuritem]);lstrcat(fullpath,"\\");
 	snprintf(tmp, 20, "%lld", testerperiod);
-	lstrcat(fullpath,tmp);
-	lstrcat(fullpath,".hst");
+	lstrcat(fullpath,tmp);lstrcat(fullpath,".hc");
+	//lstrcat(fullpath,".hst");
 	testerdataok=false;
 
 	hFile = CreateFile(fullpath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_ALWAYS, 0, 0);
@@ -741,28 +747,30 @@ void Otskok::testerloaddata()
 	if(testerbacktest==-1){testerbacktest=0;testerbacktest2=-1;}
 	if(!(!hFile)){
 		int dwFileSize = GetFileSize(hFile, NULL);
-		if(dwFileSize>=148+44){
+		if(dwFileSize>=148+60){//44
 			testerdataok=true;
 			i1=0;
 			char* membuf = new char[2];
 			testercntper=2100;
 			if(actmode==hard)testercntper=710;
-			membuf = (char*)Mrealloc(membuf,(testercntper+3)*44);
+			membuf = (char*)Mrealloc(membuf,(testercntper+3)*60);//44
 
-			int i=dwFileSize-44*testercntper-44*testerbacktest;
-			if((int)((dwFileSize-148)/44)<testercntper-testerbacktest){i=(dwFileSize-148)/44;testercntper=i-testerbacktest;i=148;}
+			int i=dwFileSize-60*testercntper-60*testerbacktest;//44
+			if((int)((dwFileSize-148)/60)<testercntper-testerbacktest){i=(dwFileSize-148)/60;testercntper=i-testerbacktest;i=148;}//44
 			//if(mode==optimizing)if(((testercntper>>1)<<1)==testercntper)testercntper--;
 
 			SetFilePointer(hFile,i,NULL,FILE_BEGIN);
-			ReadFile(hFile, membuf,44*testercntper, &dwRead, NULL);
-			i=0;double tstopavg1b,tstopavg1s,tstopavg2b,tstopavg2s;double tmp1b,tmp1s,tmp2b,tmp2s;
+			ReadFile(hFile, membuf,60*testercntper, &dwRead, NULL);//44
+			i=0;double tstopavg1b,tstopavg1s,tstopavg2b,tstopavg2s;double tmp1b,tmp1s,tmp2b,tmp2s; unsigned long long time_t2;time_t time_t3;
 			while(i1<testercntper){
-				memcpy(&testermetadata->ctm[i1],&membuf[i],4);i+=4;
+//				memcpy(&testermetadata->ctm[i1],&membuf[i],8);i+=8;
+				memcpy(&time_t2,&membuf[i],8);time_t3=(time_t)time_t2;testermetadata->ctm[i1]=time_t3;i+=8;
 				memcpy(&testermetadata->open[i1],&membuf[i],8);i+=8;
-				memcpy(&testermetadata->low[i1],&membuf[i],8);i+=8;
 				memcpy(&testermetadata->high[i1],&membuf[i],8);i+=8;
+				memcpy(&testermetadata->low[i1],&membuf[i],8);i+=8;
 				memcpy(&testermetadata->close[i1],&membuf[i],8);i+=8;
 				memcpy(&testermetadata->volume[i1],&membuf[i],8);i+=8;
+				i+=12;
 				
                 tmp1b=0.0;tmp1s=0.0;tmp2b=0.0;tmp2s=0.0;
 				if(i1>256)
@@ -791,7 +799,7 @@ void Otskok::testerloaddata()
 			    
 				i1++;
 			}
-			SetFilePointer(hFile,84,NULL,FILE_BEGIN);
+			SetFilePointer(hFile,88,NULL,FILE_BEGIN);
 			ReadFile(hFile, &testerdigits,4, &dwRead, NULL);
 			CloseHandle(hFile);
 			tester2point=(int)pow((double)10.0,(int)testerdigits);
@@ -1006,7 +1014,7 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 	double sig;
 	sig=0.0;
 
-	double topen,thigh,tlow,tclose,tvolume,ttemp,ttemp2;
+	double topen,thigh,tlow,tclose,ttemp,ttemp2;unsigned long long tvolume;
 	int avg1;
 	
 	if(mode==optimizing){
@@ -1025,7 +1033,7 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 				testermetadata->close[testercurbar]=(testermetadata->close[testercurbar]+testermetadata->close[testercurbar+z])*0.5;
 				testermetadata->high[testercurbar]=fmax(testermetadata->high[testercurbar],testermetadata->high[testercurbar+z]);
 				testermetadata->low[testercurbar]=fmin(testermetadata->low[testercurbar],testermetadata->low[testercurbar+z]);
-				testermetadata->volume[testercurbar]=(testermetadata->volume[testercurbar]+testermetadata->volume[testercurbar+z])*0.5;
+				testermetadata->volume[testercurbar]=(testermetadata->volume[testercurbar]+testermetadata->volume[testercurbar+z])>>1;
 			}
 			switch(optcurbuysell){
 				case 0:{testermetadata->close[testercurbar]=(testermetadata->close[testercurbar]+testermetadata->high[testercurbar])*0.5;break;}
