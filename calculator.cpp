@@ -7,6 +7,9 @@
 
 #include "calculator.h"
 /*
+	emailbogsuv [AT] gmail.com
+	+380 98 8988692
+	Suvorov Bogdan
 	g++ -msse -mtune=pentium3 -mfpmath=sse -mno-mmx calculator.cpp -o calculator
 	./calculator -a opt mode1 -p 1440
 */
@@ -839,6 +842,9 @@ void calculator::testerloaddata()
 		}
 		testermincnttrades=(int)(testercntper*0.1);testermincnttrades-=22;
 	}
+/*int h1=testercntper-1;printf(testervals[testercuritem]);
+printf(" ");wlog(gmtimeToStr(testermetadata->ctm[h1]));printf(" %f %f %f %f",testermetadata->open[h1],testermetadata->high[h1],testermetadata->low[h1],testermetadata->close[h1]);
+printf("\n");*/
 }
 void calculator::testersavefx(){
 	testerfxok=true;
@@ -2252,7 +2258,7 @@ void calculator::test()
 		{
 			testerloaddata();
 			if(datetimemax<testermetadata->ctm[testercntper-1])datetimemax=testermetadata->ctm[testercntper-1];
-			if(datetimemax==testermetadata->ctm[testercntper-1])
+			//if(datetimemax==testermetadata->ctm[testercntper-1])
 			if(testerdataok){
 				double midSELLSTOP=0.0;double midBUYSTOP=0.0;int cntSELLSTOP=0;int cntBUYSTOP=0;int cntSELLSTOP2=0;int cntBUYSTOP2=0;
 				unsorted[testercuritem].cntSELLSTOP=cntSELLSTOP;unsorted[testercuritem].cntBUYSTOP=cntBUYSTOP;
@@ -2370,7 +2376,8 @@ void calculator::test()
 //		if((unsorted[testercuritem].midBUYSTOP!=0.0)&&(unsorted[testercuritem].midSELLSTOP!=0.0))
 		if(unsorted[testercuritem].cntBUYSTOP2!=0.0||unsorted[testercuritem].cntSELLSTOP2!=0.0)
 		{
-				if(unsorted[testercuritem].cntBUYSTOP2>(1.8*unsorted[testercuritem].cntBUYSTOP)){
+				if(unsorted[testercuritem].cntBUYSTOP2>(1.8*unsorted[testercuritem].cntBUYSTOP))
+				{
 				if(unsorted[testercuritem].cntBUYSTOP2>0.0&&unsorted[testercuritem].cntBUYSTOP>0.0)
                 //if(unsorted[testercuritem].powerBUYSTOP>(1.1*unsorted[testercuritem].powerSELLSTOP))
                 //if(unsorted[testercuritem].powerBUYSTOP>0.0&&unsorted[testercuritem].powerSELLSTOP>0.0)
@@ -2386,22 +2393,24 @@ void calculator::test()
 					}
 					if(!issort){sort1[sort1cnt]=testercuritem;sort1cnt++;}
 				}}else
-				if(unsorted[testercuritem].cntSELLSTOP2>(1.8*unsorted[testercuritem].cntSELLSTOP)){
-                if(unsorted[testercuritem].cntSELLSTOP2>0.0&&unsorted[testercuritem].cntSELLSTOP>0.0)
-                //if(unsorted[testercuritem].powerSELLSTOP>(1.1*unsorted[testercuritem].powerBUYSTOP))
-                //if(unsorted[testercuritem].powerBUYSTOP>0.0&&unsorted[testercuritem].powerSELLSTOP>0.0)
+				if(unsorted[testercuritem].cntSELLSTOP2>(1.8*unsorted[testercuritem].cntSELLSTOP))
 				{
-                    bool issort=false;
-                    //if(sort2cnt==0){sort2[sort2cnt]=testercuritem;sort2cnt++;issort=true;}else
-					for(int i=0;i<=sort2cnt;i++)
-					if(unsorted[testercuritem].cntSELLSTOP2>unsorted[sort2[i]].cntSELLSTOP2){
-						for(int i1=sort2cnt;i1>i;i1--)sort2[i1]=sort2[i1-1];
-						sort2[i]=testercuritem;
-						sort2cnt++;i=sort2cnt;
-						issort=true;
+					if(unsorted[testercuritem].cntSELLSTOP2>0.0&&unsorted[testercuritem].cntSELLSTOP>0.0)
+					//if(unsorted[testercuritem].powerSELLSTOP>(1.1*unsorted[testercuritem].powerBUYSTOP))
+					//if(unsorted[testercuritem].powerBUYSTOP>0.0&&unsorted[testercuritem].powerSELLSTOP>0.0)
+					{
+						bool issort=false;
+						//if(sort2cnt==0){sort2[sort2cnt]=testercuritem;sort2cnt++;issort=true;}else
+						for(int i=0;i<=sort2cnt;i++)
+						if(unsorted[testercuritem].cntSELLSTOP2>unsorted[sort2[i]].cntSELLSTOP2){
+							for(int i1=sort2cnt;i1>i;i1--)sort2[i1]=sort2[i1-1];
+							sort2[i]=testercuritem;
+							sort2cnt++;i=sort2cnt;
+							issort=true;
+						}
+						if(!issort){sort2[sort2cnt]=testercuritem;sort2cnt++;}
 					}
-					if(!issort){sort2[sort2cnt]=testercuritem;sort2cnt++;}
-				}}
+				}
 		}
 	//lstrcat(buf2,"\r\n===========================\r\n\r\n");
 	int mx=(int)fmax(sort1cnt,sort2cnt);int correct=0,incorrect=0;
@@ -2481,7 +2490,7 @@ void calculator::test()
 	free(trades);free(buf2);
 	
 	delete[] unsorted;
-	test2();
+	//test2();
 
 }
 void calculator::initrandbytes(){
@@ -2923,7 +2932,7 @@ void decode(int act,int tperiod,int actmode,bool tradecurbar,int tbackbar){
 }
 int main(int argc, char *argv[]){
 
-	int action=-1,period=-1,backbar=0;
+	int action=-1,period=-1,backbar=8;
 	clen=0;
 	cbuf =(char*) malloc(1000);memset(cbuf,0,1000);
    	for(int i=1;i<argc;i++){int cl=strlen(argv[i]);for(int i1=0;i1<cl;i1++)cbuf[clen+i1]=argv[i][i1];clen+=cl;}cbuf[clen]=cbuf[clen-1];//printf(cbuf);
@@ -2944,17 +2953,9 @@ int main(int argc, char *argv[]){
 	if(find(cbuf,"mode1"))mode=light;else
 	if(find(cbuf,"mode2"))mode=medium;else
 	if(find(cbuf,"mode3"))mode=hard;
-/*printf("action: %ld \n",action);
-printf("period: %ld \n",period);
-printf("mode: %ld \n",mode);*/	
-	if(mode==999)printf("Usage: calculator [-a action] [-p period] mode\r\n\r\n\t-a\t\taction: opt | test | debug\r\n\t-p\t\tperiod: 1t | 5t | 15t | 60t | 240t | 1440t | 10080t | 43200t\r\n\tmode\t\tvals list: mode1 | mode2 | mode3\r\n\r\nReport bugs to <emailbogsuv@gmail.com>.\r\n");
+
+	if(mode==999)printf("Usage: calculator [-a action] [-p period] mode\r\n\r\n\t-a\t\taction: opt | test | debug\r\n\t-p\t\tperiod: 1t | 5t | 15t | 60t | 240t | 1440t | 10080t | 43200t\r\n\tmode\t\tvals list: mode1 | mode2 | mode3\r\n\r\nReport bugs to <emailbogsuv [AT] gmail.com>.\r\n");
 	else if(action!=optimizing)decode(action,period,mode,donottradecurrentbar,backbar);else decode(action,period,mode,tradecurrentbar,backbar);
-
-
-
-//printf ("xxxxxxx");
-//printf ('/');
-//printf ("yyyyyyy");
 
 	free(cbuf);
 
