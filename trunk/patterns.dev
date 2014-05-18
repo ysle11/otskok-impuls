@@ -27,7 +27,7 @@ CustomMakefile=Makefile.win
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=00000000010010000000ha
+CompilerSettings=00000000010010000000ia
 
 [Unit1]
 FileName=main.cpp

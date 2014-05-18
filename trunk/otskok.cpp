@@ -583,32 +583,27 @@ void Otskok::testerinit()
 		strcpy(&testervals[8][0],"GBPJPY");
 		strcpy(&testervals[9][0],"CHFJPY");
 		strcpy(&testervals[10][0],"EURJPY");
-		strcpy(&testervals[11][0],"EURGBP");
-		strcpy(&testervals[12][0],"GOLD");
-		strcpy(&testervals[13][0],"SILVER");
-		strcpy(&testervals[14][0],"NZDJPY");
-//		strcpy(&testervals[15][0],"USDHKD");
-		strcpy(&testervals[15][0],"AUDNZD");
-		strcpy(&testervals[16][0],"AUDCAD");
-		strcpy(&testervals[17][0],"AUDCHF");
-		strcpy(&testervals[18][0],"AUDJPY");
-		strcpy(&testervals[19][0],"AUDSGD");
-		strcpy(&testervals[20][0],"EURAUD");
-		strcpy(&testervals[21][0],"EURCAD");
-//		strcpy(&testervals[23][0],"EURCHF");
-		strcpy(&testervals[22][0],"EURNZD");
-		strcpy(&testervals[23][0],"GBPAUD");
-		strcpy(&testervals[24][0],"GBPCAD");
-		strcpy(&testervals[25][0],"NZDCAD");
-		strcpy(&testervals[26][0],"EURNOK");
-		strcpy(&testervals[27][0],"EURSEK");
-		strcpy(&testervals[28][0],"USDDKK");
-		strcpy(&testervals[29][0],"USDNOK");
-		strcpy(&testervals[30][0],"USDSEK");
-		strcpy(&testervals[31][0],"USDZAR");
-//		strcpy(&testervals[34][0],"USDRUB");
-		strcpy(&testervals[32][0],"USDSGD");
-		testervalcnt=33;
+		strcpy(&testervals[11][0],"NZDJPY");
+		strcpy(&testervals[12][0],"AUDNZD");
+		strcpy(&testervals[13][0],"AUDCAD");
+		strcpy(&testervals[14][0],"AUDCHF");
+		strcpy(&testervals[15][0],"AUDJPY");
+		strcpy(&testervals[16][0],"AUDSGD");
+		strcpy(&testervals[17][0],"EURAUD");
+		strcpy(&testervals[18][0],"EURCAD");
+		strcpy(&testervals[19][0],"EURNZD");
+		strcpy(&testervals[20][0],"GBPAUD");
+		strcpy(&testervals[21][0],"GBPCAD");
+		strcpy(&testervals[22][0],"NZDCAD");
+		strcpy(&testervals[23][0],"EURNOK");
+		strcpy(&testervals[24][0],"EURSEK");
+		strcpy(&testervals[25][0],"USDDKK");
+		strcpy(&testervals[26][0],"USDNOK");
+		strcpy(&testervals[27][0],"USDSEK");
+		strcpy(&testervals[28][0],"USDZAR");
+//		strcpy(&testervals[29][0],"GOLD");
+//		strcpy(&testervals[30][0],"SILVER");
+		testervalcnt=29;
 	}else
 	/*if(actmode==medium){
 		strcpy(&testervals[0][0],"GBPUSD");
@@ -690,7 +685,7 @@ void Otskok::testerinit()
 	testercuritem=0;
 	memset(strategyset,0,sizeof(strategyset));
 	if(actmode==light)lstrcat(strategyset,"MMCIS-Demo");else
-	if(actmode==medium)lstrcat(strategyset,"MMCIS-Real");else
+	if(actmode==medium)lstrcat(strategyset,"c:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\MQL4\\Files\\");else
 	if(actmode==hard)lstrcat(strategyset,"InstaForex-Demo.com");
 	lstrcat(strategyset,".");
 	lstrcat(strategyset,intToStr(testerperiod));
@@ -733,12 +728,11 @@ void Otskok::testerloaddata()
 	HANDLE hFile;DWORD dwRead;
 	memset(testermetadata,0,sizeof(struct mdata));
 	char fullpath[256],tmp[20];memset(fullpath,0,256);memset(tmp,0,20);
-	//lstrcat(fullpath,testerpath);
-	//memset(datfile,0,255);
-	//lstrcat(datfile,fullpath);
-	lstrcat(fullpath,testervals[testercuritem]);lstrcat(fullpath,"\\");
+	//lstrcat(fullpath,"MMCIS-Real\\");
+	lstrcat(fullpath,"c:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\MQL4\\Files\\");
+	lstrcat(fullpath,testervals[testercuritem]);//lstrcat(fullpath,"\\");
 	snprintf(tmp, 20, "%lld", testerperiod);
-	lstrcat(fullpath,tmp);lstrcat(fullpath,".hc");
+	lstrcat(fullpath,tmp);lstrcat(fullpath,".hst");
 	//lstrcat(fullpath,".hst");
 	testerdataok=false;
 
@@ -747,30 +741,30 @@ void Otskok::testerloaddata()
 	if(testerbacktest==-1){testerbacktest=0;testerbacktest2=-1;}
 	if(!(!hFile)){
 		int dwFileSize = GetFileSize(hFile, NULL);
-		if(dwFileSize>=148+60){//44
+		if(dwFileSize>=4+44){//44
 			testerdataok=true;
 			i1=0;
 			char* membuf = new char[2];
-			testercntper=2100;
+			testercntper=2000;
 			if(actmode==hard)testercntper=710;
-			membuf = (char*)Mrealloc(membuf,(testercntper+3)*60);//44
+			membuf = (char*)Mrealloc(membuf,(testercntper+3)*44);//44
 
-			int i=dwFileSize-60*testercntper-60*testerbacktest;//44
-			if((int)((dwFileSize-148)/60)<testercntper-testerbacktest){i=(dwFileSize-148)/60;testercntper=i-testerbacktest;i=148;}//44
+			int i=dwFileSize-44*testercntper-44*testerbacktest;//44
+			if((int)((dwFileSize-4)/44)<testercntper-testerbacktest){i=(dwFileSize-4)/44;testercntper=i-testerbacktest;i=4;}//44
 			//if(mode==optimizing)if(((testercntper>>1)<<1)==testercntper)testercntper--;
 
 			SetFilePointer(hFile,i,NULL,FILE_BEGIN);
-			ReadFile(hFile, membuf,60*testercntper, &dwRead, NULL);//44
-			i=0;double tstopavg1b,tstopavg1s,tstopavg2b,tstopavg2s;double tmp1b,tmp1s,tmp2b,tmp2s; unsigned long long time_t2;time_t time_t3;
+			ReadFile(hFile, membuf,44*testercntper, &dwRead, NULL);//44
+			i=0;double tstopavg1b,tstopavg1s,tstopavg2b,tstopavg2s;double tmp1b,tmp1s,tmp2b,tmp2s; time_t time_t2;time_t time_t3;
 			while(i1<testercntper){
 //				memcpy(&testermetadata->ctm[i1],&membuf[i],8);i+=8;
-				memcpy(&time_t2,&membuf[i],8);time_t3=(time_t)time_t2;testermetadata->ctm[i1]=time_t3;i+=8;
+				memcpy(&testermetadata->ctm[i1],&membuf[i],4);i+=4;
 				memcpy(&testermetadata->open[i1],&membuf[i],8);i+=8;
 				memcpy(&testermetadata->high[i1],&membuf[i],8);i+=8;
 				memcpy(&testermetadata->low[i1],&membuf[i],8);i+=8;
 				memcpy(&testermetadata->close[i1],&membuf[i],8);i+=8;
 				memcpy(&testermetadata->volume[i1],&membuf[i],8);i+=8;
-				i+=12;
+				//i+=12;
 				
                 tmp1b=0.0;tmp1s=0.0;tmp2b=0.0;tmp2s=0.0;
 				if(i1>256)
@@ -799,7 +793,7 @@ void Otskok::testerloaddata()
 			    
 				i1++;
 			}
-			SetFilePointer(hFile,88,NULL,FILE_BEGIN);
+			SetFilePointer(hFile,0,NULL,FILE_BEGIN);
 			ReadFile(hFile, &testerdigits,4, &dwRead, NULL);
 			CloseHandle(hFile);
 			tester2point=(int)pow((double)10.0,(int)testerdigits);
@@ -815,7 +809,7 @@ void Otskok::testerloaddata()
 			if(testerbacktest2==-1){
 				double tmp;
 				tmp=testermetadata->close[i1-1];
-                testermetadata->ctm[i1]=(testermetadata->ctm[i1-1]+testerperiod*60);
+                testermetadata->ctm[i1]=(testermetadata->ctm[i1-1]+testerperiod*44);
                 testermetadata->open[i1]=tmp;
                 testermetadata->close[i1]=tmp;
                 testermetadata->high[i1]=tmp;
@@ -1014,7 +1008,7 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 	double sig;
 	sig=0.0;
 
-	double topen,thigh,tlow,tclose,ttemp,ttemp2;unsigned long long tvolume;
+	double topen,thigh,tlow,tclose,ttemp,ttemp2;double tvolume;
 	int avg1;
 	
 	if(mode==optimizing){
@@ -1033,7 +1027,7 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 				testermetadata->close[testercurbar]=(testermetadata->close[testercurbar]+testermetadata->close[testercurbar+z])*0.5;
 				testermetadata->high[testercurbar]=fmax(testermetadata->high[testercurbar],testermetadata->high[testercurbar+z]);
 				testermetadata->low[testercurbar]=fmin(testermetadata->low[testercurbar],testermetadata->low[testercurbar+z]);
-				testermetadata->volume[testercurbar]=(testermetadata->volume[testercurbar]+testermetadata->volume[testercurbar+z])>>1;
+				testermetadata->volume[testercurbar]=(testermetadata->volume[testercurbar]+testermetadata->volume[testercurbar+z])*0.5;
 			}
 			switch(optcurbuysell){
 				case 0:{testermetadata->close[testercurbar]=(testermetadata->close[testercurbar]+testermetadata->high[testercurbar])*0.5;break;}
@@ -2576,6 +2570,7 @@ int Otskok::getrand(){
 	if(randptr>randcnt){randptr=0;randcnt2++;if(randcnt2>randcnt)randcnt2=0;}
     int t;t=randbytes[randptr^randcnt2];
 	//t=(t%128);
+	t^=(t>>8);t=(t&127);
 	t+=kperiod;
 	randptr++;
 	return t;
@@ -2598,8 +2593,8 @@ void Otskok::optimize(){
 	if(actmode==hard)lstrcat(buf1,":InstaForex-Demo.com");
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
-//	int wsleep=6,wsleep2=4;
-	int wsleep=6,wsleep2=3;
+	int wsleep=5,wsleep2=2;
+//	int wsleep=6,wsleep2=3;
 
     bool reopt=false,mreopt;
 	testerusefx();
@@ -2610,7 +2605,6 @@ void Otskok::optimize(){
 	double profitcnt2=0.0,ordercnt2=0.0,profitindex2=0.0,drawdowncnt2=0.0;
 	int p2[8];int res1=0,sorl;time_t deltatime;
 	for(testercuritem=0;testercuritem<testervalcnt;testercuritem++)
-	if((testercuritem!=12)&&(testercuritem!=13))
 	{
 //	for(testercuritem=12;testercuritem<testervalcnt;testercuritem++){
 		testerloaddata();//SleepEx(1000,true);
@@ -2798,7 +2792,7 @@ void Otskok::optimize(){
 					}
 					i++;
                     if((i&15)==15)
-					{tt2=time(0);if(tt2!=ttprev){SleepEx(270,true);ttprev=tt2;}}
+					{tt2=time(0);if(tt2!=ttprev){SleepEx(170,true);ttprev=tt2;}}
 					if(i==50){i=0;ix++;}
 					if(ix>11){i=0;ix=0;ix2++;}//if(ix2==5)
 					//if((res1>26)||(tt2-deltatime)>15&&((tt2-deltatime)<10000)){i=99999;res1=0;}
