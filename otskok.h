@@ -102,12 +102,12 @@ class Otskok
 		int totaldrawdown;*/
 	};
 	struct mdata{
-		time_t  ctm[42000];//time_t
-		double open[42000];
-		double low[42000];
-		double high[42000];
-		double close[42000];
-		unsigned long long  volume[42000];
+		time_t  ctm[10000];//time_t
+		double open[10000];
+		double low[10000];
+		double high[10000];
+		double close[10000];
+		double  volume[10000];
 	};
 	char testerpath[255];
 	char strategyset[255];
@@ -121,7 +121,7 @@ class Otskok
 	int testervalcnt,testersmacnt,testercuritem,testercursma;
 	bool testerfxok,testerdataok;
 
-	double topen,topen1,thigh,tlow,tclose;unsigned long long tvolume;
+	double topen,topen1,thigh,tlow,tclose;double tvolume;
 
 	int testerdigits,testercntper,tester2point;
 	double testerpoint;

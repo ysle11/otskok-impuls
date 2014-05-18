@@ -235,7 +235,7 @@ void wlog(const char* buffer){
 }
 void wlogsave(){
     DWORD result;
-    HANDLE hFile = CreateFile("patterns.log", GENERIC_WRITE, 0, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+    HANDLE hFile = CreateFile("c:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\MQL4\\Files\\patterns.log", GENERIC_WRITE, 0, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
     int i=GetFileSize(hFile, NULL),nsize,nsize2;
     SetFilePointer(hFile,i,NULL,FILE_BEGIN);
 

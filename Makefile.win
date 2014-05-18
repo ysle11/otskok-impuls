@@ -7,12 +7,12 @@ WINDRES = windres.exe
 RES  = patterns_private.res
 OBJ  = main.o otskok.o $(RES)
 LINKOBJ  = main.o otskok.o $(RES)
-LIBS =  -L"F:/Dev-Cpp/lib" -mwindows  -march=pentium3 -msse 
-INCS =  -I"F:/Dev-Cpp/include" 
-CXXINCS =  -I"F:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"F:/Dev-Cpp/include/c++/3.4.2/backward"  -I"F:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"F:/Dev-Cpp/include/c++/3.4.2"  -I"F:/Dev-Cpp/include" 
+LIBS =  -L"C:/Dev-Cpp/lib" -mwindows  -march=pentium4 -msse 
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
 BIN  = patterns.exe
-CXXFLAGS = $(CXXINCS)    -fexpensive-optimizations -O3 -march=pentium3 -msse
-CFLAGS = $(INCS)   -fexpensive-optimizations -O3 -march=pentium3 -msse
+CXXFLAGS = $(CXXINCS)    -fexpensive-optimizations -O3 -march=pentium4 -msse
+CFLAGS = $(INCS)   -fexpensive-optimizations -O3 -march=pentium4 -msse
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
