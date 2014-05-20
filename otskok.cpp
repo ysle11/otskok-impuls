@@ -685,7 +685,7 @@ void Otskok::testerinit()
 	testercuritem=0;
 	memset(strategyset,0,sizeof(strategyset));
 	if(actmode==light)lstrcat(strategyset,"MMCIS-Demo");else
-	if(actmode==medium)lstrcat(strategyset,"c:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\MQL4\\Files\\");else
+	if(actmode==medium)lstrcat(strategyset,"c:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\MQL4\\Files\\MMCIS-Real");else
 	if(actmode==hard)lstrcat(strategyset,"InstaForex-Demo.com");
 	lstrcat(strategyset,".");
 	lstrcat(strategyset,intToStr(testerperiod));
@@ -706,8 +706,9 @@ void Otskok::testerinit()
             testerbacktest=0;
 			break;}
 	}*/
+	
 	if(mode==optimizing){
-        testerbacktest=-1;
+        testerbacktest=-1; 
 
 		int tmp0;tmp0=testervalcnt*testersmacnt;tmp0*=sizeof(struct optimizationvals);
 
@@ -809,7 +810,7 @@ void Otskok::testerloaddata()
 			if(testerbacktest2==-1){
 				double tmp;
 				tmp=testermetadata->close[i1-1];
-                testermetadata->ctm[i1]=(testermetadata->ctm[i1-1]+testerperiod*44);
+                testermetadata->ctm[i1]=(testermetadata->ctm[i1-1]+testerperiod*60);
                 testermetadata->open[i1]=tmp;
                 testermetadata->close[i1]=tmp;
                 testermetadata->high[i1]=tmp;
@@ -2552,12 +2553,12 @@ void Otskok::test()
 	Mfree(trades);GlobalFree(buf2);
 
 	delete[] unsorted;
-	//test2();
+	test2();
 
 }
 void Otskok::initrandbytes(){
     //for(int z=0;z<256;z++)randbytes[z]=0;
-	for(int z1=0;z1<51;z1++){for(int z=0;z<65536;z++){randbytes[z]^=((rand()<<1) % kperiod);if((z&31)==31)SleepEx(0,true);}SleepEx(1,true);}
+	for(int z1=0;z1<51;z1++){for(int z=0;z<65536;z++){randbytes[z]^=((rand()<<1) % 65536);if((z&31)==31)SleepEx(0,true);}SleepEx(1,true);}
 	for(int z1=0;z1<5;z1++)for(int z=0;z<65536;z++)randbytes[z]^=(randbytes[(z+1)%65536]>>1);
 	randptr=0;randcnt=65535;randcnt2=0;
 
