@@ -746,8 +746,8 @@ void Otskok::testerloaddata()
 			testerdataok=true;
 			i1=0;
 			char* membuf = new char[2];
-			//testercntper=2100;
-			testercntper=1001;
+			testercntper=2100;
+		//	testercntper=1001;
 			membuf = (char*)Mrealloc(membuf,(testercntper+3)*44);//44
 
 			int i=dwFileSize-44*testercntper-44*testerbacktest;//44
@@ -823,7 +823,7 @@ void Otskok::testerloaddata()
 			}
 			delete []membuf;
 		}
-		testermincnttrades=(int)(testercntper*0.1);testermincnttrades-=22;
+		testermincnttrades=(int)(testercntper*0.075);testermincnttrades-=22;
 	}
 }
 void Otskok::testersavefx(){
@@ -974,7 +974,7 @@ void Otskok::testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2
 		if (sig>0.0)
 //		if((iTradesTotalOP_BUY==0)&&(iTradesTotalOP_BUYLIMIT==0)&&(iTradesTotalOP_BUYSTOP==0))
 		{
-			tmp=testerspread;tmp+=4;tmp*=testerpoint;
+			tmp=testerspread;tmp+=5;tmp*=testerpoint;
 			SL=0.0;TP=sig;TP+=tmp;
 			OrderSend(OP_BUYSTOP, sig,SL,TP);
 		}else
@@ -982,7 +982,7 @@ void Otskok::testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2
 //		if((iTradesTotalOP_SELL==0)&&(iTradesTotalOP_SELLLIMIT==0)&&(iTradesTotalOP_SELLSTOP==0))
 		{
 			sig*=-1.0;
-			tmp=testerspread;tmp+=4;tmp*=testerpoint;
+			tmp=testerspread;tmp+=5;tmp*=testerpoint;
 			SL=0.0;TP=sig;TP-=tmp;
 			OrderSend(OP_SELLSTOP, sig,SL,TP);
 		}
@@ -1015,7 +1015,7 @@ double Otskok::testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int
 	int avg1;
 	
 	if(mode==optimizing){
-		avg1=3;
+		avg1=4;
 		if(testerperiod==1440)avg1=4;else
 		if(testerperiod==240)avg1=24;else
 		if(testerperiod==60)avg1=96;else
@@ -2444,7 +2444,7 @@ void Otskok::test()
 			tmp1=(unsorted[testercuritem].cntBUYSTOP);tmp1=(tmp1/unsorted[testercuritem].cntBUYSTOPtotal);tmp1*=100;
 			tmp2=(unsorted[testercuritem].cntSELLSTOP);tmp2=(tmp2/unsorted[testercuritem].cntSELLSTOPtotal);tmp2*=100;
 			tmp5=tmp1-tmp2;tmp6=tmp2-tmp1;*/
-				if(unsorted[testercuritem].cntBUYSTOP2>(1.7*unsorted[testercuritem].cntBUYSTOP)){
+				if(unsorted[testercuritem].cntBUYSTOP2>(1.8*unsorted[testercuritem].cntBUYSTOP)){
 				if(unsorted[testercuritem].cntBUYSTOP2>0.0&&unsorted[testercuritem].cntBUYSTOP>0.0)
                 //if(unsorted[testercuritem].powerBUYSTOP>(1.1*unsorted[testercuritem].powerSELLSTOP))
                 //if(unsorted[testercuritem].powerBUYSTOP>0.0&&unsorted[testercuritem].powerSELLSTOP>0.0)
@@ -2460,7 +2460,7 @@ void Otskok::test()
 					}
 					if(!issort){sort1[sort1cnt]=testercuritem;sort1cnt++;}
 				}}else
-				if(unsorted[testercuritem].cntSELLSTOP2>(1.7*unsorted[testercuritem].cntSELLSTOP)){
+				if(unsorted[testercuritem].cntSELLSTOP2>(1.8*unsorted[testercuritem].cntSELLSTOP)){
                 if(unsorted[testercuritem].cntSELLSTOP2>0.0&&unsorted[testercuritem].cntSELLSTOP>0.0)
                 //if(unsorted[testercuritem].powerSELLSTOP>(1.1*unsorted[testercuritem].powerBUYSTOP))
                 //if(unsorted[testercuritem].powerBUYSTOP>0.0&&unsorted[testercuritem].powerSELLSTOP>0.0)
@@ -2574,7 +2574,7 @@ int Otskok::getrand(){
     int t,t1;t1=randptr^randcnt2;t=randbytes[t1];
     randbytes[t1]^=randbytes[(t1+3)%65536];
 	//t=(t%128);
-	if(kperiod==128){kperiod=64;kperiod1=3;}else{kperiod=128;kperiod1=10;}
+	//if(kperiod==128){kperiod=64;kperiod1=3;}else{kperiod=128;kperiod1=10;}
 	t^=(t>>8);t=(t&(kperiod-1));
 	t+=kperiod;
 	randptr++;
@@ -2599,7 +2599,7 @@ void Otskok::optimize(){
 	lstrcat(buf1,"\r\n ");
 	wlog(buf1);
 	int wsleep=5,wsleep2=2;
-				kperiod=128;kperiod1=10;initrandbytes();
+				kperiod=64;kperiod1=3;initrandbytes();
 //	int wsleep=6,wsleep2=3;
 
     bool reopt=false,mreopt;
@@ -2682,7 +2682,7 @@ void Otskok::optimize(){
 				tt2=ttl;ttprev=tt2;
 				testeroptval[testercuritemptr].params[ls].datetimeopt=0;
 				deltatime=ttl-86000*10000;
-				double pindex=0.819;
+				double pindex=0.79;
 				double slorderscnt,stmp1,stmp2,stmp3;
 				while(i<100/*&&unoptimized<31*/){
 
@@ -2690,6 +2690,8 @@ void Otskok::optimize(){
 					o=testertest(p[0],p[1],p[2],p[3],p[4],p[5],0,0,p[6]);SleepEx(0,true);
 					if(o!=-1){
 					if(profitcnt>0.0)
+					if((sorderscnt>0)&&(lorderscnt>0))
+					if((ls==0||ls==2)?sorderscnt<lorderscnt:sorderscnt>lorderscnt)
 					{
 						oprofitcnt=maxprofit;
 						oordercnt=drawdowncnt+profitcnt;
@@ -2697,21 +2699,18 @@ void Otskok::optimize(){
 						odrawdowncnt=minprofit;
 						slorderscnt=sorderscnt;slorderscnt+=lorderscnt;slorderscnt*=0.5;
 						if(oprofitindex>pindex)
-						
 						if((oordercnt>testermincnttrades)&&(((ordercnt2-oordercnt)<(ordercnt2*0.1)&&profitindex2<oprofitindex)||((oordercnt-ordercnt2)>(ordercnt2*0.5)&&(profitindex2-oprofitindex)<0.05)||(ordercnt2<oordercnt&&profitindex2<=oprofitindex)))
-						if((ls==0||ls==2)?sorderscnt<lorderscnt:sorderscnt>lorderscnt)
-						if((sorderscnt>0)&&(lorderscnt>0))
 						{
-                            stmp1=drawdowncnt;stmp1+=profitcnt;stmp1*=0.5;stmp2=(sorderscnt<lorderscnt?sorderscnt:lorderscnt);stmp3=slorderscnt;stmp3/=stmp2;
-						if(slorderscnt<stmp1)
-						if(sbalance<stmp3)
-						{
+                          stmp1=drawdowncnt;stmp1+=profitcnt;stmp1*=0.5;stmp2=(sorderscnt<lorderscnt?sorderscnt:lorderscnt);stmp3=slorderscnt;stmp3/=stmp2;
+						  if(slorderscnt<stmp1)
+						  if(sbalance<stmp3)
+						  {
 							res1++;//Sleep(1);
 							deltatime=time(0);ttl=deltatime;
 							profitcnt2=oprofitcnt;ordercnt2=oordercnt;profitindex2=oprofitindex;drawdowncnt2=odrawdowncnt;
 							//sbalance=(slorderscnt/(sorderscnt<lorderscnt?sorderscnt:lorderscnt));
 							for(int i9=0;i9<7;i9++)p2[i9]=p[i9];
-							memset(tmp,0,5255);
+							memset(tmp,0,1255);
 							lstrcat(tmp,"  ");
 							if(ls<0.0)
 							lstrcat(tmp," -");else
