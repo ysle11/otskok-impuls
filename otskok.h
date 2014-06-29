@@ -125,6 +125,7 @@ class Otskok
 
 	int testerdigits,testercntper,tester2point;
 	double testerpoint;
+	int spreadtp;
 
 	double testercurh,testercuro,testercurl,testercurc;
 	int testercurbar;
@@ -135,6 +136,9 @@ class Otskok
 	void initrandbytes();
 	int getrand();
 
+	double mpage[33][2301][257][8];
+	bool mpageis[33][2301][257][8];
+	void mpage_update();
 
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
 	void testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
@@ -249,7 +253,7 @@ class Otskok
 
 	int datetimemin,datetimemax;
 	bool tradecurbar;
-	int optcurbuysell,kperiod,kperiod1;
+	int optcurbuysell,kperiod,kperiod1,cpuse,wsleep;
 
 	void test();
 	void test2();
