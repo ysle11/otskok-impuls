@@ -1,6 +1,6 @@
 <chart>
 id=130447120656250001
-symbol=EURUSD
+symbol=AUDUSD
 period=1440
 leftpos=1512
 digits=4
