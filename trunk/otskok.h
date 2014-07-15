@@ -117,7 +117,8 @@ class Otskok
 	char testervals[255][22];
 	optimizationvals* testeroptval;
 
-	int testerperiod,testerspread,stopavg1b,stopavg1s,stopavg2b,stopavg2s;
+	int testerperiod,testerspread;//,stopavg1b,stopavg1s,stopavg2b,stopavg2s;
+	int stopavg1b[1201],stopavg1s[1201],stopavg2b[1201],stopavg2s[1201],spreadtp[1201];
 	int testervalcnt,testersmacnt,testercuritem,testercursma;
 	bool testerfxok,testerdataok;
 
@@ -125,7 +126,6 @@ class Otskok
 
 	int testerdigits,testercntper,tester2point;
 	double testerpoint;
-	int spreadtp;
 
 	double testercurh,testercuro,testercurl,testercurc;
 	int testercurbar;
@@ -136,8 +136,8 @@ class Otskok
 	void initrandbytes();
 	int getrand();
 
-	double mpage[33][2301][257][8];
-	bool mpageis[33][2301][257][8];
+	double mpage[33][1201][257][8];
+	bool mpageis[33][1201][257][8];
 	void mpage_update();
 
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
@@ -258,7 +258,9 @@ class Otskok
 	void test();
 	void test2();
 	void optimize();
-	//void debug();
+/* TODO (root#1#): Debug */
+    void showlog();
+	void debug();
 
 	public:
 		Otskok();
