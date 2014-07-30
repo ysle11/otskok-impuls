@@ -247,6 +247,7 @@ class Otskok
 		double profitSELLSTOP2;
 		int cntBUYSTOP2;
 		int cntSELLSTOP2;
+		bool used;
 	};
 
 	consolidatesorted* unsorted;
