@@ -265,7 +265,7 @@ class Otskok
 
 	public:
 		Otskok();
-		void action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar);
+		void action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar,int cntbars);
 		virtual ~Otskok();
 
 };

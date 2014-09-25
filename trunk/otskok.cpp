@@ -22,7 +22,7 @@ extern HWND hwnd,hlog,hpro,hper,hcmd;
 Otskok::Otskok(){}
 Otskok::~Otskok(){}
 
-void Otskok::action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar)
+void Otskok::action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar,int cntbars)
 {   srand(time(0));
 	kperiod=128;kperiod1=10;
 	initrandbytes();initrandbytes();
@@ -30,6 +30,7 @@ void Otskok::action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar)
     actmode=historymode;
     tradecurbar=tcurbar;
     testerbacktest=tbackbar;
+    testercntper=cntbars;
 	if(t==testing){mode=testing;test();}
 	if(t==optimizing){mode=optimizing;optimize();}
 	if(t==debuging){mode=debuging;debug();}
@@ -701,6 +702,8 @@ void Otskok::testerinit()
 	if(actmode==medium)lstrcat(strategyset,"c:\\Program Files\\MMCIS MetaTrader 4 Client Terminal\\MQL4\\Files\\MMCIS-Real");else
 	if(actmode==hard)lstrcat(strategyset,"InstaForex-Demo.com");
 	lstrcat(strategyset,".");
+	lstrcat(strategyset,intToStr(testercntper));
+	lstrcat(strategyset,".");
 	lstrcat(strategyset,intToStr(testerperiod));
 
 	
@@ -744,7 +747,7 @@ void Otskok::testerloaddata()
 			testerdataok=true;
 			i1=0;
 			char* membuf = new char[2];
-			testercntper=2100;
+		//	testercntper=2100;
 		//	testercntper=1200;
 			membuf = (char*)Mrealloc(membuf,(testercntper+3)*44);//44
 

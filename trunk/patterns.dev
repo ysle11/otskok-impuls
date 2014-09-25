@@ -21,13 +21,13 @@ OverrideOutput=0
 OverrideOutputName=patterns1.exe
 HostApplication=
 Folders=
-CommandLine=/MMCIS-Real /debug /1440t
+CommandLine=/MMCIS-Real /debug /240t
 UseCustomMakefile=0
 CustomMakefile=Makefile.win
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=00000000010010000000ia
+CompilerSettings=00000000000000000000ia
 
 [Unit1]
 FileName=main.cpp
