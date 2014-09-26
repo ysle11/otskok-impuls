@@ -254,7 +254,7 @@ class Otskok
 
 	int datetimemin,datetimemax;
 	bool tradecurbar;
-	int optcurbuysell,kperiod,kperiod1,cpuse,wsleep;
+	int optcurbuysell,kperiod,kperiod1,cpuse,wsleep,optcntbars;
 
 	void test();
 	void test2();
@@ -264,6 +264,7 @@ class Otskok
 	void debug();
 
 	public:
+		double secsused;   
 		Otskok();
 		void action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar,int cntbars);
 		virtual ~Otskok();
