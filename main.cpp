@@ -199,13 +199,24 @@ switch (message)
 return 0;
 }
 void decode(int act,int tperiod,int actmode,bool tradecurbar,int tbackbar){
+	double secs=0;
+	char* tmp;tmp=(char*)malloc(125);memset(tmp,0,125);
 	Otskok* otskokobj;
 	otskokobj=new Otskok;
 	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar,2100);
+	secs+=otskokobj->secsused;
 	delete otskokobj;
 	otskokobj=new Otskok;
-	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar,2095);
+	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar,2098);
+	secs+=otskokobj->secsused;
 	delete otskokobj;
+	
+	secs/=60;
+	lstrcat(tmp,intToStr((int)secs));
+	lstrcat(tmp," minutes used\r\n");
+	
+	if(act==optimizing)wlog(tmp);	
+	free(tmp);
 }
 void wcmd(int reqestor){
 		if(reqestor==cmdmain)wlog("\r\n main enter\r\n");else
