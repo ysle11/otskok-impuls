@@ -114,9 +114,9 @@ ListView_InsertColumn(hcmd,1,&lvc);
     if(find(lpszArgument,"/opt"))action=optimizing;else
     if(find(lpszArgument,"/test")){
 		action=testing;
-		hbup =CreateWindowEx (0,"Button"," ",WS_CHILD | WS_VISIBLE,400,630,10,10,hwnd,NULL,hThisInstance,NULL);
-		hbdn =CreateWindowEx (0,"Button"," ",WS_CHILD | WS_VISIBLE,400,640,10,10,hwnd,NULL,hThisInstance,NULL);
-		hbackbar =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,380,630,20,20,hwnd,NULL,hThisInstance,NULL);title(whbackbar,intToStr(backbar));
+		hbup =CreateWindowEx (0,"Button"," ",WS_CHILD | WS_VISIBLE,40,630,10,10,hwnd,NULL,hThisInstance,NULL);
+		hbdn =CreateWindowEx (0,"Button"," ",WS_CHILD | WS_VISIBLE,40,640,10,10,hwnd,NULL,hThisInstance,NULL);
+		hbackbar =CreateWindowEx (0,"Static"," ",WS_CHILD | WS_VISIBLE,20,630,20,20,hwnd,NULL,hThisInstance,NULL);title(whbackbar,intToStr(backbar));
 	}else
     if(find(lpszArgument,"/debug"))action=debuging;
 
@@ -130,6 +130,7 @@ ListView_InsertColumn(hcmd,1,&lvc);
     if(find(lpszArgument,"/43200t"))period=43200;
 
 	mode=999;
+
 	if(find2(lpszArgument,"/MMCIS-Demo"))mode=light;else
     if(find2(lpszArgument,"/MMCIS-Real"))mode=medium;else
     if(find2(lpszArgument,"/InstaForex-Demo.com"))mode=hard;
@@ -143,13 +144,13 @@ ListView_InsertColumn(hcmd,1,&lvc);
 	else 
 	if(action!=optimizing)decode(action,period,mode,donottradecurrentbar,backbar);
 	else decode(action,period,mode,tradecurrentbar,backbar);
-    
+    InvalidateRect(hwnd,0,true);
     if(!find(lpszArgument,"/quit"))
 	while (GetMessage (&messages, NULL, 0, 0))
 	{if((messages.hwnd==hcmd)&&(messages.message==WM_KEYUP)&&messages.wParam==VK_RETURN)wcmd(cmdmain);
 	if((messages.hwnd==hcmd)&&(messages.message==WM_LBUTTONDBLCLK))wlog(intToStr(ListBox_GetCurSel(hcmd) ));
-	if((messages.hwnd==hbup)&&(messages.message==WM_LBUTTONUP)){backbar++;if(backbar>21)backbar=21;else title(whbackbar,intToStr(backbar));decode(action,period,mode,donottradecurrentbar,backbar);}
-	if((messages.hwnd==hbdn)&&(messages.message==WM_LBUTTONUP)){backbar--;if(backbar<-1)backbar=-1;else title(whbackbar,intToStr(backbar));decode(action,period,mode,donottradecurrentbar,backbar);}
+	if((messages.hwnd==hbup)&&(messages.message==WM_LBUTTONUP)){backbar++;if(backbar>21)backbar=21;else title(whbackbar,intToStr(backbar));decode(action,period,mode,donottradecurrentbar,backbar);InvalidateRect(hwnd,0,true);}
+	if((messages.hwnd==hbdn)&&(messages.message==WM_LBUTTONUP)){backbar--;if(backbar<-1)backbar=-1;else title(whbackbar,intToStr(backbar));decode(action,period,mode,donottradecurrentbar,backbar);InvalidateRect(hwnd,0,true);}
 		TranslateMessage(&messages);
 		DispatchMessage(&messages);
 	}
@@ -200,20 +201,31 @@ return 0;
 }
 void decode(int act,int tperiod,int actmode,bool tradecurbar,int tbackbar){
 	double secs=0;
-	char* tmp;tmp=(char*)malloc(125);memset(tmp,0,125);
+	int smastat[32];for(int i1=0;i1<32;i1++)smastat[i1]=0;
+	
+	char* tmp;tmp=(char*)malloc(1250);memset(tmp,0,1250);
 	Otskok* otskokobj;
 	otskokobj=new Otskok;
-	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar,2100);
+	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar,717);
 	secs+=otskokobj->secsused;
+	for(int i1=0;i1<32;i1++)smastat[i1]+=otskokobj->smastat[i1];
 	delete otskokobj;
 	otskokobj=new Otskok;
-	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar,2098);
+	otskokobj->action(act,tperiod,actmode,tradecurbar,tbackbar,715);
 	secs+=otskokobj->secsused;
+	for(int i1=0;i1<32;i1++)smastat[i1]+=otskokobj->smastat[i1];
 	delete otskokobj;
 	
 	secs/=60;
 	lstrcat(tmp,intToStr((int)secs));
 	lstrcat(tmp," minutes used\r\n");
+	for(int i1=0;i1<32;i1++)
+	{
+	 		lstrcat(tmp,intToStr(i1));
+	 		lstrcat(tmp," : ");
+	 		lstrcat(tmp,intToStr(smastat[i1]));
+	 		lstrcat(tmp,"\r\n");
+	}
 	
 	if(act==optimizing)wlog(tmp);	
 	free(tmp);

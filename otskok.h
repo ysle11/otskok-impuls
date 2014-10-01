@@ -134,7 +134,7 @@ class Otskok
 	int testermincnttrades,testermdrawdownclimit;
 	int randptr,randcnt,randcnt2,randbytes[65536];
 	void initrandbytes();
-	int getrand();
+	int getrand(int x1, int x2);
 
 	double mpage[33][2101][257][8];
 	bool mpageis[33][2101][257][8];
@@ -143,6 +143,7 @@ class Otskok
 	int testertest(int p1,int p2,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
 	void testerstart(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
 	double testersignal(int k1,int d1,int k2,int d2,int k3,int d3,int l1,int l2,int limit);
+	double maindex(const int index,const int period, const int price, const int shift);
 	double sma(const int period, const int price, const int shift );
 	double isma(const int k1, const int d1, const int k2, const int d2, const int k3, const int d3, int l1, int l2, const int il);
 	double cci(const int period, const int shift );
@@ -251,10 +252,11 @@ class Otskok
 	};
 
 	consolidatesorted* unsorted;
+	
 
 	int datetimemin,datetimemax;
 	bool tradecurbar;
-	int optcurbuysell,kperiod,kperiod1,cpuse,wsleep,optcntbars;
+	int optcurbuysell,cpuse,wsleep,optcntbars;
 
 	void test();
 	void test2();
@@ -264,7 +266,8 @@ class Otskok
 	void debug();
 
 	public:
-		double secsused;   
+		double secsused;
+		int smastat[32];
 		Otskok();
 		void action(int t,int tperiod,int historymode,bool tcurbar,int tbackbar,int cntbars);
 		virtual ~Otskok();
