@@ -6,13 +6,7 @@
 #include <time.h>
 
 #include "calculator.h"
-/*
-	emailbogsuv [AT] gmail.com
-	+380 98 8988692
-	Suvorov Bogdan
-	g++ -msse -mtune=pentium3 -mfpmath=sse -mno-mmx calculator.cpp -o calculator
-	./calculator -aopt mode1 -p1440t
-*/
+
 enum { whwnd, whpro };
 enum { testing, optimizing, debuging };
 enum { light, medium, hard, unscalp };

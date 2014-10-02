@@ -1,10 +1,4 @@
-/*
-	emailbogsuv [AT] gmail.com
-	+380 98 8988692
-	Suvorov Bogdan
-	g++ -msse -mtune=pentium3 -mfpmath=sse -mno-mmx calculator.cpp -o calculator
-	./calculator -aopt mode1 -p1440t
-*/
+
 class calculator
 {
 	char* intToStr(int i);
