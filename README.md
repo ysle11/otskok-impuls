@@ -16,4 +16,3 @@ next step - get results for opening orders
 
 ./calculator -a test mode1 -p 1440
 
-the results look like http://bogsuv.hj.cx/
